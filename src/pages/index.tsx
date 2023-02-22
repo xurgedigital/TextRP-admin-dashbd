@@ -5,7 +5,7 @@ import ChatSection from "@/components/ChatSection";
 
 export default function Home() {
   return (
-    <div className="flex">
+    <div className="flex max-h-screen">
       <InboxComp />
       <ChatSection/>
     </div>

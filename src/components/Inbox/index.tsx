@@ -3,12 +3,15 @@ import React from "react";
 import FilterIcon from "@public/Icons/filterIcon.svg";
 import SearchIcon from "@public/Icons/searchIcon.svg";
 import TwitterIcon from "@public/Icons/twitterChatIcon.svg";
+import DiscordIcon from "@public/Icons/discordIcon.svg";
+import ChatIcon from "@public/Icons/chatIcon.svg";
 import UserImage from "@public/Images/userImage.png";
-import ChatImage from "@public/Images/chatImg.png";
+import DummyUserImage from "@public/Images/dummyUser.jpg";
+import DummyUser2Image from "@public/Images/dummyUser2.jpg";
 
 const dummyData: IInboxChatProps[] = [
   {
-    userImage: UserImage,
+    userImage: DummyUserImage,
     platformIcon: TwitterIcon,
     userName: "Leslie Alexander",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
@@ -16,7 +19,15 @@ const dummyData: IInboxChatProps[] = [
     unseenMessageCount: 2,
   },
   {
-    userImage: UserImage,
+    userImage: DummyUser2Image,
+    platformIcon: DiscordIcon,
+    userName: "Leslie Alexander",
+    lastChat: "Lorem ipsum dolor sit amet, consec...",
+    time: "11:21 pm",
+    unseenMessageCount: 1,
+  },
+  {
+    userImage: DummyUserImage,
     platformIcon: TwitterIcon,
     userName: "Leslie Alexander",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
@@ -24,37 +35,46 @@ const dummyData: IInboxChatProps[] = [
     unseenMessageCount: 0,
   },
   {
-    userImage: UserImage,
-    platformIcon: TwitterIcon,
+    userImage: DummyUser2Image,
+    platformIcon: DiscordIcon,
     userName: "Leslie Alexander",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
-    unseenMessageCount: 100,
+    unseenMessageCount: 0,
   },
   {
-    userImage: UserImage,
+    userImage: DummyUserImage,
     platformIcon: TwitterIcon,
     userName: "Leslie Alexander",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
-    unseenMessageCount: 2,
+    unseenMessageCount: 0,
   },
   {
-    userImage: UserImage,
-    platformIcon: TwitterIcon,
+    userImage: DummyUser2Image,
+    platformIcon: DiscordIcon,
     userName: "Leslie Alexander",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
-    unseenMessageCount: 2,
+    unseenMessageCount: 0,
   },
   {
-    userImage: UserImage,
+    userImage: DummyUserImage,
     platformIcon: TwitterIcon,
     userName: "Leslie Alexander",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
-    unseenMessageCount: 2,
+    unseenMessageCount: 0,
   },
+  {
+    userImage: DummyUser2Image,
+    platformIcon: DiscordIcon,
+    userName: "Leslie Alexander",
+    lastChat: "Lorem ipsum dolor sit amet, consec...",
+    time: "11:21 pm",
+    unseenMessageCount: 0,
+  },
+  
 ];
 
 interface IInboxChatProps {
@@ -77,10 +97,18 @@ const InboxCompChat = (props: IInboxChatProps) => {
   } = props;
 
   return (
-    <div className="flex mb-7 items-center">
-      <div className="rounded-full h-12 w-12 relative min-w-[48px] ">
-        <Image src={userImage} alt="Filter Icon" fill />
-        <div className=" rounded-full h-4 w-4 absolute right-0 bottom-0 ">
+    <div className="flex mb-7 items-center cursor-pointer px-8">
+      <div className="relative">
+        <div className="rounded-full h-10 lg:h-12 w-10 lg:w-12 relative min-w-[40px] lg:min-w-[48px] overflow-hidden ">
+          <Image
+            src={userImage}
+            alt="User Image"
+            fill
+            className=" object-cover"
+            quality={100}
+          />
+        </div>
+        <div className=" rounded-full h-3 lg:h-4 w-3 lg:w-4 absolute right-0 bottom-0 ">
           <Image src={platformIcon} fill alt="Filter Icon" />
         </div>
       </div>
@@ -88,7 +116,7 @@ const InboxCompChat = (props: IInboxChatProps) => {
         <div className="text-base text-primary-text font-semibold ">
           {userName}
         </div>
-        <div className=" text-xs text-secondary-text font-normal">
+        <div className=" text-xs text-secondary-text font-normal max-w-[75%] truncate  ">
           {lastChat}
         </div>
       </div>
@@ -108,31 +136,41 @@ const InboxCompChat = (props: IInboxChatProps) => {
 
 const InboxComp = () => {
   return (
-    <div className="md:flex-[0.25] lg:flex-[0.2] min-h-screen bg-gray-bg px-8 py-6">
-      <div className="flex justify-between items-center mb-5">
-        <div className=" text-primary-text font-semibold text-3xl">Chats</div>
-        <div className="flex items-center gap-5">
-          <span>
-            <Image src={FilterIcon} width={18} height={16} alt="Filter Icon" />
+    <div className="md:flex-[0.25] lg:flex-[0.2] min-h-screen max-h-screen bg-gray-bg py-6 relative ">
+      <div className="px-8">
+        <div className="flex justify-between items-center mb-5">
+          <div className=" text-primary-text font-semibold text-3xl">Chats</div>
+          <div className="flex items-center gap-5">
+            <span>
+              <Image
+                src={FilterIcon}
+                width={18}
+                height={16}
+                alt="Filter Icon"
+              />
+            </span>
+            <span className=" overflow-hidden rounded-full h-8 w-8 ">
+              <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
+            </span>
+          </div>
+        </div>
+        <div className="flex border border-[#ACB1C1] rounded-lg h-12 items-center overflow-hidden bg-white ">
+          <span className="mr-2.5 ml-5">
+            <Image src={SearchIcon} width={16} height={16} alt="Filter Icon" />
           </span>
-          <span className=" overflow-hidden rounded-full h-8 w-8 ">
-            <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
-          </span>
+          <input
+            type="text"
+            className=" border-none outline-none h-full w-full bg-transparent text-sm text-secondary-text "
+          />
         </div>
       </div>
-      <div className="flex border border-[#ACB1C1] rounded-lg h-12 items-center overflow-hidden bg-white ">
-        <span className="mr-2.5 ml-5">
-          <Image src={SearchIcon} width={16} height={16} alt="Filter Icon" />
-        </span>
-        <input
-          type="text"
-          className=" border-none outline-none h-full w-full bg-transparent text-sm text-secondary-text "
-        />
-      </div>
-      <div className="mt-8">
+      <div className="mt-8 overflow-y-auto">
         {dummyData.map((data, index) => {
           return <InboxCompChat key={index} {...data} />;
         })}
+      </div>
+      <div className="w-12 lg:w-16 h-12 lg:h-16 bg-primary-blue rounded-full absolute bottom-8 right-8 flex justify-center items-center">
+        <Image src={ChatIcon} alt="" />
       </div>
     </div>
   );
