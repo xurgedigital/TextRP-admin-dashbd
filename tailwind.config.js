@@ -15,6 +15,7 @@ module.exports = {
         "gray-bg": "#F3F5FF",
         "primary-text": "#000000",
         "secondary-text": "#606885",
+        "primary-green": "#3BDC96",
       },
     },
   },

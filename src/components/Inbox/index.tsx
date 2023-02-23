@@ -11,7 +11,7 @@ import DummyUser2Image from "@public/Images/dummyUser2.jpg";
 
 const dummyData: IInboxChatProps[] = [
   {
-    userImage: DummyUserImage,
+    userImage: `https://picsum.photos/201`,
     platformIcon: TwitterIcon,
     userName: "Leslie Alexander",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
@@ -19,66 +19,65 @@ const dummyData: IInboxChatProps[] = [
     unseenMessageCount: 2,
   },
   {
-    userImage: DummyUser2Image,
+    userImage: `https://picsum.photos/202`,
     platformIcon: DiscordIcon,
-    userName: "Leslie Alexander",
+    userName: "Amit Sebastian",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
     unseenMessageCount: 1,
   },
   {
-    userImage: DummyUserImage,
+    userImage: `https://picsum.photos/203`,
     platformIcon: TwitterIcon,
-    userName: "Leslie Alexander",
+    userName: "Sigfrido Sarala",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
     unseenMessageCount: 0,
   },
   {
-    userImage: DummyUser2Image,
+    userImage: `https://picsum.photos/204`,
     platformIcon: DiscordIcon,
-    userName: "Leslie Alexander",
+    userName: "Levi Kain",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
     unseenMessageCount: 0,
   },
   {
-    userImage: DummyUserImage,
+    userImage: `https://picsum.photos/205`,
     platformIcon: TwitterIcon,
-    userName: "Leslie Alexander",
+    userName: "Apollon Salome",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
     unseenMessageCount: 0,
   },
   {
-    userImage: DummyUser2Image,
+    userImage: `https://picsum.photos/206`,
     platformIcon: DiscordIcon,
-    userName: "Leslie Alexander",
+    userName: "Bernarda Uta",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
     unseenMessageCount: 0,
   },
   {
-    userImage: DummyUserImage,
+    userImage: `https://picsum.photos/207`,
     platformIcon: TwitterIcon,
-    userName: "Leslie Alexander",
+    userName: "Zoran Prabhu",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
     unseenMessageCount: 0,
   },
   {
-    userImage: DummyUser2Image,
+    userImage: `https://picsum.photos/208`,
     platformIcon: DiscordIcon,
-    userName: "Leslie Alexander",
+    userName: "Jedidah Raisa",
     lastChat: "Lorem ipsum dolor sit amet, consec...",
     time: "11:21 pm",
     unseenMessageCount: 0,
   },
-  
 ];
 
 interface IInboxChatProps {
-  userImage: StaticImageData;
+  userImage: string;
   platformIcon: StaticImageData;
   userName: string;
   lastChat: string;
@@ -86,7 +85,17 @@ interface IInboxChatProps {
   unseenMessageCount: number;
 }
 
-const InboxCompChat = (props: IInboxChatProps) => {
+interface IInboxChatCompProps {
+  userImage: string;
+  platformIcon: StaticImageData;
+  userName: string;
+  lastChat: string;
+  time: string;
+  unseenMessageCount: number;
+  handleSelectChat: Function;
+}
+
+const InboxCompChat = (props: IInboxChatCompProps) => {
   const {
     userImage,
     userName,
@@ -94,10 +103,14 @@ const InboxCompChat = (props: IInboxChatProps) => {
     time,
     platformIcon,
     unseenMessageCount,
+    handleSelectChat,
   } = props;
 
   return (
-    <div className="flex mb-7 items-center cursor-pointer px-8">
+    <div
+      className="flex mb-7 items-center cursor-pointer px-8"
+      onClick={() => handleSelectChat(props)}
+    >
       <div className="relative">
         <div className="rounded-full h-10 lg:h-12 w-10 lg:w-12 relative min-w-[40px] lg:min-w-[48px] overflow-hidden ">
           <Image
@@ -134,7 +147,14 @@ const InboxCompChat = (props: IInboxChatProps) => {
   );
 };
 
-const InboxComp = () => {
+interface IInboxCompProps {
+  setChatSelected: Function;
+}
+
+const InboxComp = (props: IInboxCompProps) => {
+  const handleSelectChat = (name: string) => {
+    props?.setChatSelected(name);
+  };
   return (
     <div className="md:flex-[0.25] lg:flex-[0.2] min-h-screen max-h-screen bg-gray-bg py-6 relative ">
       <div className="px-8">
@@ -166,7 +186,13 @@ const InboxComp = () => {
       </div>
       <div className="mt-8 overflow-y-auto">
         {dummyData.map((data, index) => {
-          return <InboxCompChat key={index} {...data} />;
+          return (
+            <InboxCompChat
+              key={index}
+              handleSelectChat={handleSelectChat}
+              {...data}
+            />
+          );
         })}
       </div>
       <div className="w-12 lg:w-16 h-12 lg:h-16 bg-primary-blue rounded-full absolute bottom-8 right-8 flex justify-center items-center">
