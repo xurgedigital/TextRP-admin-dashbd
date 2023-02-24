@@ -65,7 +65,7 @@ const PersonalChat = (props: IPersonalProps) => {
   const noRef = useRef(null)
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end", inline: 'nearest' });
+    // bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end", inline: 'nearest' });
   };
 
   const onAction = (event: any) => {
