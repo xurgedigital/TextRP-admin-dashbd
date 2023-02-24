@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        "3xl": "1800px",
+      },
       colors: {
         "primary-blue": "#3052FF",
         "gray-bg": "#F3F5FF",

@@ -1,5 +1,5 @@
 import Image, { StaticImageData } from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import FilterIcon from "@public/Icons/filterIcon.svg";
 import SearchIcon from "@public/Icons/searchIcon.svg";
 import TwitterIcon from "@public/Icons/twitterChatIcon.svg";
@@ -9,6 +9,7 @@ import UserImage from "@public/Images/userImage.png";
 import DummyUserImage from "@public/Images/dummyUser.jpg";
 import DummyUser2Image from "@public/Images/dummyUser2.jpg";
 import Link from "next/link";
+import MobileFilter from "./MobileFilter";
 
 const dummyData: IInboxChatProps[] = [
   {
@@ -109,7 +110,7 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
 
   return (
     <div
-      className="flex mb-7 items-center cursor-pointer px-8"
+      className="flex mb-7 items-center cursor-pointer px-4 lg:px-8 "
       onClick={() => handleSelectChat(props)}
     >
       <div className="relative">
@@ -126,13 +127,13 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
           <Image src={platformIcon} fill alt="Filter Icon" />
         </div>
       </div>
-      <div className="ml-3 w-full">
-        <div className="text-base text-primary-text font-semibold ">
+      <div className="ml-3 w-full flex flex-col  ">
+        <span className="text-base text-primary-text font-semibold ">
           {userName}
-        </div>
-        <div className=" text-xs text-secondary-text font-normal max-w-[75%] truncate  ">
+        </span>
+        <span className=" text-xs text-secondary-text font-normal max-w-[75%] truncate  ">
           {lastChat}
-        </div>
+        </span>
       </div>
       <div className=" min-w-max text-end">
         {unseenMessageCount > 0 && (
@@ -150,17 +151,19 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
 
 interface IInboxCompProps {
   setChatSelected: Function;
-  setShowSetting: Function;
 }
 
 const InboxComp = (props: IInboxCompProps) => {
+  const [filter, setFilter] = useState<string>("All Chats");
+
   const handleSelectChat = (name: string) => {
     props?.setChatSelected(name);
   };
+
   return (
-    <div className="md:flex-[0.25] lg:flex-[0.2] min-h-screen max-h-screen bg-gray-bg py-6 relative ">
+    <div className="flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg py-6 relative overflow-hidden ">
       <div className="px-8">
-        <div className="flex justify-between items-center mb-5">
+        <div className=" hidden md:flex justify-between items-center mb-5">
           <div className=" text-primary-text font-semibold text-3xl">Chats</div>
           <div className="flex items-center gap-5">
             <span>
@@ -178,17 +181,22 @@ const InboxComp = (props: IInboxCompProps) => {
             </Link>
           </div>
         </div>
-        <div className="flex border border-[#ACB1C1] rounded-lg h-12 items-center overflow-hidden bg-white ">
-          <span className="mr-2.5 ml-5">
+        <div className="flex border border-[#ACB1C1] rounded-lg h-12 items-center overflow-hidden bg-[#F3F5FF] md:bg-white ">
+          <span className=" min-w-fit mr-2.5 ml-5">
             <Image src={SearchIcon} width={16} height={16} alt="Filter Icon" />
           </span>
           <input
             type="text"
-            className=" border-none outline-none h-full w-full bg-transparent text-sm text-secondary-text "
+            className=" border-none outline-none h-full w-full bg-transparent text-secondary-text text-base "
+            placeholder="Search"
           />
+          <span className=" md:hidden min-w-fit mr-2 overflow-hidden rounded-full h-8 w-8 ">
+            <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
+          </span>
         </div>
+        <MobileFilter filter={filter} setFilter={setFilter} />
       </div>
-      <div className="mt-8 overflow-y-auto">
+      <div className="mt-2 md:mt-8 overflow-y-auto">
         {dummyData.map((data, index) => {
           return (
             <InboxCompChat
