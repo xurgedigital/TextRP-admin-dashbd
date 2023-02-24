@@ -93,7 +93,7 @@ const PersonalChat = (props: IPersonalProps) => {
   }, [sampleMsgs]);
 
   return (
-    <div className="flex md:flex-[0.75] lg:flex-[0.8] flex-col justify-between w-full">
+    <div className="flex flex-col justify-between w-full min-h-screen">
       <div className="border h-16 lg:h-20 w-full flex justify-between px-6">
         <div className="flex items-center">
           <Image
