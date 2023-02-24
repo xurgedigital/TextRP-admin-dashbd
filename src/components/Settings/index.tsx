@@ -115,7 +115,7 @@ const Settings = () => {
     const router = useRouter()
 
     return (
-        <div className="md:flex-[0.25]  min-h-screen max-h-screen bg-white py-6 px-8 relative border-[0.5px] border-primary-gray">
+        <div className="flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen max-h-screen bg-white py-6 px-8 relative border-[0.5px] border-primary-gray">
             <div className='flex gap-5 items-center'>
                 <Image
                     src={ArrowLeft}

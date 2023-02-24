@@ -191,7 +191,9 @@ const InboxComp = (props: IInboxCompProps) => {
             placeholder="Search"
           />
           <span className=" md:hidden min-w-fit mr-2 overflow-hidden rounded-full h-8 w-8 ">
-            <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
+            <Link href={"/setting"}>
+              <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
+            </Link>
           </span>
         </div>
         <MobileFilter filter={filter} setFilter={setFilter} />
