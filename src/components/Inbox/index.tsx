@@ -8,6 +8,7 @@ import ChatIcon from "@public/Icons/chatIcon.svg";
 import UserImage from "@public/Images/userImage.png";
 import DummyUserImage from "@public/Images/dummyUser.jpg";
 import DummyUser2Image from "@public/Images/dummyUser2.jpg";
+import Link from "next/link";
 
 const dummyData: IInboxChatProps[] = [
   {
@@ -149,6 +150,7 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
 
 interface IInboxCompProps {
   setChatSelected: Function;
+  setShowSetting: Function;
 }
 
 const InboxComp = (props: IInboxCompProps) => {
@@ -169,9 +171,11 @@ const InboxComp = (props: IInboxCompProps) => {
                 alt="Filter Icon"
               />
             </span>
-            <span className=" overflow-hidden rounded-full h-8 w-8 ">
-              <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
-            </span>
+            <Link href={"/setting"}>
+              <span className=" overflow-hidden cursor-pointer rounded-full h-8 w-8 ">
+                <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
+              </span>
+            </Link>
           </div>
         </div>
         <div className="flex border border-[#ACB1C1] rounded-lg h-12 items-center overflow-hidden bg-white ">

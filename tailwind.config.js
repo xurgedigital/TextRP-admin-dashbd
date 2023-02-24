@@ -16,7 +16,11 @@ module.exports = {
         "primary-text": "#000000",
         "secondary-text": "#606885",
         "primary-green": "#3BDC96",
+        "primary-gray": "#ACB1C1",
       },
+      boxShadow: {
+        'shadow-primary': '0px 4px 80px rgba(0, 0, 0, 0.06)',
+      }
     },
   },
   plugins: [],
