@@ -13,13 +13,24 @@ interface IPersonalProps {
     unseenMessageCount: number;
     handleSelectChat: Function;
   } | null;
+  setChatSelected?: Function;
 }
 
-
-
 const ChatSection = (props: IPersonalProps) => {
+  const [isMount, setMount] = React.useState(true);
+
+  React.useEffect(() => {
+    if (isMount) {
+      setMount(false);
+    }
+  }, []);
+
   return (
-    <div className={` md:transform-none chatSection  flex md:flex-[0.7] lg:flex-[0.75] 3xl:flex-[0.8] justify-center items-center bg-white `}>
+    <div
+      className={` md:transform-none chatSection  flex md:flex-[0.65] xl:flex-[0.75] 3xl:flex-[0.8] justify-center items-center bg-white ${
+        isMount ? "translate-x-full" : "translate-x-0"
+      } transition duration-200 `}
+    >
       {props.ChatSelected === null ? (
         <div>
           <div className="relative h-[360px] w-[360px]">
@@ -36,7 +47,12 @@ const ChatSection = (props: IPersonalProps) => {
           </div>
         </div>
       ) : (
-        <PersonalChat ChatSelected={props.ChatSelected} />
+        props.setChatSelected && (
+          <PersonalChat
+            setChatSelected={props.setChatSelected}
+            ChatSelected={props.ChatSelected}
+          />
+        )
       )}
     </div>
   );

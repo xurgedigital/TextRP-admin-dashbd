@@ -6,3 +6,10 @@
   --grey-bg:#F3F5FF;
 }
 
+.newChatMobile{
+  border-radius: 24px 24px 0px 0px;
+}
+
+.blurBG{
+  background-color: rgba(0, 0, 0, 0.5);
+}
