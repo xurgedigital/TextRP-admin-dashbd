@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      borderWidth : {
+        "0.5": "0.5px"
+      },
       screens: {
         "3xl": "1800px",
       },

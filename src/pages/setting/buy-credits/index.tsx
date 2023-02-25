@@ -7,7 +7,7 @@ export default function SettingPage() {
     return (
         <div className="flex max-h-screen">
             <BuyCredits />
-            {width > 768 && <ChatSection ChatSelected={null} />}
+            {/* {width > 768 && <ChatSection ChatSelected={null} />} */}
         </div>
     );
 }

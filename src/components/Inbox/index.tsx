@@ -10,6 +10,9 @@ import DummyUserImage from "@public/Images/dummyUser.jpg";
 import DummyUser2Image from "@public/Images/dummyUser2.jpg";
 import Link from "next/link";
 import MobileFilter from "./MobileFilter";
+import AddChat from "./AddChat";
+import AddChatModal from "./AddChatModal";
+import useWidth from "@/hooks/useWidth";
 
 const dummyData: IInboxChatProps[] = [
   {
@@ -110,30 +113,32 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
 
   return (
     <div
-      className="flex mb-7 items-center cursor-pointer px-4 lg:px-8 "
+      className="flex mb-7 items-center justify-between cursor-pointer px-4 lg:px-8 overflow-hidden  "
       onClick={() => handleSelectChat(props)}
     >
-      <div className="relative">
-        <div className="rounded-full h-10 lg:h-12 w-10 lg:w-12 relative min-w-[40px] lg:min-w-[48px] overflow-hidden ">
-          <Image
-            src={userImage}
-            alt="User Image"
-            fill
-            className=" object-cover"
-            quality={100}
-          />
+      <div className="flex">
+        <div className="relative">
+          <div className="rounded-full h-12 w-12 relative min-w-[40px] lg:min-w-[48px] overflow-hidden ">
+            <Image
+              src={userImage}
+              alt="User Image"
+              fill
+              className=" object-cover"
+              quality={100}
+            />
+          </div>
+          <div className=" rounded-full h-3 lg:h-4 w-3 lg:w-4 absolute right-0 bottom-0 ">
+            <Image src={platformIcon} fill alt="Filter Icon" />
+          </div>
         </div>
-        <div className=" rounded-full h-3 lg:h-4 w-3 lg:w-4 absolute right-0 bottom-0 ">
-          <Image src={platformIcon} fill alt="Filter Icon" />
+        <div className="ml-3 grid ">
+          <span className="text-base text-primary-text font-semibold truncate ">
+            {userName}
+          </span>
+          <div className=" text-xs text-secondary-text font-normal max-w-[75%] truncate  ">
+            {lastChat}
+          </div>
         </div>
-      </div>
-      <div className="ml-3 w-full flex flex-col  ">
-        <span className="text-base text-primary-text font-semibold ">
-          {userName}
-        </span>
-        <span className=" text-xs text-secondary-text font-normal max-w-[75%] truncate  ">
-          {lastChat}
-        </span>
       </div>
       <div className=" min-w-max text-end">
         {unseenMessageCount > 0 && (
@@ -155,64 +160,100 @@ interface IInboxCompProps {
 
 const InboxComp = (props: IInboxCompProps) => {
   const [filter, setFilter] = useState<string>("All Chats");
+  const [openNewChatModal, setOpenNewChatModal] = useState<boolean>(false);
+
+  const width = useWidth();
 
   const handleSelectChat = (name: string) => {
     props?.setChatSelected(name);
   };
 
   return (
-    <div className="flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg py-6 relative overflow-hidden ">
-      <div className="px-8">
-        <div className=" hidden md:flex justify-between items-center mb-5">
-          <div className=" text-primary-text font-semibold text-3xl">Chats</div>
-          <div className="flex items-center gap-5">
-            <span>
+    <>
+      <div className="flex-1 md:flex-[0.35] xl:flex-[0.25] 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg py-6 relative overflow-hidden">
+        <div className="px-4 lg:px-8">
+          <div className=" hidden md:flex justify-between items-center mb-5">
+            <div className=" text-primary-text font-semibold text-3xl">
+              Chats
+            </div>
+            <div className="flex items-center gap-5">
+              <span>
+                <Image
+                  src={FilterIcon}
+                  width={18}
+                  height={16}
+                  alt="Filter Icon"
+                />
+              </span>
+              <Link href={"/setting"}>
+                <span className=" overflow-hidden rounded-full h-8 w-8 ">
+                  <Image
+                    src={UserImage}
+                    width={32}
+                    height={32}
+                    alt="Filter Icon"
+                  />
+                </span>
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center border border-[#ACB1C1] rounded-lg h-12  overflow-hidden bg-[#F3F5FF] md:bg-white ">
+            <span className=" min-w-fit mr-2.5 ml-5">
               <Image
-                src={FilterIcon}
-                width={18}
+                src={SearchIcon}
+                width={16}
                 height={16}
                 alt="Filter Icon"
               />
             </span>
-            <Link href={"/setting"}>
-              <span className=" overflow-hidden cursor-pointer rounded-full h-8 w-8 ">
-                <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
-              </span>
-            </Link>
-          </div>
-        </div>
-        <div className="flex border border-[#ACB1C1] rounded-lg h-12 items-center overflow-hidden bg-[#F3F5FF] md:bg-white ">
-          <span className=" min-w-fit mr-2.5 ml-5">
-            <Image src={SearchIcon} width={16} height={16} alt="Filter Icon" />
-          </span>
-          <input
-            type="text"
-            className=" border-none outline-none h-full w-full bg-transparent text-secondary-text text-base "
-            placeholder="Search"
-          />
-          <span className=" md:hidden min-w-fit mr-2 overflow-hidden rounded-full h-8 w-8 ">
-            <Link href={"/setting"}>
-              <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
-            </Link>
-          </span>
-        </div>
-        <MobileFilter filter={filter} setFilter={setFilter} />
-      </div>
-      <div className="mt-2 md:mt-8 overflow-y-auto">
-        {dummyData.map((data, index) => {
-          return (
-            <InboxCompChat
-              key={index}
-              handleSelectChat={handleSelectChat}
-              {...data}
+            <input
+              type="text"
+              className=" border-none outline-none h-full w-full bg-transparent text-secondary-text text-base "
+              placeholder="Search"
             />
-          );
-        })}
+            <span className=" md:hidden min-w-fit mr-2 overflow-hidden rounded-full h-8 w-8 ">
+              <Link href={"/setting"}>
+                <Image
+                  src={UserImage}
+                  width={32}
+                  height={32}
+                  alt="Filter Icon"
+                />
+              </Link>
+            </span>
+          </div>
+          <MobileFilter filter={filter} setFilter={setFilter} />
+        </div>
+        <div className="mt-2 md:mt-8 overflow-y-auto">
+          {dummyData.map((data, index) => {
+            return (
+              <InboxCompChat
+                key={index}
+                handleSelectChat={handleSelectChat}
+                {...data}
+              />
+            );
+          })}
+        </div>
+        {width >= 768 ? (
+          <AddChat openNewChatModal={openNewChatModal} />
+        ) : (
+          <div
+            onClick={() => setOpenNewChatModal(true)}
+            className="w-12 h-12  bg-primary-blue rounded-full absolute bottom-4 right-4 flex justify-center items-center"
+          >
+            <Image height={20} width={20} src={ChatIcon} alt="" />
+          </div>
+        )}
+
+        {openNewChatModal && (
+          <AddChatModal
+            openNewChatModal={openNewChatModal}
+            setOpenNewChatModal={setOpenNewChatModal}
+          />
+        )}
       </div>
-      <div className="w-12 lg:w-16 h-12 lg:h-16 bg-primary-blue rounded-full absolute bottom-8 right-8 flex justify-center items-center">
-        <Image src={ChatIcon} alt="" />
-      </div>
-    </div>
+    </>
   );
 };
 
