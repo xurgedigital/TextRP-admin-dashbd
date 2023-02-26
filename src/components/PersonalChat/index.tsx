@@ -74,7 +74,7 @@ const PersonalChat = (props: IPersonalProps) => {
   }, [messageCount]);
 
   const onAction = (event: any) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && InputValue) {
       let arr = sampleMsgs;
       arr.push({
         sender: "me",

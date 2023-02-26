@@ -236,7 +236,7 @@ const InboxComp = (props: IInboxCompProps) => {
           })}
         </div>
         {width >= 768 ? (
-          <AddChat openNewChatModal={openNewChatModal} />
+          <AddChat />
         ) : (
           <div
             onClick={() => setOpenNewChatModal(true)}

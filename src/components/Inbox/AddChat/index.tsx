@@ -6,18 +6,40 @@ import DiscordIcon from "@public/Icons/discordFilterIcon.svg";
 import TwitterIcon from "@public/Icons/twitterFilterIcon.svg";
 import TwiloIcon from "@public/Icons/twiloFilterIcon.svg";
 import XRPIcon from "@public/Icons/xrpFilterIcon.svg";
+import GroupIcon from "@public/Icons/groupIcon.svg";
+import UserImage from "@public/Images/userImage.png";
 
-const AddChat = (props: { openNewChatModal: boolean }) => {
-    const { openNewChatModal} = props;
+const platformData = [
+  {
+    icon: DiscordIcon,
+    title: "Discord",
+  },
+  {
+    icon: TwitterIcon,
+    title: "Twitter",
+  },
+  {
+    icon: TwiloIcon,
+    title: "Twilio",
+  },
+  {
+    icon: XRPIcon,
+    title: "XRP",
+  },
+];
+
+const AddChat = () => {
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [platform, setPlatform] = React.useState("");
   return (
     <div className=" absolute right-8 bottom-8">
       <Popover className="">
-        {({ open  }) => (
+        {({ open }) => (
           <>
             <Popover.Button
               className={`
                 ${open ? "" : "text-opacity-90"}
-                group inline-flex items-center rounded-md text-base font-medium text-white hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
+                group inline-flex items-center rounded-md text-base font-medium text-white outline-none `}
             >
               <div className="w-12 lg:w-16 h-12 lg:h-16 bg-primary-blue rounded-full  flex justify-center items-center">
                 <Image src={ChatIcon} alt="" />
@@ -33,35 +55,97 @@ const AddChat = (props: { openNewChatModal: boolean }) => {
               leaveTo="opacity-0 translate-y-1"
             >
               <Popover.Panel className="absolute -right-4 -bottom-4 z-10  ">
-                <div className=" bg-white w-[208px] h-[216px] border p-4 rounded-lg ">
-                  <div className="text-base font-semibold mb-4">
-                    Choose Platform
+                {currentIndex == 0 && (
+                  <div className=" bg-white w-[208px] h-[216px] border p-4 rounded-lg ">
+                    <div className="text-base font-semibold mb-4">
+                      Choose Platform
+                    </div>
+                    {platformData.map((item, index) => {
+                      return (
+                        <div
+                          onClick={() => {
+                            setCurrentIndex(1);
+                            setPlatform(item.title);
+                          }}
+                          key={index}
+                          className=" mb-4 flex items-center gap-2 cursor-pointer "
+                        >
+                          <span>
+                            <Image src={item.icon} alt="" />
+                          </span>
+                          <div className=" text-xs font-normal">
+                            {item.title}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className=" mb-4 flex items-center gap-2">
-                    <span>
-                      <Image src={DiscordIcon} alt="" />
-                    </span>
-                    <div className=" text-xs font-normal">Discord</div>
+                )}
+                {currentIndex == 1 && (
+                  <div className=" bg-white w-[208px] border p-4 rounded-lg ">
+                    <input
+                      type="text"
+                      placeholder="Search"
+                      className=" bg-gray-bg h-6 rounded text-xs px-2 w-full outline-none mb-4"
+                    />
+                    {platform == "Twilio" && (
+                      <div className="flex gap-2 items-center mb-4">
+                        <span>
+                          <Image
+                            height={24}
+                            width={24}
+                            src={GroupIcon}
+                            alt=""
+                          />
+                        </span>
+                        <span className=" text-xs font-normal ">New group</span>
+                      </div>
+                    )}
+                    <div className=" text-[10px] font-normal mb-2">
+                      All contacts
+                    </div>
+                    <div className="flex items-center gap-2 mb-2 cursor-pointer ">
+                      <span>
+                        <Image height={24} width={24} src={UserImage} alt="" />
+                      </span>
+                      <div className="text-xs font-normal">
+                        Leslie Alexander
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2 cursor-pointer ">
+                      <span>
+                        <Image height={24} width={24} src={UserImage} alt="" />
+                      </span>
+                      <div className="text-xs font-normal">
+                        Leslie Alexander
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2 cursor-pointer ">
+                      <span>
+                        <Image height={24} width={24} src={UserImage} alt="" />
+                      </span>
+                      <div className="text-xs font-normal">
+                        Leslie Alexander
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2 cursor-pointer ">
+                      <span>
+                        <Image height={24} width={24} src={UserImage} alt="" />
+                      </span>
+                      <div className="text-xs font-normal">
+                        Leslie Alexander
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 mb-2 cursor-pointer ">
+                      <span>
+                        <Image height={24} width={24} src={UserImage} alt="" />
+                      </span>
+                      <div className="text-xs font-normal">
+                        Leslie Alexander
+                      </div>
+                    </div>
                   </div>
-                  <div className=" mb-4 flex items-center gap-2">
-                    <span>
-                      <Image src={TwitterIcon} alt="" />
-                    </span>
-                    <div className=" text-xs font-normal">Twitter</div>
-                  </div>
-                  <div className=" mb-4 flex items-center gap-2">
-                    <span>
-                      <Image src={TwiloIcon} alt="" />
-                    </span>
-                    <div className=" text-xs font-normal">Twilio</div>
-                  </div>
-                  <div className=" mb-4 flex items-center gap-2">
-                    <span>
-                      <Image src={XRPIcon} alt="" />
-                    </span>
-                    <div className=" text-xs font-normal">XRP</div>
-                  </div>
-                </div>
+                )}
               </Popover.Panel>
             </Transition>
           </>
