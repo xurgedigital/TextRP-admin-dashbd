@@ -1,5 +1,6 @@
 import BuyCredits from "@/components/BuyCredits";
-import ChatSection from "@/components/ChatSection";
+import DummyChatSection from "@/components/DummyChatSection";
+import NFTSection from "@/components/NFT";
 import useWidth from "@/hooks/useWidth";
 
 export default function SettingPage() {
@@ -7,8 +8,8 @@ export default function SettingPage() {
 
     return (
         <div className="flex max-h-screen">
-            <BuyCredits />
-            {width > 768 && <ChatSection ChatSelected={null} />}
+            <NFTSection />
+            {width > 768 && <DummyChatSection/>}
         </div>
     );
 }

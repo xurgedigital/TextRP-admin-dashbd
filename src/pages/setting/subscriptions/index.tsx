@@ -1,4 +1,4 @@
-import ChatSection from "@/components/ChatSection";
+import DummyChatSection from "@/components/DummyChatSection";
 import Subscriptions from "@/components/Subscriptions";
 import useWidth from "@/hooks/useWidth";
 
@@ -8,7 +8,7 @@ export default function SettingPage() {
     return (
         <div className="flex max-h-screen">
             <Subscriptions />
-            {width > 768 && <ChatSection ChatSelected={null} />}
+            {width > 768 && <DummyChatSection />}
         </div>
     );
 }

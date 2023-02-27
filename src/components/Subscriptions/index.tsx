@@ -40,10 +40,16 @@ const subsData = [
 
 const Subscriptions = () => {
     const router = useRouter()
+    const [selectCard, setSelectCard] = useState("")
+    const [isMount, setMount] = React.useState(true);
 
+    React.useEffect(() => {
+        if (isMount) {
+            setMount(false);
+        }
+    }, []);
     const SubscriptionCard = (props: ISubscriptionCard) => {
         const { time, price, pointers, bestDeal } = props
-        const [selectCard, setSelectCard] = useState("")
         return (
             <>
                 {bestDeal ? (
@@ -51,16 +57,24 @@ const Subscriptions = () => {
                         Best Deal!
                     </div>
                 ) : null}
-                <div onClick={() => setSelectCard(time)} className={`p-4 border-[0.5px] shadow-shadow-primary  rounded-lg mb-4 ${bestDeal ? "rounded-t-none border-t-0" : ""}`}>
+                <div onClick={() => setSelectCard(time)} className={`p-4 shadow-shadow-primary ${selectCard === time ? "border-2 border-primary-blue" : "border-[0.5px] border-primary-gray"}  rounded-lg mb-4 ${bestDeal ? "rounded-t-none border-t-0" : ""}`}>
                     <div className='flex items-center justify-between'>
                         <div>
                             <p className='uppercase text-xs text-secondary-text mb-1'>{time}</p>
                             <p className='text-base font-semibold text-primary-blue'>{price}</p>
                         </div>
-                        <div>
+                        <div className={`${selectCard === time ? "hidden" : "block"}`}>
                             <Image
                                 src={Circle}
-                                alt={"pointer"}
+                                alt={"circle"}
+                                className=""
+                                quality={100}
+                            />
+                        </div>
+                        <div className={`${selectCard === time ? "flex items-center justify-center h-6 w-6 rounded-full bg-primary-blue" : "hidden"}`}>
+                            <Image
+                                src={Tick}
+                                alt={"tick"}
                                 className=""
                                 quality={100}
                             />
@@ -86,7 +100,8 @@ const Subscriptions = () => {
     }
 
     return (
-        <div className="flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen  bg-white py-6 px-8 relative border-r-[0.5px]  border-primary-gray cursor-pointer">
+        <div className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] ${isMount ? "translate-x-full" : "translate-x-0"
+            } transition duration-300 min-h-screen h-full  bg-white py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray cursor-pointer`}>
             <div className='flex gap-5 items-center'>
                 <Image
                     src={ArrowLeft}
