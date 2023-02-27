@@ -37,7 +37,7 @@ const settingItems = [
     {
         title: "My NFTs",
         icon: MyNFT,
-        link: "/"
+        link: "/setting/my-nft"
 
     },
     {
@@ -113,9 +113,17 @@ const SettingItems = (props: ISItemsProps) => {
 
 const Settings = () => {
     const router = useRouter()
+    const [isMount, setMount] = React.useState(true);
+
+    React.useEffect(() => {
+        if (isMount) {
+            setMount(false);
+        }
+    }, []);
 
     return (
-        <div className="flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen max-h-screen bg-white py-6 px-8 relative border-[0.5px] border-primary-gray">
+        <div className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen max-h-screen bg-white py-6 px-4 md:px-8  relative border-[0.5px] border-primary-gray ${isMount ? "translate-x-full" : "translate-x-0"
+            } transition duration-300`}>
             <div className='flex gap-5 items-center'>
                 <Image
                     src={ArrowLeft}

@@ -1,14 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image, { StaticImageData } from "next/image";
 import ArrowLeft from "@public/Icons/setting/arrow.svg";
 import Chevrondown from "@public/Icons/chevrondown.svg";
 import { useRouter } from 'next/router';
+import Dropdown from '../common/Dropdown';
 
 
 const BuyCredits = () => {
     const router = useRouter()
+    const dropdownItems = ["50 credits for USD $3 (7.537 XRP)"]
+    const [selectedOption, setSelectedOption] = useState<string | undefined>(dropdownItems[0])
+    const [isMount, setMount] = React.useState(true);
+
+    React.useEffect(() => {
+        if (isMount) {
+            setMount(false);
+        }
+    }, []);
+
     return (
-        <div className="flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]   min-h-screen max-h-screen bg-white py-6 px-8 relative border-[0.5px] border-primary-gray">
+        <div className={` md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]   min-h-screen max-h-screen bg-white py-6  px-4 md:px-8 relative border-r-[0.5px] border-primary-gray ${isMount ? "translate-x-full" : "translate-x-0"
+            } transition duration-300`}>
             <div className='flex gap-5 items-center'>
                 <Image
                     src={ArrowLeft}
@@ -25,19 +37,7 @@ const BuyCredits = () => {
             </div>
             <div className='text-base font-normal my-8'>
                 <p className='mb-2'>Select the amount to buy</p>
-                <div className='border-[0.5px] px-3 py-2 border-primary-gray rounded-lg bg-gray-bg text-secondary-text flex items-center justify-between shadow-shadow-primary'>
-                    <p>
-                        50 credits for USD $3 (7.537 XRP)
-                    </p>
-                    <div>
-                        <Image
-                            src={Chevrondown}
-                            alt={""}
-                            className=""
-                            quality={100}
-                        />
-                    </div>
-                </div>
+                <Dropdown dropdownList={dropdownItems} selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
             </div>
             <div className='text-base font-normal my-8'>
                 <p className=''>You will be charged</p>
