@@ -127,7 +127,7 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
               quality={100}
             />
           </div>
-          <div className=" rounded-full h-3 lg:h-4 w-3 lg:w-4 absolute right-0 bottom-0 ">
+          <div className=" rounded-full h-4 w-4 absolute right-0 bottom-0 ">
             <Image src={platformIcon} fill alt="Filter Icon" />
           </div>
         </div>
@@ -170,7 +170,7 @@ const InboxComp = (props: IInboxCompProps) => {
 
   return (
     <>
-      <div className="flex-1 md:flex-[0.35] xl:flex-[0.25] 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg py-6 relative overflow-hidden">
+      <div className="flex-1 md:flex-[0.35] xl:flex-[0.25] flex flex-col 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg py-6 relative overflow-hidden">
         <div className="px-4 lg:px-8">
           <div className=" hidden md:flex justify-between items-center mb-5">
             <div className=" text-primary-text font-semibold text-3xl">
@@ -246,7 +246,7 @@ const InboxComp = (props: IInboxCompProps) => {
           </div>
         )}
 
-        {openNewChatModal && (
+        {openNewChatModal && width < 786 && (
           <AddChatModal
             openNewChatModal={openNewChatModal}
             setOpenNewChatModal={setOpenNewChatModal}
