@@ -17,6 +17,13 @@ import FilterModal from "./FilterModal";
 
 const dummyData: IInboxChatProps[] = [
   {
+    userImage: `https://picsum.photos/2031`,
+    userName: "Admin",
+    lastChat: "Lorem ipsum dolor sit amet, consec...",
+    time: "11:21 pm",
+    unseenMessageCount: 2,
+  },
+  {
     userImage: `https://picsum.photos/201`,
     platformIcon: TwitterIcon,
     userName: "Leslie Alexander",
@@ -84,7 +91,7 @@ const dummyData: IInboxChatProps[] = [
 
 interface IInboxChatProps {
   userImage: string;
-  platformIcon: StaticImageData;
+  platformIcon?: StaticImageData;
   userName: string;
   lastChat: string;
   time: string;
@@ -93,7 +100,7 @@ interface IInboxChatProps {
 
 interface IInboxChatCompProps {
   userImage: string;
-  platformIcon: StaticImageData;
+  platformIcon?: StaticImageData;
   userName: string;
   lastChat: string;
   time: string;
@@ -128,9 +135,9 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
               quality={100}
             />
           </div>
-          <div className=" rounded-full h-4 w-4 absolute right-0 bottom-0 ">
+          {platformIcon && <div className=" rounded-full h-4 w-4 absolute right-0 bottom-0 ">
             <Image src={platformIcon} fill alt="Filter Icon" />
-          </div>
+          </div>}
         </div>
         <div className="ml-3 grid ">
           <span className="text-base text-primary-text font-semibold truncate ">
