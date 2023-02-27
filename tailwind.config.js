@@ -23,6 +23,11 @@ module.exports = {
         "secondary-text": "#606885",
         "primary-green": "#3BDC96",
         "primary-gray": "#ACB1C1",
+        "primary-blue": "#3254FE"
+      },
+      backgroundImage: {
+        "login-bg": "url('/images/loginBg.png')",
+        "qr-scan-icon": "url('/images/qrScanIcon.png')"
       },
       boxShadow: {
         'shadow-primary': '0px 4px 80px rgba(0, 0, 0, 0.06)',
