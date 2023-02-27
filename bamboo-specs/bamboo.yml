@@ -10,6 +10,35 @@ stages:
       final: false
       jobs:
         - Default Job
+  - Vercel stage:
+      jobs:
+        - Vercel Job
+Vercel Job:
+  key: JOB2
+  requirements:
+    - npm
+  tasks:
+    - checkout:
+        force-clean-build: 'false'
+        description: Checkout Default Repository
+        conditions:
+          - variable:
+              equals:
+                planRepository.branch: release/production
+    - script:
+        interpreter: SHELL
+        conditions:
+          - variable:
+              equals:
+                planRepository.branch: release/production
+        scripts:
+          - npm install --global vercel
+          - npm install --global yarn
+          - yarn install
+          - export VERCEL_ORG_ID=${bamboo.vercel_org_id}
+          - export VERCEL_PROJECT_ID=${bamboo.vercel_project_id}
+          - vercel -c --token=${bamboo.vercel_token}
+        description: Set Deploy to vercel
 Default Job:
   key: JOB1
   tasks:
@@ -54,30 +83,6 @@ branches:
     after-deleted-days: 1
     after-inactive-days: never
   link-to-jira: true
-branch-overrides:
-  -
-    release/production:
-      stages:
-        - Vercel stage:
-            - Vercel Job
-      Vercel Job:
-        key: JOB2
-        requirements:
-          - npm
-        tasks:
-          - checkout:
-              force-clean-build: 'false'
-              description: Checkout Default Repository
-          - script:
-              interpreter: SHELL
-              scripts:
-                - npm install --global vercel
-                - npm install --global yarn
-                - yarn install
-                - export VERCEL_ORG_ID=${bamboo.vercel_org_id}
-                - export VERCEL_PROJECT_ID=${bamboo.vercel_project_id}
-                - vercel -c --token=${bamboo.vercel_token}
-              description: Set Deploy to vercel
 notifications:
   - events:
       - plan-responsibility-changed
