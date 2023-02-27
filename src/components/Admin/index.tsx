@@ -10,6 +10,7 @@ import Image, { StaticImageData } from "next/image";
 import AdminIcon from '@public/Icons/admin';
 import UserManagementComp from './UserManagement';
 import CreditComp from './Credits';
+import PlatformSettingsComp from './PlatformSettings';
 
 
 
@@ -92,6 +93,7 @@ const Admin = () => {
             <div className='flex w-full py-6 px-8 bg-gray-bg'>
                 {selectedTab === "User Management" && <UserManagementComp />}
                 {selectedTab === "Credits" && <CreditComp />}
+                {selectedTab === "Platform Settings" && <PlatformSettingsComp/>}
             </div>
 
         </div>
