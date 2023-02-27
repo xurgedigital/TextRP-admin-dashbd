@@ -13,6 +13,7 @@ import MobileFilter from "./MobileFilter";
 import AddChat from "./AddChat";
 import AddChatModal from "./AddChatModal";
 import useWidth from "@/hooks/useWidth";
+import FilterModal from "./FilterModal";
 
 const dummyData: IInboxChatProps[] = [
   {
@@ -161,6 +162,7 @@ interface IInboxCompProps {
 const InboxComp = (props: IInboxCompProps) => {
   const [filter, setFilter] = useState<string>("All Chats");
   const [openNewChatModal, setOpenNewChatModal] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>("");
 
   const width = useWidth();
 
@@ -177,14 +179,15 @@ const InboxComp = (props: IInboxCompProps) => {
               Chats
             </div>
             <div className="flex items-center gap-5">
-              <span>
+              <FilterModal/>
+              {/* <span>
                 <Image
                   src={FilterIcon}
                   width={18}
                   height={16}
                   alt="Filter Icon"
                 />
-              </span>
+              </span> */}
               <Link href={"/setting"}>
                 <span className=" overflow-hidden rounded-full h-8 w-8 ">
                   <Image
@@ -210,6 +213,7 @@ const InboxComp = (props: IInboxCompProps) => {
               type="text"
               className=" border-none outline-none h-full w-full bg-transparent text-secondary-text text-base "
               placeholder="Search"
+              onChange={(e) => setSearchText(e.target.value)}
             />
             <span className=" md:hidden min-w-fit mr-2 overflow-hidden rounded-full h-8 w-8 ">
               <Link href={"/setting"}>
@@ -224,17 +228,70 @@ const InboxComp = (props: IInboxCompProps) => {
           </div>
           <MobileFilter filter={filter} setFilter={setFilter} />
         </div>
-        <div className="mt-2 md:mt-8 overflow-y-auto">
-          {dummyData.map((data, index) => {
-            return (
-              <InboxCompChat
-                key={index}
-                handleSelectChat={handleSelectChat}
-                {...data}
-              />
-            );
-          })}
-        </div>
+        {!searchText ? (
+          <div className="mt-2 md:mt-8 overflow-y-auto">
+            {dummyData.map((data, index) => {
+              return (
+                <InboxCompChat
+                  key={index}
+                  handleSelectChat={handleSelectChat}
+                  {...data}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="mt-2 md:mt-8 overflow-y-auto px-8">
+            <div className=" text-base font-normal text-secondary-text mb-4 mt-6">
+              Groups
+            </div>
+            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
+              <span>
+                <Image height={40} width={40} src={UserImage} alt="" />
+              </span>
+              <div className="text-base font-semibold ">Leslie Last222</div>
+            </div>
+            <div className=" text-base font-normal text-secondary-text mb-4 mt-6">
+              Contacts
+            </div>
+            {Array.apply(null, Array(5)).map((contact, index) => {
+              return (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 mb-4 cursor-pointer "
+                >
+                  <span>
+                    <Image height={40} width={40} src={UserImage} alt="" />
+                  </span>
+                  <div className="text-base font-semibold ">Leslie Last222</div>
+                </div>
+              );
+            })}
+            <div className=" text-base font-normal text-secondary-text mt-6 mb-4">
+              Messages
+            </div>
+            {Array.apply(null, Array(2)).map((contact, index) => {
+              return (
+                <div key={index} className="mb-4">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className=" text-primary-text text-base font-semibold ">
+                      Leslie Alexander
+                    </span>
+                    <span className="text-xs font-normal text-secondary-text">
+                      11:21 pm
+                    </span>
+                  </div>
+                  <p className="text-secondary-text text-xs font-normal">
+                    Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet.
+                    Lorem ipsum dolor sit...
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
         {width >= 768 ? (
           <AddChat />
         ) : (
