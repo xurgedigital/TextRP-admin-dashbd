@@ -9,6 +9,7 @@ import Logout from "@public/Icons/logout.svg";
 import Image, { StaticImageData } from "next/image";
 import AdminIcon from '@public/Icons/admin';
 import UserManagementComp from './UserManagement';
+import CreditComp from './Credits';
 
 
 
@@ -88,8 +89,9 @@ const Admin = () => {
 
             </div>
 
-            <div className='flex md:flex-[0.65] xl:flex-[0.75] 3xl:flex-[0.8] py-6'>
+            <div className='flex w-full py-6 px-8 bg-gray-bg'>
                 {selectedTab === "User Management" && <UserManagementComp />}
+                {selectedTab === "Credits" && <CreditComp />}
             </div>
 
         </div>
