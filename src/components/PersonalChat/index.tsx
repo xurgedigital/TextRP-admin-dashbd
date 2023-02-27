@@ -4,6 +4,11 @@ import MicImage from "@public/Images/mic.jpg";
 import ThreeDotedIcon from "@public/Icons/threedotedIcon.svg";
 import LeftArrorwIcon from "@public/Icons/leftArrowIcon.svg";
 import SearchIcon from "@public/Icons/searchIcon.svg";
+import { AiOutlinePaperClip } from "react-icons/ai";
+import { ImMic } from "react-icons/im";
+import { IoSendSharp } from "react-icons/io5";
+import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import {FaStop} from "react-icons/fa"
 
 interface IPersonalProps {
   ChatSelected: {
@@ -21,7 +26,7 @@ interface IPersonalProps {
 const PersonalChat = (props: IPersonalProps) => {
   const [InputValue, setInputValue] = useState("");
 
-  const [sampleMsgs, setSampleMsgs] = useState([
+  const [sampleMsgs, setSampleMsgs] = useState<any>([
     {
       sender: "test",
       msg: "Lorem ipsum dolor sit amet.",
@@ -64,7 +69,7 @@ const PersonalChat = (props: IPersonalProps) => {
     },
   ]);
 
-  const [messageCount, setMessageCount] = useState(sampleMsgs.length);
+  const [messageCount, setMessageCount] = useState<number>(sampleMsgs.length);
 
   const ref = React.useRef<any>();
   React.useEffect(() => {
@@ -87,6 +92,41 @@ const PersonalChat = (props: IPersonalProps) => {
     }
   };
 
+  const sendMsg = () => {
+    let arr = sampleMsgs;
+      arr.push({
+        sender: "me",
+        msg: InputValue,
+        time: new Date().toISOString(),
+      });
+      setSampleMsgs(arr);
+      setInputValue("");
+      setMessageCount((prev) => prev + 1);
+  }
+
+  const recorderControls = useAudioRecorder();
+
+  const addAudioElement = (blob: any) => {
+    const url = URL.createObjectURL(blob);
+    // const audio = document.createElement("audio");
+    // audio.src = url;
+    // audio.controls = true;
+    // console.log(audio, "added audio")
+    let arr = sampleMsgs;
+    arr.push({
+      sender: "me",
+      isAudio: true,
+      audio: url,
+      time: new Date().toISOString(),
+    });
+    setSampleMsgs(arr);
+    setMessageCount((prev) => prev + 1);
+    // document.getElementById("chatBox")?.appendChild(audio)
+    // document.body.appendChild(audio);
+  };
+
+  console.log(sampleMsgs, "sam");
+
   function formatAMPM(date: any) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -98,10 +138,9 @@ const PersonalChat = (props: IPersonalProps) => {
     return strTime;
   }
 
-
   return (
     <div className="flex flex-col justify-between w-full min-h-screen max-h-screen relative py-16 md:py-20">
-      <div className=" absolute top-0 right-0 border h-16 lg:h-20 w-full flex justify-between items-center px-6 bg-[#F8FAFD] ">
+      <div className=" absolute top-0 right-0 border h-16 lg:h-20 w-full flex justify-between items-center px-2 md:px-6 bg-[#F8FAFD] ">
         <div className="flex items-center">
           <span
             onClick={() => props.setChatSelected(null)}
@@ -132,17 +171,38 @@ const PersonalChat = (props: IPersonalProps) => {
         </div>
       </div>
       <div
-      ref={ref}
+        ref={ref}
         className="flex-1 flex flex-col px-6 overflow-y-auto pb-4"
         id="chatBox"
       >
         {sampleMsgs
           .sort(
-            (msg1, msg2) =>
+            (msg1: any, msg2: any) =>
               new Date(msg1.time).getTime() - new Date(msg2.time).getTime()
           )
-          .map((msg, index) => {
+          .map((msg: any, index: number) => {
             const isMe = msg.sender === "me";
+            if (msg.isAudio) {
+              return (
+                <div
+                  key={index}
+                  className={`p-4 md:max-w-[60%] ${
+                    isMe
+                      ? "self-end rounded-br-none text-white bg-primary-blue"
+                      : "self-start rounded-bl-none text-black bg-gray-bg"
+                  } my-1 rounded-lg min-w-[90%] md:min-w-[60%]`}
+                >
+                  <audio src={msg.audio} controls={true} className="object-contain w-full"></audio>
+                  <div
+                    className={`font-normal text-xs ${
+                      isMe ? "text-[#E6FFFFFF]" : "text-secondary-text"
+                    } flex w-full justify-end`}
+                  >
+                    {formatAMPM(new Date(msg?.time))}
+                  </div>
+                </div>
+              );
+            }
             return (
               <div
                 key={index}
@@ -172,7 +232,39 @@ const PersonalChat = (props: IPersonalProps) => {
           value={InputValue}
           onKeyDown={onAction}
         />
-        <Image alt="mic" src={MicImage} />
+        {recorderControls.isRecording && <p className="mr-2">{new Date(recorderControls.recordingTime * 1000).toISOString().slice(11, 19)}</p>}
+        {recorderControls?.isRecording ? (
+          <FaStop
+            style={{ color: "#3254FE", fontSize: "26px" }}
+            onClick={recorderControls.stopRecording}
+          />
+        ) : (
+          <ImMic
+            style={{ color: "#3254FE", fontSize: "26px" }}
+            onClick={recorderControls.startRecording}
+          />
+        )}
+       <div className="hidden">
+       <AudioRecorder
+          onRecordingComplete={addAudioElement}
+          recorderControls={recorderControls}
+        />
+       </div>
+        <input accept="image/*" id="icon-button-file"
+        type="file" style={{ display: 'none' }} />
+      <label htmlFor="icon-button-file">
+        <AiOutlinePaperClip
+          style={{ color: "#3254FE", fontSize: "28px", marginLeft: "8px" }}
+        />
+        {/* <IconButton color="primary" aria-label="upload picture"
+        component="span">
+          <PhotoCamera />
+        </IconButton> */}
+      </label>
+        <IoSendSharp
+         onClick={() => sendMsg()}
+          style={{ color: "#3254FE", fontSize: "26px", marginLeft: "8px" }}
+        />
       </div>
     </div>
   );
