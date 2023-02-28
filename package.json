@@ -22,6 +22,7 @@
     "react-audio-voice-recorder": "^1.0.4",
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
+    "react-switch": "^7.0.0",
     "typescript": "4.9.5",
     "xumm-react": "^1.4.1"
   },
