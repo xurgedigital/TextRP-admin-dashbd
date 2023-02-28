@@ -11,6 +11,8 @@ import AdminIcon from '@public/Icons/admin';
 import UserManagementComp from './UserManagement';
 import CreditComp from './Credits';
 import PlatformSettingsComp from './PlatformSettings';
+import SubscriptionComp from './Subscriptions';
+import DiscountComp from './Discounts';
 
 
 
@@ -90,9 +92,11 @@ const Admin = () => {
 
             </div>
 
-            <div className='flex w-full py-6 px-8 bg-gray-bg'>
+            <div className=' overflow-y-auto flex w-full py-6 px-8 bg-gray-bg'>
                 {selectedTab === "User Management" && <UserManagementComp />}
                 {selectedTab === "Credits" && <CreditComp />}
+                {selectedTab === "Subscriptions" && <SubscriptionComp/>}
+                {selectedTab === "Discounts" && <DiscountComp/>}
                 {selectedTab === "Platform Settings" && <PlatformSettingsComp/>}
             </div>
 
