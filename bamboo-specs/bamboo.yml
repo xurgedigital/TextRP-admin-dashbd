@@ -35,9 +35,9 @@ Vercel Job:
           - npm install --global vercel
           - npm install --global yarn
           - yarn install
-          - export VERCEL_ORG_ID=${bamboo.vercel_org_id}
-          - export VERCEL_PROJECT_ID=${bamboo.vercel_project_id}
-          - vercel -c --token=${bamboo.vercel_token}
+          - export VERCEL_ORG_ID=${bamboo.vercel_org_id_secret}
+          - export VERCEL_PROJECT_ID=${bamboo.vercel_project_id_secret}
+          - vercel -c --token=${bamboo.vercel_token_secret}
         description: Set Deploy to vercel
 Default Job:
   key: JOB1
@@ -73,9 +73,9 @@ Default Job:
         description: Push Image
   artifact-subscriptions: []
 variables:
-  vercel_token: BAMSCRT@0@0@XzzhpMkCNTCHFa3tPW1NwmBSAhe6tCjSyLq8akJWtDs=
-  vercel_project_id: BAMSCRT@0@0@NMXhQSoaIeO4Y7dcQ208V1vP5xpY6ROnGpiRPr2PucuZavK38njjucu9WyAvsN2j
-  vercel_org_id: BAMSCRT@0@0@y3xhiuIFukjQd1KkoJNAsjgju5X1vAKjj7L9Rkrt6LI=
+  vercel_token_secret: BAMSCRT@0@0@XzzhpMkCNTCHFa3tPW1NwmBSAhe6tCjSyLq8akJWtDs=
+  vercel_project_id_secret: BAMSCRT@0@0@NMXhQSoaIeO4Y7dcQ208V1vP5xpY6ROnGpiRPr2PucuZavK38njjucu9WyAvsN2j
+  vercel_org_id_secret: BAMSCRT@0@0@y3xhiuIFukjQd1KkoJNAsjgju5X1vAKjj7L9Rkrt6LI=
 branches:
   create: manually
   delete:
