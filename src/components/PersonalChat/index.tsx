@@ -8,7 +8,7 @@ import { AiOutlinePaperClip } from "react-icons/ai";
 import { ImMic } from "react-icons/im";
 import { IoSendSharp } from "react-icons/io5";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import {FaStop} from "react-icons/fa"
+import { FaStop } from "react-icons/fa";
 
 interface IPersonalProps {
   ChatSelected: {
@@ -70,6 +70,7 @@ const PersonalChat = (props: IPersonalProps) => {
   ]);
 
   const [messageCount, setMessageCount] = useState<number>(sampleMsgs.length);
+  const [ShowSearch, setShowSearch] = useState(false);
 
   const ref = React.useRef<any>();
   React.useEffect(() => {
@@ -94,15 +95,15 @@ const PersonalChat = (props: IPersonalProps) => {
 
   const sendMsg = () => {
     let arr = sampleMsgs;
-      arr.push({
-        sender: "me",
-        msg: InputValue,
-        time: new Date().toISOString(),
-      });
-      setSampleMsgs(arr);
-      setInputValue("");
-      setMessageCount((prev) => prev + 1);
-  }
+    arr.push({
+      sender: "me",
+      msg: InputValue,
+      time: new Date().toISOString(),
+    });
+    setSampleMsgs(arr);
+    setInputValue("");
+    setMessageCount((prev) => prev + 1);
+  };
 
   const recorderControls = useAudioRecorder();
 
@@ -141,34 +142,59 @@ const PersonalChat = (props: IPersonalProps) => {
   return (
     <div className="flex flex-col justify-between w-full min-h-screen max-h-screen relative py-16 md:py-20">
       <div className=" absolute top-0 right-0 border h-16 lg:h-20 w-full flex justify-between items-center px-2 md:px-6 bg-[#F8FAFD] ">
-        <div className="flex items-center">
-          <span
-            onClick={() => props.setChatSelected(null)}
-            className="h-[17px] mr-3 cursor-pointer md:hidden"
-          >
-            <Image src={LeftArrorwIcon} alt="" />
-          </span>
-          <Image
-            src={props?.ChatSelected?.userImage}
-            alt="user"
-            width={50}
-            height={50}
-            className="rounded-full"
-          />
-          <div className="ml-2">
-            <h4 className="text-lg font-semibold">
-              {props?.ChatSelected?.userName}
-            </h4>
-            <div className="flex items-center">
-              <div className="bg-primary-green h-2 w-2 rounded-full mr-2"></div>
-              <p className="text-sm font-normal text-secondary-text">Online</p>
-            </div>
+        {ShowSearch ? (
+          <div className="flex justify-between items-center py-2 w-full">
+            <input
+              placeholder="Search.."
+              className="px-6 py-2 w-full bg-gray-bg rounded-lg outline-none"
+            />
+            <button
+              className="outline-none p-4"
+              onClick={() => setShowSearch(false)}
+            >
+              Cancel
+            </button>
           </div>
-        </div>
-        <div className="flex items-center gap-7">
-          <Image height={20} width={20} alt="mic" src={SearchIcon} />
-          <Image alt="mic" src={ThreeDotedIcon} className="mr-5" />
-        </div>
+        ) : (
+          <>
+            <div className="flex items-center">
+              <span
+                onClick={() => props.setChatSelected(null)}
+                className="h-[17px] mr-3 cursor-pointer md:hidden"
+              >
+                <Image src={LeftArrorwIcon} alt="" />
+              </span>
+              <Image
+                src={props?.ChatSelected?.userImage}
+                alt="user"
+                width={50}
+                height={50}
+                className="rounded-full"
+              />
+              <div className="ml-2">
+                <h4 className="text-lg font-semibold">
+                  {props?.ChatSelected?.userName}
+                </h4>
+                <div className="flex items-center">
+                  <div className="bg-primary-green h-2 w-2 rounded-full mr-2"></div>
+                  <p className="text-sm font-normal text-secondary-text">
+                    Online
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-7">
+              <Image
+                height={20}
+                width={20}
+                alt="mic"
+                src={SearchIcon}
+                onClick={() => setShowSearch(true)}
+              />
+              <Image alt="mic" src={ThreeDotedIcon} className="mr-5" />
+            </div>
+          </>
+        )}
       </div>
       <div
         ref={ref}
@@ -192,7 +218,11 @@ const PersonalChat = (props: IPersonalProps) => {
                       : "self-start rounded-bl-none text-black bg-gray-bg"
                   } my-1 rounded-lg min-w-[90%] md:min-w-[60%]`}
                 >
-                  <audio src={msg.audio} controls={true} className="object-contain w-full"></audio>
+                  <audio
+                    src={msg.audio}
+                    controls={true}
+                    className="object-contain w-full"
+                  ></audio>
                   <div
                     className={`font-normal text-xs ${
                       isMe ? "text-[#E6FFFFFF]" : "text-secondary-text"
@@ -232,7 +262,13 @@ const PersonalChat = (props: IPersonalProps) => {
           value={InputValue}
           onKeyDown={onAction}
         />
-        {recorderControls.isRecording && <p className="mr-2">{new Date(recorderControls.recordingTime * 1000).toISOString().slice(11, 19)}</p>}
+        {recorderControls.isRecording && (
+          <p className="mr-2">
+            {new Date(recorderControls.recordingTime * 1000)
+              .toISOString()
+              .slice(11, 19)}
+          </p>
+        )}
         {recorderControls?.isRecording ? (
           <FaStop
             style={{ color: "#3254FE", fontSize: "26px" }}
@@ -244,25 +280,29 @@ const PersonalChat = (props: IPersonalProps) => {
             onClick={recorderControls.startRecording}
           />
         )}
-       <div className="hidden">
-       <AudioRecorder
-          onRecordingComplete={addAudioElement}
-          recorderControls={recorderControls}
+        <div className="hidden">
+          <AudioRecorder
+            onRecordingComplete={addAudioElement}
+            recorderControls={recorderControls}
+          />
+        </div>
+        <input
+          accept="image/*"
+          id="icon-button-file"
+          type="file"
+          style={{ display: "none" }}
         />
-       </div>
-        <input accept="image/*" id="icon-button-file"
-        type="file" style={{ display: 'none' }} />
-      <label htmlFor="icon-button-file">
-        <AiOutlinePaperClip
-          style={{ color: "#3254FE", fontSize: "28px", marginLeft: "8px" }}
-        />
-        {/* <IconButton color="primary" aria-label="upload picture"
+        <label htmlFor="icon-button-file">
+          <AiOutlinePaperClip
+            style={{ color: "#3254FE", fontSize: "28px", marginLeft: "8px" }}
+          />
+          {/* <IconButton color="primary" aria-label="upload picture"
         component="span">
           <PhotoCamera />
         </IconButton> */}
-      </label>
+        </label>
         <IoSendSharp
-         onClick={() => sendMsg()}
+          onClick={() => sendMsg()}
           style={{ color: "#3254FE", fontSize: "26px", marginLeft: "8px" }}
         />
       </div>
