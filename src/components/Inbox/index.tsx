@@ -106,6 +106,15 @@ interface IInboxChatCompProps {
   time: string;
   unseenMessageCount: number;
   handleSelectChat: Function;
+  ChatSelected: {
+    userImage: string | any;
+    platformIcon: StaticImageData;
+    userName: string;
+    lastChat: string;
+    time: string;
+    unseenMessageCount: number;
+    handleSelectChat: Function;
+  } | null;
 }
 
 const InboxCompChat = (props: IInboxChatCompProps) => {
@@ -117,11 +126,12 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
     platformIcon,
     unseenMessageCount,
     handleSelectChat,
+    ChatSelected,
   } = props;
 
   return (
     <div
-      className="flex mb-7 items-center justify-between cursor-pointer px-4 lg:px-8 overflow-hidden  "
+      className={` flex py-3.5 items-center justify-between cursor-pointer px-4 lg:px-8 overflow-hidden ${ChatSelected?.userName == userName ? "bg-white" : ""} `}
       onClick={() => handleSelectChat(props)}
     >
       <div className="flex">
@@ -135,9 +145,11 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
               quality={100}
             />
           </div>
-          {platformIcon && <div className=" rounded-full h-4 w-4 absolute right-0 bottom-0 ">
-            <Image src={platformIcon} fill alt="Filter Icon" />
-          </div>}
+          {platformIcon && (
+            <div className=" rounded-full h-4 w-4 absolute right-0 bottom-0 ">
+              <Image src={platformIcon} fill alt="Filter Icon" />
+            </div>
+          )}
         </div>
         <div className="ml-3 grid ">
           <span className="text-base text-primary-text font-semibold truncate ">
@@ -164,6 +176,15 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
 
 interface IInboxCompProps {
   setChatSelected: Function;
+  ChatSelected: {
+    userImage: string | any;
+    platformIcon: StaticImageData;
+    userName: string;
+    lastChat: string;
+    time: string;
+    unseenMessageCount: number;
+    handleSelectChat: Function;
+  } | null;
 }
 
 const InboxComp = (props: IInboxCompProps) => {
@@ -179,22 +200,14 @@ const InboxComp = (props: IInboxCompProps) => {
 
   return (
     <>
-      <div className="flex-1 md:flex-[0.35] xl:flex-[0.25] flex flex-col 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg py-6 relative overflow-hidden">
+      <div className=" border-r  flex-1 md:flex-[0.35] xl:flex-[0.25] flex flex-col 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg pt-6 relative overflow-hidden">
         <div className="px-4 lg:px-8">
           <div className=" hidden md:flex justify-between items-center mb-5">
             <div className=" text-primary-text font-semibold text-3xl">
               Chats
             </div>
             <div className="flex items-center gap-5">
-              <FilterModal/>
-              {/* <span>
-                <Image
-                  src={FilterIcon}
-                  width={18}
-                  height={16}
-                  alt="Filter Icon"
-                />
-              </span> */}
+              <FilterModal />
               <Link href={"/setting"}>
                 <span className=" overflow-hidden rounded-full h-8 w-8 ">
                   <Image
@@ -241,6 +254,7 @@ const InboxComp = (props: IInboxCompProps) => {
               return (
                 <InboxCompChat
                   key={index}
+                  ChatSelected={props.ChatSelected}
                   handleSelectChat={handleSelectChat}
                   {...data}
                 />
