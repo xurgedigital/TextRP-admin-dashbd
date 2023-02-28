@@ -4,14 +4,16 @@ import SearchIcon from "@public/Icons/searchIcon.svg";
 import Button from "@/components/UI/Button";
 import EditIcon from "@public/Icons/editIcon.svg";
 import EditPage from "./EditPage";
+import useWidth from "@/hooks/useWidth";
 
 const UserManagementComp = () => {
   const [openEditSection, setOpenEditSection] = React.useState(false);
+  const width = useWidth();
 
   return (
     <>
       {!openEditSection ? (
-        <div className="w-full 2xl:max-w-[1200px]">
+        <div className="w-full">
           <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-3">
             <span className=" text-xl font-semibold">User Management</span>
             <div className="flex gap-2 w-full md:w-auto">
@@ -57,7 +59,8 @@ const UserManagementComp = () => {
                       <tr key={index} className="bg-white border-b-0.5 border-[#ACB1C1] text-xs text-secondary-text font-normal ">
                         <td className="px-4 py-3">First name Last Name</td>
                         <td className="px-4 py-3">
-                          0x05f7903195f7110e318fce46973aa72adeafd0e8
+                            {width > 768 ? "0x05f7903195f7110e318fce46973aa72adeafd0e8" : "0x05f7903195f7110e318fce46973aa72adeafd0e8"}
+                          
                         </td>
                         <td className="px-4 py-3">Yes</td>
                         <td className="px-4 py-3 text-end">
@@ -81,11 +84,11 @@ const UserManagementComp = () => {
               </table>
             </div>
             <div className="flex justify-between items-center px-4 py-3">
-              <Button variant="blueOutline" className="py-2 px-4">
+              <Button variant="blueOutline" className="py-2 px-4 rounded-lg ">
                 Previous
               </Button>
               <div>Page 1 of 10</div>
-              <Button variant="blueOutline" className="py-2 px-4">
+              <Button variant="blueOutline" className="py-2 px-4 rounded-lg">
                 Next
               </Button>
             </div>
