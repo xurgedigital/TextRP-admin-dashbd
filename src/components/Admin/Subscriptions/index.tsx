@@ -51,7 +51,7 @@ const SubscriptionComp = () => {
                                     rows={3}
                                     placeholder={packageDescription}
                                     value={packageDescription}
-                                    className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text`}
+                                    className={`p-3 w-[17rem] rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text`}
                                 />
                                 <div className='flex items-center gap-2 mt-4'>
                                     <button onClick={() => setIsEditable(prev => !prev)} className="bg-primary-blue text-white px-6 py-2 text-sm font-semibold rounded">{"Save"}</button>
@@ -111,25 +111,27 @@ const SubscriptionComp = () => {
     }
 
     return (
-        <div>
+        <div className='w-full'>
             <p className='text-2xl font-semibold'>Subscription Pricing</p>
-            <div className='shadow-shadow-tertiary rounded-lg p-6 pb-2 bg-white mt-3'>
-                <table className="table-fixed ">
-                    <thead>
-                        <tr className='text-sm font-semibold'>
-                            <th> <div className='min-w-[9rem] text-left mb-4'>Package Name</div></th>
-                            <th> <div className='min-w-[10rem] text-left mb-4'>Package Description</div></th>
-                            <th> <div className='min-w-[9rem] text-left mb-4'>Number of Credits</div></th>
-                            <th> <div className='min-w-[9rem] text-left mb-4'>Price (in USD $) </div></th>
-                            <th> <div className='w-10 mb-4'></div> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {SubscriptionItems.map((si, i) => (
-                            <Row {...si} key={i} />
-                        ))}
-                    </tbody>
-                </table>
+            <div className=" w-full inline-block align-middle ">
+                <div className=' overflow-auto shadow-shadow-tertiary rounded-lg p-6 pb-2 bg-white mt-3'>
+                    <table className="table-auto ">
+                        <thead>
+                            <tr className='text-sm font-semibold'>
+                                <th> <div className='min-w-[9rem] text-left mb-4'>Package Name</div></th>
+                                <th> <div className='min-w-[10rem] text-left mb-4'>Package Description</div></th>
+                                <th> <div className='min-w-[9rem] text-left mb-4'>Number of Credits</div></th>
+                                <th> <div className='min-w-[9rem] text-left mb-4'>Price (in USD $) </div></th>
+                                <th> <div className='w-10 mb-4'></div> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {SubscriptionItems.map((si, i) => (
+                                <Row {...si} key={i} />
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     )

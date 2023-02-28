@@ -94,26 +94,29 @@ const CreditComp = () => {
     }
 
     return (
-        <div>
-            <p className='text-2xl font-semibold'>Credits Pricing</p>
-            <div className='shadow-shadow-tertiary rounded-lg p-6 pb-2 bg-white mt-3'>
-                <table className="table-fixed ">
-                    <thead>
-                        <tr className='text-sm font-semibold'>
-                            <th> <div className='min-w-[9rem] text-left mb-4'>Package Name</div></th>
-                            <th> <div className='min-w-[9rem] text-left mb-4'>Number of Credits</div></th>
-                            <th> <div className='min-w-[9rem] text-left mb-4'>Number of Credits</div></th>
-                            <th> <div className='w-10 mb-4'></div> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {CreditItems.map((ci, i) => (
-                            <Row {...ci} key={i} />
-                        ))}
-                    </tbody>
-                </table>
+        <div className='w-full'>
+            <p className='text-xl sm:text-2xl font-semibold'>Credits Pricing</p>
+            <div className="max-w-[660px] w-full inline-block align-middle ">
+                <div className='overflow-auto shadow-shadow-tertiary rounded-lg p-6 pb-2 bg-white mt-3'>
+                    <table className="table-fixed">
+                        <thead>
+                            <tr className='text-sm font-semibold'>
+                                <th> <div className='min-w-[9rem] text-left mb-4'>Package Name</div></th>
+                                <th> <div className='min-w-[9rem] text-left mb-4'>Number of Credits</div></th>
+                                <th> <div className='min-w-[9rem] text-left mb-4'>Number of Credits</div></th>
+                                <th> <div className='w-10 mb-4'></div> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {CreditItems.map((ci, i) => (
+                                <Row {...ci} key={i} />
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     )
 }
 
