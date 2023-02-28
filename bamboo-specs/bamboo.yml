@@ -10,35 +10,6 @@ stages:
       final: false
       jobs:
         - Default Job
-  - Vercel stage:
-      jobs:
-        - Vercel Job
-Vercel Job:
-  key: JOB2
-  requirements:
-    - npm
-  tasks:
-    - checkout:
-        force-clean-build: 'false'
-        description: Checkout Default Repository
-        conditions:
-          - variable:
-              equals:
-                planRepository.branch: release/production
-    - script:
-        interpreter: SHELL
-        conditions:
-          - variable:
-              equals:
-                planRepository.branch: release/production
-        scripts:
-          - npm install --global vercel
-          - npm install --global yarn
-          - yarn install
-          - export VERCEL_ORG_ID=${bamboo.vercel_org_id_secret}
-          - export VERCEL_PROJECT_ID=${bamboo.vercel_project_id_secret}
-          - vercel -c --token=${bamboo.vercel_token_secret}
-        description: Set Deploy to vercel
 Default Job:
   key: JOB1
   tasks:
@@ -72,10 +43,6 @@ Default Job:
           registryOption: custom
         description: Push Image
   artifact-subscriptions: []
-variables:
-  vercel_token_secret: BAMSCRT@0@0@XzzhpMkCNTCHFa3tPW1NwmBSAhe6tCjSyLq8akJWtDs=
-  vercel_project_id_secret: BAMSCRT@0@0@NMXhQSoaIeO4Y7dcQ208V1vP5xpY6ROnGpiRPr2PucuZavK38njjucu9WyAvsN2j
-  vercel_org_id_secret: BAMSCRT@0@0@y3xhiuIFukjQd1KkoJNAsjgju5X1vAKjj7L9Rkrt6LI=
 branches:
   create: manually
   delete:
@@ -158,7 +125,8 @@ release-naming:
   auto-increment-variables: []
 environments:
 - Production Server
-Production Server:
+- Development Server
+Development Server:
   triggers:
   - build-success
   tasks:
@@ -188,6 +156,38 @@ Production Server:
     cloudron_api: my.aticloud.atican.dev
     cloudron_username: nick
     cloudron_token_secret: BAMSCRT@0@0@SVAlAyWq65MlzPsZfHqnDiO9gzu987/P+DAEdgJpcoXePc05edNFqV3yTw3HoRfyAutNUN3AXtQvDtI0OSfHQtWVj9wyruB++iIlLLmJeQY=
+  requirements: []
+  notifications: []
+Production Server:
+  triggers:
+    - build-success:
+        branch: release-production
+  tasks:
+    - clean
+    - checkout:
+        force-clean-build: 'false'
+        description: Checkout Default Repository
+    - script:
+        interpreter: SHELL
+        scripts:
+          - npm install --global vercel
+          - npm install --global yarn
+          - yarn install
+          - export VERCEL_ORG_ID=${bamboo.vercel_org_id_secret}
+          - export VERCEL_PROJECT_ID=${bamboo.vercel_project_id_secret}
+          - vercel -c --token=${bamboo.vercel_token_secret}
+  final-tasks:
+    - script:
+        interpreter: SHELL
+        scripts:
+          - rm -rf ~/.cloudron.json
+  variables:
+    cloudron_api: my.aticloud.atican.dev
+    cloudron_username: nick
+    cloudron_token_secret: BAMSCRT@0@0@SVAlAyWq65MlzPsZfHqnDiO9gzu987/P+DAEdgJpcoXePc05edNFqV3yTw3HoRfyAutNUN3AXtQvDtI0OSfHQtWVj9wyruB++iIlLLmJeQY=
+    vercel_token_secret: BAMSCRT@0@0@XzzhpMkCNTCHFa3tPW1NwmBSAhe6tCjSyLq8akJWtDs=
+    vercel_project_id_secret: BAMSCRT@0@0@NMXhQSoaIeO4Y7dcQ208V1vP5xpY6ROnGpiRPr2PucuZavK38njjucu9WyAvsN2j
+    vercel_org_id_secret: BAMSCRT@0@0@y3xhiuIFukjQd1KkoJNAsjgju5X1vAKjj7L9Rkrt6LI=
   requirements: []
   notifications: []
 ---
