@@ -29,7 +29,7 @@ const platformData = [
 
 const FilterModal = () => {
   return (
-    <div className="">
+    <div className="h-4">
       <Popover className="relative">
         {({ open, close }) => (
           <>
@@ -61,7 +61,7 @@ const FilterModal = () => {
                   <span className=" text-base font-semibold text-primary-text cursor-pointer ">
                     Filter Chats
                   </span>
-                  <span onClick={close}>
+                  <span className=" cursor-pointer " onClick={close}>
                     <Image src={CrossIcon} alt="" />
                   </span>
                 </div>

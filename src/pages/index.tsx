@@ -9,7 +9,7 @@ export default function Home() {
   const width = useWidth();
   return (
     <div className="flex max-h-screen">
-      <InboxComp setChatSelected={setChatSelected} />
+      <InboxComp ChatSelected={ChatSelected} setChatSelected={setChatSelected} />
       {width >= 768 && <ChatSection ChatSelected={ChatSelected} setChatSelected={setChatSelected} />}
       <div className=" overflow-hidden">
         {width < 768 && ChatSelected !== null && (
