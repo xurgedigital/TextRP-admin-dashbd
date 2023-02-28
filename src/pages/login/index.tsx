@@ -1,10 +1,68 @@
-import { useSignIn } from "xumm-react";
+import { useState } from "react";
+import {XummPkce} from "xumm-oauth2-pkce"
 
 const Login = () => {
-  const { signIn, signInData: { xummPayload } = {} } = useSignIn();
-  const qr = xummPayload?.refs?.qr_png;
+  const [ButtonMsg, setButtonMsg] = useState("Sign In");
+  
+  var auth = new XummPkce('b19848bd-6133-4267-aa72-2bb4a5183893')
+  var sdk = null
 
-  const fakeqr = "https://cdn.ttgtmedia.com/rms/misc/qr_code_barcode.jpg";
+  function signedInHandler (authorized: any) {
+    // Assign to global,
+    // please don't do this but for the sake of the demo it's easy
+    sdk = authorized.sdk
+
+    console.log('Authorized', /* authorized.jwt, */ authorized.me)
+
+    setButtonMsg("Signed In!")
+
+    console.log(authorized, "auth data")
+    // document.getElementById('trypayload').style.display = 'block'
+    // document.getElementById('logout').style.display = 'block'
+
+    sdk.ping().then((pong: any) => console.log({pong}))
+  }
+
+
+  const go = () => {
+       setButtonMsg('Signing in...')
+
+       auth.authorize()?.then(signedInHandler).catch(e => {
+        console.log('Auth error', e)
+
+        setButtonMsg("Sign In")
+
+        alert("error in authentication")
+       })
+
+       auth.on('error', error => {
+        console.log('error', error)
+      })
+    
+      auth.on('success', async () => {
+        console.log('success')
+        auth.state()?.then(state => {
+          if (state?.me) {
+            console.log('success, me', JSON.stringify(state.me))
+          }
+        })
+      })
+    
+      auth.on('retrieved', async () => {
+        // Redirect, e.g. mobile. Mobile may return to new tab, this
+        // must retrieve the state and process it like normally the authorize method
+        // would do
+        console.log('Results are in, mobile flow, process sign in')
+    
+        auth.state()?.then(state => {
+          console.log(state)
+          if (state) {
+            console.log('retrieved, me:', JSON.stringify(state.me))
+            signedInHandler(state)
+          }
+        })
+      })
+  };
 
   return (
     <div className="bg-primary-blue h-fit">
@@ -33,8 +91,8 @@ const Login = () => {
               <div className="flex flex-col lg:flex-row">
                 <div className="flex">
                   Tap on the{" "}
-                  <span className="bg-qr-scan-icon h-6 w-6 mx-0.5"></span> center
-                  icon
+                  <span className="bg-qr-scan-icon h-6 w-6 mx-0.5"></span>{" "}
+                  center icon
                 </div>{" "}
                 <div>in bottom navigation</div>
               </div>
@@ -61,12 +119,13 @@ const Login = () => {
               </label>
             </div>
           </div>
-          <div className="flex items-center justify-center mt-10 md:mt-0">
-          <img
-            src={qr ?? fakeqr}
-            style={{ width: 248, height: 248 }}
-            alt="xumm-qr"
-          />
+          <div className="flex items-center justify-center mt-10 md:mt-0 md:w-1/2">
+            <button
+              className="bg-primary-blue p-6  py-3 outline-none rounded-lg text-white"
+              onClick={() => go()}
+            >
+              {ButtonMsg}
+            </button>
           </div>
         </div>
       </div>
