@@ -52,9 +52,9 @@ const DiscountComp = () => {
 
     const SetNewDiscount = () => {
         return (
-            <div>
+            <div className='w-full sm:w-auto'>
                 <p className="text-2xl font-semibold mt-8">Set New Discount</p>
-                <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3">
+                <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3 w-full">
                     <CommonInput
                         label="Discount %"
                         placeholder="10"
@@ -65,8 +65,8 @@ const DiscountComp = () => {
                         placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
                         fullWidth
                     />
-                    <div className='flex items-center gap-2 mt-4 ml-28'>
-                        <button onClick={() => setShowNewDiscount(prev => !prev)} className="bg-primary-blue text-white px-4 py-2 text-sm font-semibold rounded">{"Set New Discount"}</button>
+                    <div className='flex items-center gap-2 mt-4 sm:ml-28'>
+                        <button onClick={() => setShowNewDiscount(prev => !prev)} className="bg-primary-blue truncate text-white px-4 py-2 text-sm font-semibold rounded">{"Set New Discount"}</button>
                         <button onClick={() => setShowNewDiscount(prev => !prev)} className="border border-primary-blue text-primary-blue px-4 py-2 text-sm font-semibold rounded">{"Cancel"}</button>
                     </div>
                 </div>
