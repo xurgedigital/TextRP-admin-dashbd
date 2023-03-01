@@ -41,7 +41,7 @@ const UserManagementComp = () => {
               <table className="w-full">
                 <thead className="border-b-0.5 border-[#ACB1C1]">
                   <tr>
-                    <th className="text-start text-sm text-semibold w-1/4  px-4 py-3 w-[30%] ">
+                    <th className="text-start text-sm text-semibold px-4 py-3 w-[30%] ">
                       Account Name
                     </th>
                     <th className="text-start text-sm text-semibold px-4 py-3 ">
@@ -56,11 +56,20 @@ const UserManagementComp = () => {
                 <tbody>
                   {Array.apply(null, Array(10)).map((contact, index) => {
                     return (
-                      <tr key={index} className="bg-white border-b-0.5 border-[#ACB1C1] text-xs text-secondary-text font-normal ">
-                        <td className="px-4 py-3">First name Last Name</td>
+                      <tr
+                        key={index}
+                        className="bg-white border-b-0.5 border-[#ACB1C1] text-xs text-secondary-text font-normal "
+                      >
                         <td className="px-4 py-3">
-                            {width > 768 ? "0x05f7903195f7110e318fce46973aa72adeafd0e8" : "0x05f7903195f7110e318fce46973aa72adeafd0e8"}
-                          
+                          <div className="flex gap-2 flex-col md:flex-row min-w-max ">
+                            <span>First name</span>
+                            <span>Last Name</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          {width > 768
+                            ? "0x05f7903195f7110e318fce46973aa72adeafd0e8"
+                            : "0x05f7...d0e8"}
                         </td>
                         <td className="px-4 py-3">Yes</td>
                         <td className="px-4 py-3 text-end">
@@ -87,7 +96,8 @@ const UserManagementComp = () => {
               <Button variant="blueOutline" className="py-2 px-4 rounded-lg ">
                 Previous
               </Button>
-              <div>Page 1 of 10</div>
+              <div className="hidden md:block">Page 1 of 10</div>
+              <div className="md:hidden" >1 / 10</div>
               <Button variant="blueOutline" className="py-2 px-4 rounded-lg">
                 Next
               </Button>

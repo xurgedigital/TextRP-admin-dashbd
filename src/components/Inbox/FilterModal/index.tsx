@@ -56,7 +56,7 @@ const FilterModal = () => {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="absolute right-0 z-10 w-[208px] h-[264px] rounded-lg border-0.5 border-[#ACB1C1] bg-white p-4">
+              <Popover.Panel className="absolute right-0 z-10 w-[180px] lg:w-[208px] h-[264px] rounded-lg border-0.5 border-[#ACB1C1] bg-white p-4">
                 <div className=" flex justify-between items-center mb-4 ">
                   <span className=" text-base font-semibold text-primary-text cursor-pointer ">
                     Filter Chats

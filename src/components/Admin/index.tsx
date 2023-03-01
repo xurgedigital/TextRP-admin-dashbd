@@ -56,7 +56,7 @@ const Admin = () => {
     const width = useWidth();
 
     useEffect(() => {
-        if (width < 768) {
+        if (width < 1024) {
             setIsDrawerOpen(false);
         } else {
             setIsDrawerOpen(true);
@@ -86,15 +86,15 @@ const Admin = () => {
         <div className='flex'>
             {/* left panel */}
             {isDrawerOpen ?
-                (<div className='z-30 flex fixed left-4 top-2 md:hidden bg-white p-2' onClick={() => setIsDrawerOpen(prev => !prev)}>
+                (<div className='z-30 flex fixed left-4 top-2 lg:hidden bg-white p-2' onClick={() => setIsDrawerOpen(prev => !prev)}>
                     <AiOutlineMenuFold size={24} className="cursor-pointer" />
                 </div>) :
-                (<div className='z-30 flex fixed left-4 top-2 md:hidden bg-white  shadow-shadow-tertiary p-2 rounded' onClick={() => setIsDrawerOpen(prev => !prev)}>
+                (<div className='z-30 flex fixed left-4 top-2 lg:hidden bg-white  shadow-shadow-tertiary p-2 rounded' onClick={() => setIsDrawerOpen(prev => !prev)}>
                     <AiOutlineMenuUnfold size={24} className="cursor-pointer" />
                 </div>)
             }
             {isDrawerOpen && (
-                <div className="fixed top-0 z-20 h-full min-h-screen px-4 lg:px-8 md:w-[14.5rem] shadow-shadow-secondary py-6 pt-10 bg-white">
+                <div className="fixed top-0 z-20 h-full min-h-screen px-4 lg:px-8 md:w-[14.5rem] shadow-shadow-secondary py-6 pt-12 bg-white">
                     <div className='flex flex-col h-[92vh] justify-between'>
                         <div>
                             <p className='text-primary-blue text-2xl font-semibold'>TextRP Logo</p>
@@ -118,7 +118,7 @@ const Admin = () => {
                     </div>
                 </div>
             )}
-            <div className={`overflow-y-auto min-h-screen flex w-full py-6 pt-12 px-4 lg:px-8 bg-gray-bg transition-all ease-linear duration-200 ${isDrawerOpen ? "md:ml-[14.5rem]" : "ml-0"
+            <div className={`overflow-y-auto min-h-screen flex w-full py-6 pt-14 px-4 lg:px-8 bg-gray-bg transition-all ease-linear duration-200 ${isDrawerOpen ? "lg:ml-[14.5rem]" : "ml-0"
                 } `}>
                 {selectedTab === "User Management" && <UserManagementComp />}
                 {selectedTab === "Credits" && <CreditComp />}
