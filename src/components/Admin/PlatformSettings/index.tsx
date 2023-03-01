@@ -29,9 +29,9 @@ const CreditItems = [
 
 const PlatformSettingsComp = () => {
   return (
-    <div>
+    <div className="w-full max-w-[660px]">
       <p className="text-2xl font-semibold">First Time Login Bonus</p>
-      <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3">
+      <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
         <CommonInput
           label="Set New Bonus (in Credits)"
           placeholder="Ex. 500"
@@ -59,7 +59,7 @@ const PlatformSettingsComp = () => {
       </div>
 
       <p className="text-2xl font-semibold mt-8">Micropayments</p>
-      <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3">
+      <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
         <CommonInput
           label="Wallet Address"
           placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
@@ -74,7 +74,7 @@ const PlatformSettingsComp = () => {
       </div>
 
       <p className="text-2xl font-semibold mt-8">Receive Payments</p>
-      <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3">
+      <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
         <CommonInput
           label="Wallet Address"
           placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
@@ -84,7 +84,7 @@ const PlatformSettingsComp = () => {
       </div>
 
       <p className="text-2xl font-semibold mt-8">External API Keys</p>
-      <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3">
+      <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
         <CommonInput
           label="Twilio API Key"
           placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
