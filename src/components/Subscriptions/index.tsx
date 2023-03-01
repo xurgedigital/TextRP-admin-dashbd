@@ -57,7 +57,7 @@ const Subscriptions = () => {
                         Best Deal!
                     </div>
                 ) : null}
-                <div onClick={() => setSelectCard(time)} className={`p-4 shadow-shadow-primary ${selectCard === time ? "border-2 border-primary-blue" : "border-[0.5px] border-primary-gray"}  rounded-lg mb-4 ${bestDeal ? "rounded-t-none border-t-0" : ""}`}>
+                <div onClick={() => setSelectCard(time)} className={`p-4 shadow-shadow-primary ${selectCard === time ? "border-2 border-primary-blue bg-gray-bg" : "border-[0.5px] border-primary-gray"}  rounded-lg mb-4 ${bestDeal ? "rounded-t-none" : ""}`}>
                     <div className='flex items-center justify-between'>
                         <div>
                             <p className='uppercase text-xs text-secondary-text mb-1'>{time}</p>
@@ -100,7 +100,7 @@ const Subscriptions = () => {
     }
 
     return (
-        <div className={`md:transform-none  flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] min-h-screen h-full  bg-white py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray cursor-pointer overflow-hidden`}>
+        <div className={`md:transform-none  flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] min-h-screen h-full  bg-white py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray cursor-pointer`}>
             <div className='flex gap-5 items-center'>
                 <Image
                     src={ArrowLeft}

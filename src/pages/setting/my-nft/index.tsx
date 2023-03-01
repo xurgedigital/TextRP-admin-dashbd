@@ -5,7 +5,7 @@ import NFTSection from "@/components/NFT";
 export default function SettingPage() {
 
     return (
-        <div className="flex max-h-screen overflow-hidden">
+        <div className="flex max-h-screen overflow-x-hidden">
             <NFTSection />
             <DummyChatSection />
         </div>
