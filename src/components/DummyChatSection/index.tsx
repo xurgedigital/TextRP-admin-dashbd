@@ -13,11 +13,9 @@ const DummyChatSection = () => {
 
   return (
     <div
-      className={` md:transform-none chatSection  flex md:flex-[0.65] xl:flex-[0.75] 3xl:flex-[0.8] justify-center items-center bg-white ${
-        isMount ? "translate-x-full" : "translate-x-0"
-      } transition duration-200 `}
+      className={` chatSection hidden  md:flex md:flex-[0.65] xl:flex-[0.75] 3xl:flex-[0.8] justify-center items-center bg-white transition duration-200 `}
     >
-     <div>
+     <div className="flex flex-col w-full items-center justify-center">
           <div className="relative h-[360px] w-[360px]">
             <Image src={DefaultImage} fill alt="" />
           </div>

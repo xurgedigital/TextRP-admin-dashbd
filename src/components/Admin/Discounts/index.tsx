@@ -79,17 +79,17 @@ const DiscountComp = () => {
             {
                 showNewDiscount ? (<SetNewDiscount />) : (
                     <div className='w-full'>
-                        <div className='flex flex-col md:flex-row w-full max-w-[660px] gap-y-2  md:items-center md:justify-between'>
+                        <div className='flex flex-col md:flex-row w-full max-w-[600px] gap-y-2  md:items-center md:justify-between'>
                             <p className='text-xl sm:text-2xl font-semibold'>Running Discounts</p>
                             <button onClick={() => setShowNewDiscount(prev => !prev)} className="bg-primary-blue truncate text-white px-8 py-2 text-sm font-semibold rounded w-max">{"Set New Discount"}</button>
                         </div>
-                        <div className="max-w-[660px] w-full inline-block align-middle ">
-                            <div className='overflow-auto w-full rounded-lg border  border-primary-gray mt-3'>
+                        <div className="max-w-[600px] w-full inline-block align-middle ">
+                            <div className='overflow-auto w-full rounded-lg rounded-b-none border border-b-0  border-primary-gray mt-3'>
                                 <table className="table-auto w-full ">
                                     <thead className='bg-transparent border-b border-primary-gray'>
                                         <tr className='text-sm font-semibold'>
                                             <th> <div className='min-w-[9rem] text-left py-3 pl-4'>Discount %</div></th>
-                                            <th>  <div className='min-w-[10rem] text-left py-3 pr-4'>Wallet address</div></th>
+                                            <th> <div className='min-w-full text-left py-3 pr-4'>Wallet address</div></th>
                                         </tr>
                                     </thead>
                                     <tbody className='divide-y divide-primary-gray bg-white w-full'>
@@ -101,11 +101,11 @@ const DiscountComp = () => {
                                         ))}
                                     </tbody>
                                 </table>
-                                <div className='flex items-center gap-6 sm:gap-0 justify-center sm:justify-between p-4 bg-white rounded-b-lg border-t border-primary-gray'>
-                                    <button className="border-2 border-primary-blue text-primary-blue px-4 py-2 text-sm font-semibold rounded-lg">{"Next"}</button>
-                                    <p className='text-secondary-text text-sm font-normal'>Page 1 of 10</p>
-                                    <button className="border-2 border-primary-blue text-primary-blue px-4 py-2 text-sm font-semibold rounded-lg">{"Previous"}</button>
-                                </div>
+                            </div>
+                            <div className='flex border   border-primary-gray items-center gap-6 sm:gap-0 justify-center sm:justify-between p-4 bg-white rounded-b-lg '>
+                                <button className="border-2 border-primary-blue text-primary-blue px-4 py-2 text-sm font-semibold rounded-lg">{"Next"}</button>
+                                <p className='truncate text-secondary-text text-sm font-normal'>Page 1 of 10</p>
+                                <button className="border-2 border-primary-blue text-primary-blue px-4 py-2 text-sm font-semibold rounded-lg">{"Previous"}</button>
                             </div>
                         </div>
                     </div>

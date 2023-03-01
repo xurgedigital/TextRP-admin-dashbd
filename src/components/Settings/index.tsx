@@ -65,13 +65,13 @@ const SettingItems = (props: ISItemsProps) => {
     const ShowButtons = () => {
         if (title === "Buy credits") {
             return (
-                <div className='text-xs rounded p-2 font-semibold text-primary-blue bg-gray-bg'>
-                    Bal : 10
+                <div className='text-xs mr-4  truncate rounded p-2 font-semibold text-primary-blue bg-gray-bg'>
+                    Bal: 10
                 </div>
             )
         } else if (title === "Subscriptions") {
             return (
-                <div className='text-xs font-normal rounded p-2 bg-primary-blue text-white'>
+                <div className='text-xs  mr-4 truncate font-normal rounded p-2 bg-primary-blue text-white'>
                     Upgrade
                 </div>
             )
@@ -84,19 +84,21 @@ const SettingItems = (props: ISItemsProps) => {
     return (
         <Link href={link ?? "/"}>
             <div className='flex items-center justify-between my-8 cursor-pointer'>
-                <div className='flex items-center gap-5'>
-                    <Image
-                        src={icon}
-                        alt={title}
-                        className=""
-                        quality={100}
-                    />
-                    <p className='text-base font-normal'>{title}</p>
+                <div className='flex items-center justify-between sm:gap-2 md:justify-between w-full' >
+                    <div className='flex items-center gap-5'>
+                        <Image
+                            src={icon}
+                            alt={title}
+                            className=""
+                            quality={100}
+                        />
+                        <p className='text-base font-normal truncate'>{title}</p>
+                    </div>
+                    <ShowButtons />
                 </div>
 
-                <div className='flex items-center gap-6 self-end'>
+                <div className='flex flex-shrink-0 items-center'>
 
-                    <ShowButtons />
 
                     <Image
                         src={Chevron}

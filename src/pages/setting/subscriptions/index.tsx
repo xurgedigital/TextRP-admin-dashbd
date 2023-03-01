@@ -1,14 +1,12 @@
 import DummyChatSection from "@/components/DummyChatSection";
 import Subscriptions from "@/components/Subscriptions";
-import useWidth from "@/hooks/useWidth";
 
 export default function SettingPage() {
-    const width = useWidth();
 
     return (
-        <div className="flex max-h-screen">
+        <div className="flex max-h-screen overflow-hidden">
             <Subscriptions />
-            {width > 768 && <DummyChatSection />}
+            <DummyChatSection />
         </div>
     );
 }

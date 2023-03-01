@@ -1,14 +1,12 @@
 import DummyChatSection from "@/components/DummyChatSection";
 import LinkedAccounts from "@/components/LinkedAccounts";
-import useWidth from "@/hooks/useWidth";
 
 export default function SettingPage() {
-    const width = useWidth();
 
     return (
-        <div className="flex max-h-screen">
+        <div className="flex max-h-screen overflow-hidden">
             <LinkedAccounts />
-            {width > 768 && <DummyChatSection/>}
+           <DummyChatSection/>
         </div>
     );
 }
