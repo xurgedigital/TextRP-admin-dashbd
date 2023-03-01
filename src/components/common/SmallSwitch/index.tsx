@@ -15,7 +15,7 @@ const SmallSwitch = (props: Iprops) => {
     props;
   return (
     <div className={className}>
-      <div className="flex flex-col md:flex-row items-start justify-between text-sm font-normal md:pr-20 lg:pr-40 mt-6">
+      <div className="flex flex-col sm:flex-row items-start justify-between text-sm font-normal sm:pr-20 lg:pr-40 mt-6">
         <div className="text-black">
           {label}
         </div>
