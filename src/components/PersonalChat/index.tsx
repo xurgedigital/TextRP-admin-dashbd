@@ -94,15 +94,17 @@ const PersonalChat = (props: IPersonalProps) => {
   };
 
   const sendMsg = () => {
-    let arr = sampleMsgs;
-    arr.push({
-      sender: "me",
-      msg: InputValue,
-      time: new Date().toISOString(),
-    });
-    setSampleMsgs(arr);
-    setInputValue("");
-    setMessageCount((prev) => prev + 1);
+    if (InputValue) {
+      let arr = sampleMsgs;
+      arr.push({
+        sender: "me",
+        msg: InputValue,
+        time: new Date().toISOString(),
+      });
+      setSampleMsgs(arr);
+      setInputValue("");
+      setMessageCount((prev) => prev + 1);
+    }
   };
 
   const recorderControls = useAudioRecorder();
@@ -271,11 +273,13 @@ const PersonalChat = (props: IPersonalProps) => {
         )}
         {recorderControls?.isRecording ? (
           <FaStop
+          className=" cursor-pointer"
             style={{ color: "#3254FE", fontSize: "26px" }}
             onClick={recorderControls.stopRecording}
           />
         ) : (
           <ImMic
+          className=" cursor-pointer"
             style={{ color: "#3254FE", fontSize: "26px" }}
             onClick={recorderControls.startRecording}
           />
@@ -292,7 +296,7 @@ const PersonalChat = (props: IPersonalProps) => {
           type="file"
           style={{ display: "none" }}
         />
-        <label htmlFor="icon-button-file">
+        <label className=" cursor-pointer" htmlFor="icon-button-file">
           <AiOutlinePaperClip
             style={{ color: "#3254FE", fontSize: "28px", marginLeft: "8px" }}
           />
@@ -302,6 +306,7 @@ const PersonalChat = (props: IPersonalProps) => {
         </IconButton> */}
         </label>
         <IoSendSharp
+        className=" cursor-pointer"
           onClick={() => sendMsg()}
           style={{ color: "#3254FE", fontSize: "26px", marginLeft: "8px" }}
         />
