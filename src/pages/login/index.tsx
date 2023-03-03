@@ -1,68 +1,49 @@
 import { useState } from "react";
-import {XummPkce} from "xumm-oauth2-pkce"
+import useWebSocket from 'react-use-websocket';
+import { useRouter } from 'next/router'
 
 const Login = () => {
   const [ButtonMsg, setButtonMsg] = useState("Sign In");
+
+  const router = useRouter()
   
-  var auth = new XummPkce('b19848bd-6133-4267-aa72-2bb4a5183893')
-  var sdk = null
-
-  function signedInHandler (authorized: any) {
-    // Assign to global,
-    // please don't do this but for the sake of the demo it's easy
-    sdk = authorized.sdk
-
-    console.log('Authorized', /* authorized.jwt, */ authorized.me)
-
-    setButtonMsg("Signed In!")
-
-    console.log(authorized, "auth data")
-    // document.getElementById('trypayload').style.display = 'block'
-    // document.getElementById('logout').style.display = 'block'
-
-    sdk.ping().then((pong: any) => console.log({pong}))
-  }
-
-
-  const go = () => {
-       setButtonMsg('Signing in...')
-
-       auth.authorize()?.then(signedInHandler).catch(e => {
-        console.log('Auth error', e)
-
-        setButtonMsg("Sign In")
-
-        alert("error in authentication")
-       })
-
-       auth.on('error', error => {
-        console.log('error', error)
-      })
-    
-      auth.on('success', async () => {
-        console.log('success')
-        auth.state()?.then(state => {
-          if (state?.me) {
-            console.log('success, me', JSON.stringify(state.me))
-          }
-        })
-      })
-    
-      auth.on('retrieved', async () => {
-        // Redirect, e.g. mobile. Mobile may return to new tab, this
-        // must retrieve the state and process it like normally the authorize method
-        // would do
-        console.log('Results are in, mobile flow, process sign in')
-    
-        auth.state()?.then(state => {
-          console.log(state)
-          if (state) {
-            console.log('retrieved, me:', JSON.stringify(state.me))
-            signedInHandler(state)
-          }
-        })
-      })
+  const static_payload = {
+    data: {
+      uuid: "0b6b861a-9aa5-4b5b-a6b3-e868a7d26f2f",
+      next: {
+        always: "https://xumm.app/sign/0b6b861a-9aa5-4b5b-a6b3-e868a7d26f2f",
+      },
+      refs: {
+        qr_png:
+          "https://xumm.app/sign/0b6b861a-9aa5-4b5b-a6b3-e868a7d26f2f_q.png",
+        qr_matrix:
+          "https://xumm.app/sign/0b6b861a-9aa5-4b5b-a6b3-e868a7d26f2f_q.json",
+        qr_uri_quality_opts: ["m", "q", "h"],
+        websocket_status:
+          "wss://xumm.app/sign/0b6b861a-9aa5-4b5b-a6b3-e868a7d26f2f",
+      },
+      pushed: false,
+    },
   };
+
+  useWebSocket(static_payload?.data?.refs?.websocket_status, {
+    onOpen: () => {
+      console.log('WebSocket connection established.');
+    },
+    onMessage(event) {
+      console.log(event, "enet")
+    },
+  });
+
+  const handleSignIn = () => {
+    let testData = {
+
+    }
+    let token = "gfhgjhjkl"
+    localStorage.setItem("userData", JSON.stringify(testData))
+    localStorage.setItem("token", token)
+    router.push("/")
+  }
 
   return (
     <div className="bg-primary-blue h-fit">
@@ -78,13 +59,13 @@ const Login = () => {
             <h2 className=" font-normal text-2xl">
               Login with QR Code to use TextRP
             </h2>
-            <p className="flex mt-4 text-secondary-text font-normal text-base">
+            <div className="flex mt-4 text-secondary-text font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 1
               </div>
               Open the XUMM app on your phone
-            </p>
-            <p className="flex mt-4 text-secondary-text font-normal text-base break-keep">
+            </div>
+            <div className="flex mt-4 text-secondary-text font-normal text-base break-keep">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 2
               </div>
@@ -96,19 +77,19 @@ const Login = () => {
                 </div>{" "}
                 <div>in bottom navigation</div>
               </div>
-            </p>
-            <p className="flex mt-4 text-secondary-text font-normal text-base">
+            </div>
+            <div className="flex mt-4 text-secondary-text font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 3
               </div>
               Tap on the scan QR code button
-            </p>
-            <p className="flex mt-4 text-secondary-text font-normal text-base">
+            </div>
+            <div className="flex mt-4 text-secondary-text font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 4
               </div>
               Point your phone camera towards the QR code
-            </p>
+            </div>
             <div className="mt-6 flex items-center">
               <input
                 type="checkbox"
@@ -120,12 +101,7 @@ const Login = () => {
             </div>
           </div>
           <div className="flex items-center justify-center mt-10 md:mt-0 md:w-1/2">
-            <button
-              className="bg-primary-blue p-6  py-3 outline-none rounded-lg text-white"
-              onClick={() => go()}
-            >
-              {ButtonMsg}
-            </button>
+            <img src={static_payload.data.refs.qr_png} alt="qr" onClick={() => handleSignIn()} />
           </div>
         </div>
       </div>
