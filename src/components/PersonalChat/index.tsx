@@ -244,7 +244,7 @@ const PersonalChat = (props: IPersonalProps) => {
                     : "self-start rounded-bl-none text-black bg-gray-bg"
                 } my-2 rounded-lg`}
               >
-                <div> {msg?.msg}</div>
+                <p className="whitespace-pre-wrap">{msg?.msg}</p>
                 <div
                   className={`font-normal text-xs ${
                     isMe ? "text-[#E6FFFFFF]" : "text-secondary-text"
@@ -256,13 +256,13 @@ const PersonalChat = (props: IPersonalProps) => {
             );
           })}
       </div>
-      <div className=" absolute bottom-0 right-0 border h-16 lg:h-20 w-full flex justify-between items-center px-6">
-        <input
+      <div className="absolute bottom-0 right-0 border h-16 lg:h-20 w-full flex justify-between items-center px-6">
+        <textarea
           placeholder="Type a message"
-          className="outline-none w-full font-normal text-sm h-full"
+          className="outline-none w-full font-normal text-sm h-full pt-8"
           onChange={(e) => setInputValue(e.target.value)}
           value={InputValue}
-          onKeyDown={onAction}
+          // onKeyDown={onAction}
         />
         {recorderControls.isRecording && (
           <p className="mr-2">
