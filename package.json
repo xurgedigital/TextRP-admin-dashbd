@@ -23,6 +23,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "react-switch": "^7.0.0",
+    "react-use-websocket": "^4.3.1",
     "typescript": "4.9.5",
     "xumm-oauth2-pkce": "^2.7.6",
     "xumm-react": "^1.4.1"
