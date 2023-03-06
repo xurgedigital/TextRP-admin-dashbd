@@ -9,7 +9,7 @@ import MyNFT from "@public/Icons/setting/my-nft.svg";
 import Profile from "@public/Icons/setting/profile.svg";
 import Subscriptions from "@public/Icons/setting/subscriptions.svg";
 import { useRouter } from 'next/router';
-import Link from 'next/link';
+import axios from 'axios';
 
 
 interface ISettingsProps {
@@ -55,12 +55,14 @@ const settingItems = [
     {
         title: "Log out",
         icon: Logout,
+        link: "/logout"
     },
 ]
 
 
 const SettingItems = (props: ISItemsProps) => {
     const { title, icon, link } = props
+    let router = useRouter()
 
     const ShowButtons = () => {
         if (title === "Buy credits") {
@@ -81,8 +83,19 @@ const SettingItems = (props: ISItemsProps) => {
 
     }
 
+    const handleLogOut = () => {
+        axios.post("/api/logout").then((res) => {
+            localStorage.clear()
+            router.push('/login')
+          });
+    }
+
+    let passProp = {
+        ...(link === "/logout" ? {onClick: () => handleLogOut()} : {onClick: () => router.push(link ?? "/")})
+    }
+
     return (
-        <Link href={link ?? "/"}>
+        <div {...passProp}>
             <div className='flex items-center justify-between my-8 cursor-pointer'>
                 <div className='flex items-center justify-between sm:gap-2 md:justify-between w-full' >
                     <div className='flex items-center gap-5'>
@@ -108,7 +121,7 @@ const SettingItems = (props: ISItemsProps) => {
                     />
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
 
