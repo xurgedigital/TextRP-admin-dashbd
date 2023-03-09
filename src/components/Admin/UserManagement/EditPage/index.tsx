@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EditIcon from "@public/Icons/editIcon.svg";
 import Switch from "react-switch";
 import NFT1 from "@public/Images/nft/img1.svg";
@@ -8,16 +8,148 @@ import NFT3 from "@public/Images/nft/img3.svg";
 import NFT4 from "@public/Images/nft/img4.svg";
 import useWidth from "@/hooks/useWidth";
 import Button from "@/components/UI/Button";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { trimAddress } from "@/helpers";
+import moment from "moment";
 
+interface IEditProps {
+  ActiveEditId: number;
+  ActiveUser: any;
+}
 
-const EditPage = () => {
+const EditPage = (props: IEditProps) => {
   const [active, setActive] = React.useState(false);
   const [isEditingUser, setIsEditingUser] = React.useState(false);
   const [isEditingCredit, setIsEditingCredit] = React.useState(false);
   const [isEditingDiscount, setIsEditingDiscount] = React.useState(false);
   const [isEditingNFT, setisEditingNFT] = React.useState(false);
+  const [UserData, setUserData] = useState<any>(null);
+  const [UserName, setUserName] = useState(props?.ActiveUser?.name);
+  const [UserNameLoader, setUserNameLoader] = useState(false);
+  const [Credits, setCredits] = useState(props?.ActiveUser?.credit);
+  const [CreditsLoader, setCreditsLoader] = useState(false);
+  const [Discount, setDiscount] = useState(props?.ActiveUser?.discount);
+  const [DiscountLoader, setDiscountLoader] = useState(false);
 
   const width = useWidth();
+  const router = useRouter();
+
+  const handleSaveUserName = () => {
+    setUserNameLoader(true);
+    let payload = {
+      name: UserName,
+    };
+    axios
+      .post(`/api/admin/users/${props?.ActiveEditId}`, payload)
+      .then((res) => {
+        console.log(res.data);
+        setUserNameLoader(false);
+        setIsEditingUser(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setUserNameLoader(false);
+        setIsEditingUser(false);
+      });
+  };
+
+  const handleSaveCredits = () => {
+    setCreditsLoader(true);
+    let payload = {
+      balance: JSON.parse(Credits),
+    };
+    if (props?.ActiveUser?.credit == null) {
+      axios
+        .post(`/api/admin/users/${props?.ActiveEditId}/create_credit`, payload)
+        .then((res) => {
+          console.log(res.data);
+          setCreditsLoader(false);
+          setIsEditingCredit(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setCreditsLoader(false);
+          setIsEditingCredit(false);
+        });
+    } else {
+      axios
+        .post(
+          `/api/admin/users/${props?.ActiveEditId}/credits/${props?.ActiveUser?.credit}`,
+          payload
+        )
+        .then((res) => {
+          console.log(res.data);
+          setCreditsLoader(false);
+          setIsEditingCredit(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setCreditsLoader(false);
+          setIsEditingCredit(false);
+        });
+    }
+  };
+
+  const handleSaveDiscount = () => {
+    setDiscountLoader(true);
+    let payload = {
+      discount: JSON.parse(Discount),
+    };
+    if (props?.ActiveUser?.discount == null) {
+      axios
+        .post(
+          `/api/admin/users/${props?.ActiveEditId}/create_discount`,
+          payload
+        )
+        .then((res) => {
+          console.log(res.data);
+          setDiscountLoader(false);
+          setIsEditingDiscount(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setDiscountLoader(false);
+          setIsEditingDiscount(false);
+        });
+    } else {
+      axios
+        .post(
+          `/api/admin/users/${props?.ActiveEditId}/discounts/${props?.ActiveUser?.credit}`,
+          payload
+        )
+        .then((res) => {
+          console.log(res.data);
+          setDiscountLoader(false);
+          setIsEditingDiscount(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setDiscountLoader(false);
+          setIsEditingDiscount(false);
+        });
+    }
+  };
+
+  // const getUserData = () => {
+  //   axios
+  //     .get(`/api/admin/users/${props?.ActiveEditId}`)
+  //     .then((res) => {
+  //       setUserData(res.data);
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       if (err.response.status === 401) {
+  //         localStorage.clear();
+  //         router.push("/login");
+  //       }
+  //     });
+  // };
+
+  useEffect(() => {
+    // getUserData();
+  }, []);
 
   return (
     <div className="w-full">
@@ -30,10 +162,10 @@ const EditPage = () => {
                 <div className="flex-[0.4]">Account Name</div>
                 {!isEditingUser ? (
                   <div className="flex flex-[0.6] justify-between items-center">
-                    <div className="">First name Last Name</div>
+                    <div className="">{UserName}</div>
                     <span
                       onClick={() => setIsEditingUser(true)}
-                      className=" cursor-pointer"
+                      className="cursor-pointer"
                     >
                       <Image height={16} width={16} src={EditIcon} alt="" />
                     </span>
@@ -43,9 +175,20 @@ const EditPage = () => {
                     <input
                       className=" bg-[#F3F5FF] h-11 rounded-lg w-full p-3 outline-none border-0.5 border-[#ACB1C1] "
                       type="text"
+                      value={UserName}
+                      onChange={(e) => setUserName(e.target.value)}
                     />
                     <div className=" inline-flex gap-2 mt-2">
-                      <Button className="px-6 py-2 rounded">Save</Button>
+                      <Button
+                        className="px-6 py-2 rounded"
+                        onClick={() => {
+                          handleSaveUserName();
+                        }}
+                        disabled={UserName?.length === 0}
+                        loading={UserNameLoader}
+                      >
+                        Save
+                      </Button>
                       <Button
                         onClick={() => setIsEditingUser(false)}
                         variant="blueOutline"
@@ -61,8 +204,8 @@ const EditPage = () => {
                 <div className="flex-[0.4]">Wallet Address</div>
                 <div className="flex-[0.6]">
                   {width > 1250
-                    ? "0x05f7903195f7110e318fce46973aa72adeafd0e8"
-                    : "0x05f79...d0e8"}
+                    ? props?.ActiveUser?.address
+                    : trimAddress(props?.ActiveUser?.address)}
                 </div>
               </div>
               <div className="flex gap-3 mb-4">
@@ -79,7 +222,7 @@ const EditPage = () => {
               </div>
               <div className="flex gap-3 mb-4">
                 <div className="flex-[0.4]">Account Creation Date</div>
-                <div className="flex-[0.6]">25 Jan 2023, 01:00 PM</div>
+                <div className="flex-[0.6]">{moment(props?.ActiveUser?.created_at).format("DD MMM YYYY, HH:mm A")}</div>
               </div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-[0.4]">Active</div>
@@ -105,11 +248,11 @@ const EditPage = () => {
             <div className="flex flex-col md:flex-row justify-between md:items-center gap-2 mb-4">
               <div className="flex-[0.3]">Credits Balance</div>
               {!isEditingCredit ? (
-                <div className="flex justify-between justify-between items-center gap-2 md:w-1/2">
-                  <div>25</div>
+                <div className="flex justify-between items-center gap-2 md:w-1/2">
+                  <div>{Credits || 0}</div>
                   <span
                     onClick={() => setIsEditingCredit(true)}
-                    className=" cursor-pointer"
+                    className="cursor-pointer"
                   >
                     <Image height={16} width={16} src={EditIcon} alt="" />
                   </span>
@@ -117,11 +260,20 @@ const EditPage = () => {
               ) : (
                 <div className="flex-[0.6]">
                   <input
-                    className=" bg-[#F3F5FF] h-11 rounded-lg w-full p-3 outline-none border-0.5 border-[#ACB1C1] "
+                    className="bg-[#F3F5FF] h-11 rounded-lg w-full p-3 outline-none border-0.5 border-[#ACB1C1] "
                     type="text"
+                    value={Credits}
+                    onChange={(e) => setCredits(e.target.value)}
                   />
-                  <div className=" inline-flex gap-2 mt-2">
-                    <Button className="px-6 py-2 rounded">Save</Button>
+                  <div className="inline-flex gap-2 mt-2">
+                    <Button
+                      className="px-6 py-2 rounded"
+                      onClick={() => handleSaveCredits()}
+                      loading={CreditsLoader}
+                      disabled={Credits?.length === 0}
+                    >
+                      Save
+                    </Button>
                     <Button
                       onClick={() => setIsEditingCredit(false)}
                       variant="blueOutline"
@@ -136,11 +288,11 @@ const EditPage = () => {
             <div className="flex flex-col md:flex-row justify-between md:items-center gap-2 ">
               <div className="flex-[0.3]">Discount %</div>
               {!isEditingDiscount ? (
-                <div className="flex justify-between justify-between items-center gap-2 md:w-1/2">
-                  <div>10</div>
+                <div className="flex justify-between items-center gap-2 md:w-1/2">
+                  <div>{Discount || 0}</div>
                   <span
                     onClick={() => setIsEditingDiscount(true)}
-                    className=" cursor-pointer"
+                    className="cursor-pointer"
                   >
                     <Image height={16} width={16} src={EditIcon} alt="" />
                   </span>
@@ -148,11 +300,20 @@ const EditPage = () => {
               ) : (
                 <div className="flex-[0.6]">
                   <input
-                    className=" bg-[#F3F5FF] h-11 rounded-lg w-full p-3 outline-none border-0.5 border-[#ACB1C1] "
+                    className="bg-[#F3F5FF] h-11 rounded-lg w-full p-3 outline-none border-0.5 border-[#ACB1C1] "
                     type="text"
+                    value={Discount}
+                    onChange={(e) => setDiscount(e.target.value)}
                   />
-                  <div className=" inline-flex gap-2 mt-2">
-                    <Button className="px-6 py-2 rounded">Save</Button>
+                  <div className="inline-flex gap-2 mt-2">
+                    <Button
+                      className="px-6 py-2 rounded"
+                      onClick={() => handleSaveDiscount()}
+                      loading={DiscountLoader}
+                      disabled={Discount?.length === 0}
+                    >
+                      Save
+                    </Button>
                     <Button
                       onClick={() => setIsEditingDiscount(false)}
                       variant="blueOutline"

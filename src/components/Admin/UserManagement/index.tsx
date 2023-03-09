@@ -1,14 +1,42 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SearchIcon from "@public/Icons/searchIcon.svg";
 import Button from "@/components/UI/Button";
 import EditIcon from "@public/Icons/editIcon.svg";
 import EditPage from "./EditPage";
 import useWidth from "@/hooks/useWidth";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { trimAddress } from "@/helpers";
 
 const UserManagementComp = () => {
   const [openEditSection, setOpenEditSection] = React.useState(false);
+  const [UserList, setUserList] = useState<any>(null);
+  const [ActiveEditId, setActiveEditId] = useState(0);
+  const [ActiveUser, setActiveUser] = useState('')
   const width = useWidth();
+
+  const router = useRouter();
+
+  const getUserList = () => {
+    axios
+      .get("/api/admin/users")
+      .then((res) => {
+        setUserList(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 401) {
+          localStorage.clear();
+          router.push("/login");
+        }
+      });
+  };
+
+  useEffect(() => {
+    getUserList();
+  }, []);
 
   return (
     <>
@@ -54,7 +82,7 @@ const UserManagementComp = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.apply(null, Array(10)).map((contact, index) => {
+                  {UserList?.data?.map((user: any, index: number) => {
                     return (
                       <tr
                         key={index}
@@ -62,19 +90,25 @@ const UserManagementComp = () => {
                       >
                         <td className="px-4 py-3">
                           <div className="flex gap-2 flex-col md:flex-row min-w-max ">
-                            <span>First name</span>
-                            <span>Last Name</span>
+                            <span>{user?.name}</span>
+                            {/* <span>Last Name</span> */}
                           </div>
                         </td>
                         <td className="px-4 py-3">
                           {width > 768
-                            ? "0x05f7903195f7110e318fce46973aa72adeafd0e8"
-                            : "0x05f7...d0e8"}
+                            ? user?.address
+                            : trimAddress(user?.address)}
                         </td>
-                        <td className="px-4 py-3">Yes</td>
+                        <td className="px-4 py-3">
+                          {user?.subscriptions?.length > 0 ? "Yes" : "No"}
+                        </td>
                         <td className="px-4 py-3 text-end">
                           <div
-                            onClick={() => setOpenEditSection(true)}
+                            onClick={() => {
+                              setOpenEditSection(true)
+                              setActiveEditId(user?.id)
+                              setActiveUser(user)
+                            }}
                             className="flex justify-end cursor-pointer "
                           >
                             <Image
@@ -92,20 +126,32 @@ const UserManagementComp = () => {
                 </tbody>
               </table>
             </div>
+            {!UserList?.data && (
+              <div className="flex w-full justify-center items-center p-4 bg-white">
+                <div
+                className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                role="status"
+              >
+                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                  Loading...
+                </span>
+              </div>
+                </div>
+            )}
             <div className="flex justify-between items-center px-4 py-3">
-              <Button variant="blueOutline" className="py-2 px-4 rounded-lg ">
+              <Button variant="blueOutline" className="py-2 px-4 rounded-lg" disabled={UserList?.meta?.current_page === 1}>
                 Previous
               </Button>
-              <div className="hidden md:block">Page 1 of 10</div>
-              <div className="md:hidden" >1 / 10</div>
-              <Button variant="blueOutline" className="py-2 px-4 rounded-lg">
+              <div className="hidden md:block">Page {UserList?.meta?.current_page || "0"} of {UserList?.meta?.last_page || "0"}</div>
+              <div className="md:hidden">{UserList?.meta?.current_page || "0"} / {UserList?.meta?.last_page || "0"}</div>
+              <Button variant="blueOutline" className="py-2 px-4 rounded-lg" disabled={UserList?.meta?.current_page === UserList?.meta?.last_page}>
                 Next
               </Button>
             </div>
           </div>
         </div>
       ) : (
-        <EditPage />
+        <EditPage ActiveEditId={ActiveEditId} ActiveUser={ActiveUser} />
       )}
     </>
   );
