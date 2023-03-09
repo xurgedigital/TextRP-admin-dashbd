@@ -24,7 +24,7 @@ const SmallSwitch = (props: Iprops) => {
           checked={enabled}
           onChange={setEnabled}
           className={`${
-            enabled ? "bg-primary-blue" : "bg-white"
+            enabled ? "bg-primary-blue" : "bg-slate-400"
           } relative inline-flex h-[25px] w-[45px] shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}>
           <span className="sr-only">Use setting</span>
           <span
@@ -32,7 +32,7 @@ const SmallSwitch = (props: Iprops) => {
             className={`${
               enabled
                 ? `translate-x-6 bg-[#ffffff]`
-                : `translate-x-1 ${disableColor ?? "bg-slate-400"}`
+                : `translate-x-1 ${disableColor ?? "bg-[#fff]"}`
             }
             pointer-events-none inline-block h-[17px] w-[17px] transform rounded-full  my-auto shadow-lg ring-0 transition duration-200 ease-in-out`}
           />

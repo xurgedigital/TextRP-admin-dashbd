@@ -85,8 +85,8 @@ const SettingItems = (props: ISItemsProps) => {
 
     const handleLogOut = () => {
         axios.post("/api/logout").then((res) => {
-            localStorage.clear()
             router.push('/login')
+            localStorage.clear()
           });
     }
 
