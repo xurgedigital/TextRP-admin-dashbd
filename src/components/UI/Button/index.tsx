@@ -33,7 +33,7 @@ const Button: React.FC<IButtonProps> = ({
   };
 
   return (
-    <button onClick={onClick} className={` ${returnBg(variant)} ${className} disabled:bg-slate-200`} disabled={disabled} {...rest}>
+    <button onClick={onClick} className={` ${returnBg(variant)} ${className} disabled:opacity-30`} disabled={disabled} {...rest}>
       {loading ? (
         <div className="animate-spin inline-flex h-full">
           <AiOutlineLoading className=" font-medium" size={24} />

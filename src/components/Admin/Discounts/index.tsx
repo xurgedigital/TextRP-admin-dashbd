@@ -3,6 +3,8 @@ import CommonInput from '@/components/common/CommonInput';
 import axios from "axios";
 import { useRouter } from 'next/router';
 import Button from '@/components/UI/Button';
+import Pagination from '@/components/common/Pagination';
+import Loader from '@/components/common/Loader';
 
 const DiscountComp = () => {
     const [showNewDiscount, setShowNewDiscount] = useState(false)
@@ -11,14 +13,18 @@ const DiscountComp = () => {
         discount: number;
         address: string
     }[]>([])
+    const [meta, setMeta] = useState<any>(null)
     const router = useRouter()
     const [fetch, setFetch] = useState(false)
+    const [page, setPage] = useState(1)
+    const LIMIT = 10
 
 
     const getDiscounts = () => {
         setLoading(true)
-        axios.get("/api/admin/discounts").then((res) => {
+        axios.get(`/api/admin/discounts?page=${page}&limit=${LIMIT}`).then((res) => {
             setDiscountData(res.data.data)
+            setMeta(res.data.meta)
             setLoading(false)
         }).catch(
             (err) => {
@@ -34,8 +40,7 @@ const DiscountComp = () => {
 
     useEffect(() => {
         getDiscounts()
-    }, [fetch])
-
+    }, [fetch, page])
 
 
     const SetNewDiscount = () => {
@@ -105,31 +110,21 @@ const DiscountComp = () => {
                                         </tr>
                                     </thead>
                                     <tbody className='divide-y divide-primary-gray bg-white w-full'>
-                                        {discountData && discountData?.length > 0 ? discountData.map((di, i) => (
+                                        {discountData && discountData?.length > 0 && discountData?.map((di, i) => (
                                             <tr key={i} className="text-sm font-normal text-secondary-text">
                                                 <td className='pb-4 py-3 pl-4'>{di.discount}</td>
                                                 <td className='pb-4 py-3 pr-4'>{di.address}</td>
                                             </tr>
-                                        )) : (
-                                            (
-                                                <tr>
-                                                    <td colSpan={2} className="w-full">
-                                                        <div className='text-base font-medium p-8 w-full text-center'>
-                                                            Loading...
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            )
-
-                                        )}
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
-                            <div className='flex border  border-primary-gray items-center gap-6 sm:gap-0 justify-center sm:justify-between p-4 bg-white rounded-b-lg '>
-                                <button className="border-2 border-primary-blue text-primary-blue px-4 py-2 text-sm font-semibold rounded-lg">{"Next"}</button>
-                                <p className='truncate text-secondary-text text-sm font-normal'>Page 1 of 10</p>
-                                <button className="border-2 border-primary-blue text-primary-blue px-4 py-2 text-sm font-semibold rounded-lg">{"Previous"}</button>
-                            </div>
+                            {loading ? (
+                                <div className='w-full flex justify-center items-center p-6 bg-white'>
+                                    <Loader />
+                                </div>
+                            ) : null}
+                            <Pagination className='border border-primary-gray gap-6 sm:gap-0 justify-center sm:justify-between bg-white rounded-b-lg' meta={meta} page={page} setPage={setPage} />
                         </div>
                     </div>
 

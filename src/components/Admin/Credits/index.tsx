@@ -4,6 +4,7 @@ import Image from "next/image";
 import axios from "axios";
 import { useRouter } from 'next/router';
 import Button from '@/components/UI/Button';
+import Loader from '@/components/common/Loader';
 
 interface IRowData {
     name: string,
@@ -137,20 +138,17 @@ const CreditComp = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {creditData && creditData?.length > 0 ? creditData?.map((ci, i) => (
+                            {creditData && creditData?.length > 0 && creditData?.map((ci, i) => (
                                 <Row {...ci} key={i} />
-                            )) : (
-                                <tr className='w-full'>
-                                    <td colSpan={4} className="w-full">
-                                        <div className='text-base font-medium w-full text-center p-8'>
-                                            Loading...
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
+                            ))}
                         </tbody>
                     </table>
                 </div>
+                {loading ? (
+                    <div className='w-full flex justify-center items-center p-6 bg-white'>
+                        <Loader />
+                    </div>
+                ) : null}
             </div>
         </div>
 
