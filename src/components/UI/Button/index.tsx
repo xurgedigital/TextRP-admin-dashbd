@@ -28,12 +28,12 @@ const Button: React.FC<IButtonProps> = ({
       case "primary":
         return "rounded bg-primary-blue text-white text-sm ";
       case "blueOutline":
-        return "text-primary-blue bg-white border-2 border-primary-blue text-sm font-medium ";
+        return "text-primary-blue bg-white border-2 border-primary-blue text-sm font-medium";
     }
   };
 
   return (
-    <button onClick={onClick} className={` ${returnBg(variant)} ${className}`}>
+    <button onClick={onClick} className={` ${returnBg(variant)} ${className} disabled:bg-slate-200`} disabled={disabled} {...rest}>
       {loading ? (
         <div className="animate-spin inline-flex h-full">
           <AiOutlineLoading className=" font-medium" size={24} />
