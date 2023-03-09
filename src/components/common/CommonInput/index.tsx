@@ -1,9 +1,13 @@
+import { ChangeEventHandler } from "react";
 
 interface IInputProps {
   label?: string;
   placeholder?: string;
   message?: string;
   fullWidth?: boolean;
+  value?: string | number
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  type?: string;
 }
 
 const CommonInput = (props: IInputProps) => {
@@ -13,6 +17,9 @@ const CommonInput = (props: IInputProps) => {
       <div className="relative w-full sm:w-auto">
       <input
         placeholder={props?.placeholder}
+        value={props?.value}
+        type={props?.type}
+        onChange={props?.onChange}
         className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text ${props?.fullWidth ? "min-w-full sm:min-w-[290px] lg:min-w-[360px]" : "min-w-full sm:min-w-[200px]"}`}
       />
       <p className="absolute text-secondary-text text-xs font-normal pt-1">{props?.message}</p>
