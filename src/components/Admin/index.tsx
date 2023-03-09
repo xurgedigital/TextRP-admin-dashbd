@@ -15,6 +15,7 @@ import SubscriptionComp from './Subscriptions';
 import DiscountComp from './Discounts';
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from 'react-icons/ai';
 import useWidth from '@/hooks/useWidth';
+import NFTsComp from './NFTs';
 
 
 
@@ -125,8 +126,8 @@ const Admin = () => {
                 {selectedTab === "Subscriptions" && <SubscriptionComp />}
                 {selectedTab === "Discounts" && <DiscountComp />}
                 {selectedTab === "Platform Settings" && <PlatformSettingsComp />}
+                {selectedTab === "NFTs" && <NFTsComp />}
             </div>
-
         </div>
     )
 }
