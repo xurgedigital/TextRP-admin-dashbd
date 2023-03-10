@@ -24,7 +24,7 @@ const settingItems = [
   {
     title: 'Profile',
     icon: Profile,
-    link: '/',
+    link: '/setting/profile',
   },
   {
     title: 'Linked accounts',
