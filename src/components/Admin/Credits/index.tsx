@@ -44,18 +44,22 @@ const CreditComp = () => {
         const [isEditable, setIsEditable] = useState(false)
         const [updatePrice, setUpdatePrice] = useState(price)
         const [credits, setCredits] = useState(available_credits)
+        const [isSaving, setIsSaving] = useState(false)
 
         const updateCredits = () => {
+            setIsSaving(true)
             axios.post(`/api/admin/credits/${id}`, {
                 name: name,
                 price: updatePrice,
                 available_credits: credits
             }).then((res) => {
+                setIsSaving(false)
                 setIsEditable(prev => !prev)
                 setFetch(prev => !prev)
                 console.log("update_credit", res)
             }).catch(
                 (err) => {
+                    setIsSaving(false)
                     console.log(err);
                 }
             )
@@ -78,7 +82,7 @@ const CreditComp = () => {
                                 className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text`}
                             />
                             <div className='flex items-center gap-2 mt-4'>
-                                <Button onClick={updateCredits} className="px-6 py-2  rounded">{"Save"}</Button>
+                                <Button loading={isSaving} onClick={updateCredits} className="px-6 py-2  rounded">{"Save"}</Button>
                                 <Button onClick={() => {
                                     setUpdatePrice(price)
                                     setCredits(available_credits)

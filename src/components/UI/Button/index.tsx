@@ -36,7 +36,7 @@ const Button: React.FC<IButtonProps> = ({
     <button onClick={onClick} className={` ${returnBg(variant)} ${className} disabled:opacity-30`} disabled={disabled} {...rest}>
       {loading ? (
         <div className="animate-spin inline-flex h-full">
-          <AiOutlineLoading className=" font-medium" size={24} />
+          <AiOutlineLoading className="font-bold" size={20} />
         </div>
       ) : (
         children

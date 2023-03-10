@@ -46,17 +46,21 @@ const DiscountComp = () => {
     const SetNewDiscount = () => {
         const [address, setAddress] = useState("")
         const [discount, setDiscount] = useState(0)
+        const [isSaving, setIsSaving] = useState(false)
 
         const handleSetDiscount = () => {
+            setIsSaving(true)
             axios.post(`/api/admin/discounts`, {
                 address: address,
                 discount: discount,
             }).then((res) => {
                 console.log("set_discount", res)
+                setIsSaving(false)
                 setShowNewDiscount(prev => !prev)
                 setFetch(prev => !prev)
             }).catch(
                 (err) => {
+                    setIsSaving(false)
                     console.log(err);
                 }
             )
@@ -81,9 +85,7 @@ const DiscountComp = () => {
                         fullWidth
                     />
                     <div className='flex items-center gap-2 mt-4 sm:ml-28'>
-                        <Button onClick={() => {
-                            handleSetDiscount()
-                        }} className="truncate px-4 py-2  rounded">{"Set New Discount"}</Button>
+                        <Button loading={isSaving} onClick={handleSetDiscount} className="truncate px-4 py-2  rounded">{"Save"}</Button>
                         <Button onClick={() => setShowNewDiscount(prev => !prev)} variant="blueOutline" className="px-4 py-2 rounded">{"Cancel"}</Button>
                     </div>
                 </div>
