@@ -1,448 +1,395 @@
-import CommonButton from "@/components/common/CommonButton";
-import CommonInput from "@/components/common/CommonInput";
-import CommonTextArea from "@/components/common/CommonTextArea";
-import SmallSwitch from "@/components/common/SmallSwitch";
-import axios from "axios";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import CommonButton from '@/components/common/CommonButton'
+import CommonInput from '@/components/common/CommonInput'
+import CommonTextArea from '@/components/common/CommonTextArea'
+import SmallSwitch from '@/components/common/SmallSwitch'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 
 const CreditItems = [
   {
-    packageName: "Credits Package 1",
+    packageName: 'Credits Package 1',
     numberOfCredits1: 50,
     numberOfCredits2: 3,
   },
   {
-    packageName: "Credits Package 2",
+    packageName: 'Credits Package 2',
     numberOfCredits1: 60,
     numberOfCredits2: 5,
   },
   {
-    packageName: "Credits Package 3",
+    packageName: 'Credits Package 3',
     numberOfCredits1: 70,
     numberOfCredits2: 2,
   },
   {
-    packageName: "Credits Package 4",
+    packageName: 'Credits Package 4',
     numberOfCredits1: 40,
     numberOfCredits2: 6,
   },
-];
+]
 
 const PlatformSettingsComp = () => {
-  const [NewBonus, setNewBonus] = useState<any>(0);
-  const [NewMessage, setNewMessage] = useState<any>("");
-  const [NewBonusEnabled, setNewBonusEnabled] = useState("false");
-  const [PlatformData, setPlatformData] = useState<any>(null);
-  const [WalletAddress, setWalletAddress] = useState("");
-  const [ReceiveAddress, setReceiveAddress] = useState("");
-  const [SeedKey, setSeedKey] = useState("");
-  const [TwilioKey, setTwilioKey] = useState("");
-  const [TwitterKey, setTwitterKey] = useState("");
-  const [DiscordKey, setDiscordKey] = useState("");
-  const [xummKey, setXummKey] = useState("");
+  const [NewBonus, setNewBonus] = useState<any>(0)
+  const [NewMessage, setNewMessage] = useState<any>('')
+  const [NewBonusEnabled, setNewBonusEnabled] = useState('false')
+  const [PlatformData, setPlatformData] = useState<any>(null)
+  const [WalletAddress, setWalletAddress] = useState('')
+  const [ReceiveAddress, setReceiveAddress] = useState('')
+  const [SeedKey, setSeedKey] = useState('')
+  const [TwilioKey, setTwilioKey] = useState('')
+  const [TwitterKey, setTwitterKey] = useState('')
+  const [DiscordKey, setDiscordKey] = useState('')
+  const [xummKey, setXummKey] = useState('')
   const [BonusLoader, setBonusLoader] = useState(false)
   const [MessageLoader, setMessageLoader] = useState(false)
   const [MicroPayLoader, setMicroPayLoader] = useState(false)
   const [ReceivePayLoader, setReceivePayLoader] = useState(false)
   const [ExternalAPILoader, setExternalAPILoader] = useState(false)
 
-  const router = useRouter();
+  const router = useRouter()
   const getPlatformSettings = () => {
     axios
-      .get("/api/admin/platform_settings")
+      .get('/api/admin/platform_settings')
       .then((res) => {
-        setPlatformData(res.data);
+        setPlatformData(res.data)
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
         if (err.response.status === 401) {
-          localStorage.clear();
-          router.push("/login");
+          localStorage.clear()
+          router.push('/login')
         }
-      });
-  };
+      })
+  }
 
-  console.log(PlatformData, "platform data");
+  console.log(PlatformData, 'platform data')
 
   const handleSaveLoginBonus = () => {
     setBonusLoader(true)
     let bonus = {
-      key: "bonus",
+      key: 'bonus',
       value: NewBonus,
-    };
+    }
     let active = {
-      key: "bonusActive",
+      key: 'bonusActive',
       value: NewBonusEnabled,
-    };
-    if (PlatformData?.data?.some((arr: any) => arr.key === "bonus")) {
+    }
+    if (PlatformData?.data?.some((arr: any) => arr.key === 'bonus')) {
       let keyBonus =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex((arr: any) => arr.key === "bonus")
-        ]?.id;
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'bonus')]?.id
       let keyBonusActive =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex((arr: any) => arr.key === "bonusActive")
-        ]?.id;
-      console.log(
-        PlatformData?.data?.indexOf((arr: any) => arr.key === "bonus")
-      );
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'bonusActive')]
+          ?.id
+      console.log(PlatformData?.data?.indexOf((arr: any) => arr.key === 'bonus'))
       axios
         .post(`/api/admin/platform_settings/${keyBonus}`, bonus)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           axios
             .post(`/api/admin/platform_settings/${keyBonusActive}`, active)
             .then((res) => {
-              console.log(res.data);
+              console.log(res.data)
               setBonusLoader(false)
             })
             .catch((err) => {
-              console.log(err);
+              console.log(err)
               setBonusLoader(false)
-            });
+            })
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setBonusLoader(false)
-        });
+        })
     } else {
       axios
-        .post("/api/admin/platform_settings", bonus)
+        .post('/api/admin/platform_settings', bonus)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           axios
-            .post("/api/admin/platform_settings", active)
+            .post('/api/admin/platform_settings', active)
             .then((res) => {
-              console.log(res.data);
+              console.log(res.data)
               setBonusLoader(false)
             })
             .catch((err) => {
-              console.log(err);
+              console.log(err)
               setBonusLoader(false)
-            });
+            })
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setBonusLoader(false)
-        });
+        })
     }
-  };
+  }
 
   const handleSaveLoginMessage = () => {
     setMessageLoader(true)
     let messageContents = {
-      key: "messageContents",
+      key: 'messageContents',
       value: NewMessage,
-    };
-    if (PlatformData?.data?.some((arr: any) => arr.key === "messageContents")) {
+    }
+    if (PlatformData?.data?.some((arr: any) => arr.key === 'messageContents')) {
       let keyBonus =
         PlatformData?.data[
-          PlatformData?.data?.findIndex(
-            (arr: any) => arr.key === "messageContents"
-          )
-        ]?.id;
+          PlatformData?.data?.findIndex((arr: any) => arr.key === 'messageContents')
+        ]?.id
       axios
         .post(`/api/admin/platform_settings/${keyBonus}`, messageContents)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           setMessageLoader(false)
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setMessageLoader(false)
-        });
+        })
     } else {
       axios
-        .post("/api/admin/platform_settings", messageContents)
+        .post('/api/admin/platform_settings', messageContents)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           setMessageLoader(false)
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setMessageLoader(false)
-        });
+        })
     }
-  };
+  }
 
   const handleSaveMicroPay = () => {
     setMicroPayLoader(true)
     let walletAddress = {
-      key: "walletAddress",
+      key: 'walletAddress',
       value: WalletAddress,
-    };
+    }
     let active = {
-      key: "seeedKey",
+      key: 'seeedKey',
       value: NewBonusEnabled,
-    };
-    if (PlatformData?.data?.some((arr: any) => arr.key === "walletAddress")) {
+    }
+    if (PlatformData?.data?.some((arr: any) => arr.key === 'walletAddress')) {
       let keyBonus =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex(
-            (arr: any) => arr.key === "walletAddress"
-          )
-        ]?.id;
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'walletAddress')]
+          ?.id
       let keyBonusActive =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex((arr: any) => arr.key === "seeedKey")
-        ]?.id;
-      console.log(
-        PlatformData?.data?.indexOf((arr: any) => arr.key === "walletAddress")
-      );
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'seeedKey')]?.id
+      console.log(PlatformData?.data?.indexOf((arr: any) => arr.key === 'walletAddress'))
       axios
         .post(`/api/admin/platform_settings/${keyBonus}`, walletAddress)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           axios
             .post(`/api/admin/platform_settings/${keyBonusActive}`, active)
             .then((res) => {
-              console.log(res.data);
+              console.log(res.data)
               setMicroPayLoader(false)
             })
             .catch((err) => {
-              console.log(err);
+              console.log(err)
               setMicroPayLoader(false)
-            });
+            })
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setMicroPayLoader(false)
-        });
+        })
     } else {
       axios
-        .post("/api/admin/platform_settings", walletAddress)
+        .post('/api/admin/platform_settings', walletAddress)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           axios
-            .post("/api/admin/platform_settings", active)
+            .post('/api/admin/platform_settings', active)
             .then((res) => {
-              console.log(res.data);
+              console.log(res.data)
               setMicroPayLoader(false)
             })
             .catch((err) => {
-              console.log(err);
+              console.log(err)
               setMicroPayLoader(false)
-            });
+            })
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setMicroPayLoader(false)
-        });
+        })
     }
-  };
+  }
 
   const handleSaveReceivePay = () => {
     setReceivePayLoader(true)
     let receiveWallet = {
-      key: "receiveWallet",
+      key: 'receiveWallet',
       value: ReceiveAddress,
-    };
-    if (PlatformData?.data?.some((arr: any) => arr.key === "receiveWallet")) {
+    }
+    if (PlatformData?.data?.some((arr: any) => arr.key === 'receiveWallet')) {
       let keyBonus =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex(
-            (arr: any) => arr.key === "receiveWallet"
-          )
-        ]?.id;
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'receiveWallet')]
+          ?.id
       axios
         .post(`/api/admin/platform_settings/${keyBonus}`, receiveWallet)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           setReceivePayLoader(false)
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setReceivePayLoader(false)
-        });
+        })
     } else {
       axios
-        .post("/api/admin/platform_settings", receiveWallet)
+        .post('/api/admin/platform_settings', receiveWallet)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           setReceivePayLoader(false)
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setReceivePayLoader(false)
-        });
+        })
     }
-  };
+  }
 
   const handleSaveExternalAPI = () => {
     setExternalAPILoader(true)
     let twilioKey = {
-      key: "twilioKey",
+      key: 'twilioKey',
       value: TwilioKey,
-    };
+    }
     let twitterKey = {
-      key: "twitterKey",
+      key: 'twitterKey',
       value: TwitterKey,
-    };
+    }
     let discordKey = {
-      key: "discordKey",
+      key: 'discordKey',
       value: DiscordKey,
-    };
+    }
     let XUMMKey = {
-      key: "XUMMKey",
+      key: 'XUMMKey',
       value: xummKey,
-    };
-    if (PlatformData?.data?.some((arr: any) => arr.key === "twilioKey")) {
+    }
+    if (PlatformData?.data?.some((arr: any) => arr.key === 'twilioKey')) {
       let keyBonus =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex((arr: any) => arr.key === "twilioKey")
-        ]?.id;
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'twilioKey')]?.id
       let keyBonusActive =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex((arr: any) => arr.key === "twitterKey")
-        ]?.id;
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'twitterKey')]
+          ?.id
       let keyDiscord =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex((arr: any) => arr.key === "discordKey")
-        ]?.id;
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'discordKey')]
+          ?.id
       let keyXumm =
-        PlatformData?.data[
-          PlatformData?.data?.findIndex((arr: any) => arr.key === "XUMMKey")
-        ]?.id;
-      console.log(
-        PlatformData?.data?.indexOf((arr: any) => arr.key === "twilioKey")
-      );
+        PlatformData?.data[PlatformData?.data?.findIndex((arr: any) => arr.key === 'XUMMKey')]?.id
+      console.log(PlatformData?.data?.indexOf((arr: any) => arr.key === 'twilioKey'))
       axios
         .post(`/api/admin/platform_settings/${keyBonus}`, twilioKey)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           axios
             .post(`/api/admin/platform_settings/${keyBonusActive}`, twitterKey)
             .then((res) => {
-              console.log(res.data);
+              console.log(res.data)
               axios
                 .post(`/api/admin/platform_settings/${keyDiscord}`, discordKey)
                 .then((res) => {
-                  console.log(res.data);
+                  console.log(res.data)
                   axios
                     .post(`/api/admin/platform_settings/${keyXumm}`, XUMMKey)
                     .then((res) => {
-                      console.log(res.data);
+                      console.log(res.data)
                       setExternalAPILoader(false)
                     })
                     .catch((err) => {
-                      console.log(err);
+                      console.log(err)
                       setExternalAPILoader(false)
-                    });
+                    })
                 })
                 .catch((err) => {
-                  console.log(err);
+                  console.log(err)
                   setExternalAPILoader(false)
-                });
+                })
             })
             .catch((err) => {
-              console.log(err);
+              console.log(err)
               setExternalAPILoader(false)
-            });
+            })
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setExternalAPILoader(false)
-        });
+        })
     } else {
       axios
-        .post("/api/admin/platform_settings", twilioKey)
+        .post('/api/admin/platform_settings', twilioKey)
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data)
           axios
-            .post("/api/admin/platform_settings", twitterKey)
+            .post('/api/admin/platform_settings', twitterKey)
             .then((res) => {
-              console.log(res.data);
+              console.log(res.data)
               axios
-                .post("/api/admin/platform_settings", discordKey)
+                .post('/api/admin/platform_settings', discordKey)
                 .then((res) => {
-                  console.log(res.data);
+                  console.log(res.data)
                   axios
-                    .post("/api/admin/platform_settings", XUMMKey)
+                    .post('/api/admin/platform_settings', XUMMKey)
                     .then((res) => {
-                      console.log(res.data);
+                      console.log(res.data)
                       setExternalAPILoader(false)
                     })
                     .catch((err) => {
-                      console.log(err);
+                      console.log(err)
                       setExternalAPILoader(false)
-                    });
+                    })
                 })
                 .catch((err) => {
-                  console.log(err);
+                  console.log(err)
                   setExternalAPILoader(false)
-                });
+                })
             })
             .catch((err) => {
-              console.log(err);
+              console.log(err)
               setExternalAPILoader(false)
-            });
+            })
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err)
           setExternalAPILoader(false)
-        });
+        })
     }
-  };
+  }
 
   useEffect(() => {
-    getPlatformSettings();
-  }, []);
+    getPlatformSettings()
+  }, [])
 
   useEffect(() => {
     console.log(
-      PlatformData?.data?.find((arr: any) => arr.key == "bonus"),
-      "cons"
-    );
-    PlatformData?.data?.find((arr: any) => arr.key == "bonus")?.value &&
-      setNewBonus(
-        PlatformData?.data?.find((arr: any) => arr.key == "bonus")?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "bonusActive")?.value &&
-      setNewBonusEnabled(
-        PlatformData?.data?.find((arr: any) => arr.key == "bonusActive")?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "messageContents")
-      ?.value &&
-      setNewMessage(
-        PlatformData?.data?.find((arr: any) => arr.key == "messageContents")
-          ?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "walletAddress")?.value &&
-      setWalletAddress(
-        PlatformData?.data?.find((arr: any) => arr.key == "walletAddress")
-          ?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "seeedKey")?.value &&
-      setSeedKey(
-        PlatformData?.data?.find((arr: any) => arr.key == "seeedKey")?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "receiveWallet")?.value &&
-      setReceiveAddress(
-        PlatformData?.data?.find((arr: any) => arr.key == "receiveWallet")
-          ?.value
-      );
-      PlatformData?.data?.find((arr: any) => arr.key == "twilioKey")
-      ?.value &&
-      setTwilioKey(
-        PlatformData?.data?.find((arr: any) => arr.key == "twilioKey")
-          ?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "twitterKey")?.value &&
-      setTwitterKey(
-        PlatformData?.data?.find((arr: any) => arr.key == "twitterKey")
-          ?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "discordKey")?.value &&
-      setDiscordKey(
-        PlatformData?.data?.find((arr: any) => arr.key == "discordKey")?.value
-      );
-    PlatformData?.data?.find((arr: any) => arr.key == "XUMMKey")?.value &&
-      setXummKey(
-        PlatformData?.data?.find((arr: any) => arr.key == "XUMMKey")
-          ?.value
-      );
-  }, [PlatformData]);
+      PlatformData?.data?.find((arr: any) => arr.key == 'bonus'),
+      'cons'
+    )
+    PlatformData?.data?.find((arr: any) => arr.key == 'bonus')?.value &&
+      setNewBonus(PlatformData?.data?.find((arr: any) => arr.key == 'bonus')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'bonusActive')?.value &&
+      setNewBonusEnabled(PlatformData?.data?.find((arr: any) => arr.key == 'bonusActive')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'messageContents')?.value &&
+      setNewMessage(PlatformData?.data?.find((arr: any) => arr.key == 'messageContents')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'walletAddress')?.value &&
+      setWalletAddress(PlatformData?.data?.find((arr: any) => arr.key == 'walletAddress')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'seeedKey')?.value &&
+      setSeedKey(PlatformData?.data?.find((arr: any) => arr.key == 'seeedKey')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'receiveWallet')?.value &&
+      setReceiveAddress(PlatformData?.data?.find((arr: any) => arr.key == 'receiveWallet')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'twilioKey')?.value &&
+      setTwilioKey(PlatformData?.data?.find((arr: any) => arr.key == 'twilioKey')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'twitterKey')?.value &&
+      setTwitterKey(PlatformData?.data?.find((arr: any) => arr.key == 'twitterKey')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'discordKey')?.value &&
+      setDiscordKey(PlatformData?.data?.find((arr: any) => arr.key == 'discordKey')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'XUMMKey')?.value &&
+      setXummKey(PlatformData?.data?.find((arr: any) => arr.key == 'XUMMKey')?.value)
+  }, [PlatformData])
 
   return (
     <div className="w-full max-w-[660px]">
@@ -461,7 +408,7 @@ const PlatformSettingsComp = () => {
           enabled={JSON.parse(NewBonusEnabled)}
           enableColor="#3052FF"
           setEnabled={(value) => {
-            setNewBonusEnabled(JSON.stringify(value));
+            setNewBonusEnabled(JSON.stringify(value))
           }}
         />
         <CommonButton
@@ -564,11 +511,16 @@ const PlatformSettingsComp = () => {
           label="Save"
           onClick={() => handleSaveExternalAPI()}
           isLoading={ExternalAPILoader}
-          disabled={TwilioKey.length === 0 || TwitterKey.length === 0 || DiscordKey.length === 0 || xummKey.length === 0}
+          disabled={
+            TwilioKey.length === 0 ||
+            TwitterKey.length === 0 ||
+            DiscordKey.length === 0 ||
+            xummKey.length === 0
+          }
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PlatformSettingsComp;
+export default PlatformSettingsComp

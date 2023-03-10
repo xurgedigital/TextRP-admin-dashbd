@@ -1,42 +1,42 @@
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import SearchIcon from "@public/Icons/searchIcon.svg";
-import Button from "@/components/UI/Button";
-import EditIcon from "@public/Icons/editIcon.svg";
-import EditPage from "./EditPage";
-import useWidth from "@/hooks/useWidth";
-import axios from "axios";
-import { useRouter } from "next/router";
-import { trimAddress } from "@/helpers";
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import SearchIcon from '@public/Icons/searchIcon.svg'
+import Button from '@/components/UI/Button'
+import EditIcon from '@public/Icons/editIcon.svg'
+import EditPage from './EditPage'
+import useWidth from '@/hooks/useWidth'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { trimAddress } from '@/helpers'
 
 const UserManagementComp = () => {
-  const [openEditSection, setOpenEditSection] = React.useState(false);
-  const [UserList, setUserList] = useState<any>(null);
-  const [ActiveEditId, setActiveEditId] = useState(0);
+  const [openEditSection, setOpenEditSection] = React.useState(false)
+  const [UserList, setUserList] = useState<any>(null)
+  const [ActiveEditId, setActiveEditId] = useState(0)
   const [ActiveUser, setActiveUser] = useState('')
-  const width = useWidth();
+  const width = useWidth()
 
-  const router = useRouter();
+  const router = useRouter()
 
   const getUserList = () => {
     axios
-      .get("/api/admin/users")
+      .get('/api/admin/users')
       .then((res) => {
-        setUserList(res.data);
-        console.log(res.data);
+        setUserList(res.data)
+        console.log(res.data)
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
         if (err.response.status === 401) {
-          localStorage.clear();
-          router.push("/login");
+          localStorage.clear()
+          router.push('/login')
         }
-      });
-  };
+      })
+  }
 
   useEffect(() => {
-    getUserList();
-  }, []);
+    getUserList()
+  }, [])
 
   return (
     <>
@@ -47,12 +47,7 @@ const UserManagementComp = () => {
             <div className="flex gap-2 w-full md:w-auto">
               <div className="flex items-center border border-[#ACB1C1] rounded h-11 overflow-hidden bg-white w-full md:w-[280px] ">
                 <span className=" min-w-fit mr-2.5 ml-3">
-                  <Image
-                    src={SearchIcon}
-                    width={16}
-                    height={16}
-                    alt="Filter Icon"
-                  />
+                  <Image src={SearchIcon} width={16} height={16} alt="Filter Icon" />
                 </span>
                 <input
                   type="text"
@@ -72,9 +67,7 @@ const UserManagementComp = () => {
                     <th className="text-start text-sm text-semibold px-4 py-3 w-[30%] ">
                       Account Name
                     </th>
-                    <th className="text-start text-sm text-semibold px-4 py-3 ">
-                      Wallet address
-                    </th>
+                    <th className="text-start text-sm text-semibold px-4 py-3 ">Wallet address</th>
                     <th className="text-start text-sm text-semibold px-4 py-3 w-[15%]">
                       Subscription
                     </th>
@@ -95,12 +88,10 @@ const UserManagementComp = () => {
                           </div>
                         </td>
                         <td className="px-4 py-3">
-                          {width > 768
-                            ? user?.address
-                            : trimAddress(user?.address)}
+                          {width > 768 ? user?.address : trimAddress(user?.address)}
                         </td>
                         <td className="px-4 py-3">
-                          {user?.subscriptions?.length > 0 ? "Yes" : "No"}
+                          {user?.subscriptions?.length > 0 ? 'Yes' : 'No'}
                         </td>
                         <td className="px-4 py-3 text-end">
                           <div
@@ -121,7 +112,7 @@ const UserManagementComp = () => {
                           </div>
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -129,22 +120,34 @@ const UserManagementComp = () => {
             {!UserList?.data && (
               <div className="flex w-full justify-center items-center p-4 bg-white">
                 <div
-                className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                role="status"
-              >
-                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                  Loading...
-                </span>
-              </div>
+                  className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                >
+                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                    Loading...
+                  </span>
                 </div>
+              </div>
             )}
             <div className="flex justify-between items-center px-4 py-3">
-              <Button variant="blueOutline" className="py-2 px-4 rounded-lg" disabled={UserList?.meta?.current_page === 1}>
+              <Button
+                variant="blueOutline"
+                className="py-2 px-4 rounded-lg"
+                disabled={UserList?.meta?.current_page === 1}
+              >
                 Previous
               </Button>
-              <div className="hidden md:block">Page {UserList?.meta?.current_page || "0"} of {UserList?.meta?.last_page || "0"}</div>
-              <div className="md:hidden">{UserList?.meta?.current_page || "0"} / {UserList?.meta?.last_page || "0"}</div>
-              <Button variant="blueOutline" className="py-2 px-4 rounded-lg" disabled={UserList?.meta?.current_page === UserList?.meta?.last_page}>
+              <div className="hidden md:block">
+                Page {UserList?.meta?.current_page || '0'} of {UserList?.meta?.last_page || '0'}
+              </div>
+              <div className="md:hidden">
+                {UserList?.meta?.current_page || '0'} / {UserList?.meta?.last_page || '0'}
+              </div>
+              <Button
+                variant="blueOutline"
+                className="py-2 px-4 rounded-lg"
+                disabled={UserList?.meta?.current_page === UserList?.meta?.last_page}
+              >
                 Next
               </Button>
             </div>
@@ -154,7 +157,7 @@ const UserManagementComp = () => {
         <EditPage ActiveEditId={ActiveEditId} ActiveUser={ActiveUser} />
       )}
     </>
-  );
-};
+  )
+}
 
-export default UserManagementComp;
+export default UserManagementComp

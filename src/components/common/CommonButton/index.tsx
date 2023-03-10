@@ -1,25 +1,23 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler } from 'react'
 
 interface IInputProps {
-  label?: string;
-  placeholder?: string;
-  message?: string;
-  onClick?: MouseEventHandler<HTMLDivElement>;
-  disabled?: boolean;
-  isLoading?: boolean;
+  label?: string
+  placeholder?: string
+  message?: string
+  onClick?: MouseEventHandler<HTMLDivElement>
+  disabled?: boolean
+  isLoading?: boolean
 }
 
 const CommonButton = (props: IInputProps) => {
   return (
     <div
       className={`text-sm font-normal sm:pr-20 lg:pr-40 flex flex-col sm:flex-row justify-between items-start mt-3 ${
-        props?.message && "mb-10"
+        props?.message && 'mb-10'
       }`}
       onClick={props?.onClick}
     >
-      <label className="pr-6 text-black hidden sm:block sm:invisible">
-        {props?.label}
-      </label>
+      <label className="pr-6 text-black hidden sm:block sm:invisible">{props?.label}</label>
       <div className="flex min-w-[200px] justify-start">
         <button
           className="bg-primary-blue disabled:bg-slate-400 text-white px-8 py-2 text-sm font-semibold rounded min-w-[100px]"
@@ -40,7 +38,7 @@ const CommonButton = (props: IInputProps) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CommonButton;
+export default CommonButton

@@ -1,77 +1,77 @@
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import EditIcon from "@public/Icons/editIcon.svg";
-import Switch from "react-switch";
-import NFT1 from "@public/Images/nft/img1.svg";
-import NFT2 from "@public/Images/nft/img2.svg";
-import NFT3 from "@public/Images/nft/img3.svg";
-import NFT4 from "@public/Images/nft/img4.svg";
-import useWidth from "@/hooks/useWidth";
-import Button from "@/components/UI/Button";
-import axios from "axios";
-import { useRouter } from "next/router";
-import { trimAddress } from "@/helpers";
-import moment from "moment";
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import EditIcon from '@public/Icons/editIcon.svg'
+import Switch from 'react-switch'
+import NFT1 from '@public/Images/nft/img1.svg'
+import NFT2 from '@public/Images/nft/img2.svg'
+import NFT3 from '@public/Images/nft/img3.svg'
+import NFT4 from '@public/Images/nft/img4.svg'
+import useWidth from '@/hooks/useWidth'
+import Button from '@/components/UI/Button'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { trimAddress } from '@/helpers'
+import moment from 'moment'
 
 interface IEditProps {
-  ActiveEditId: number;
-  ActiveUser: any;
+  ActiveEditId: number
+  ActiveUser: any
 }
 
 const EditPage = (props: IEditProps) => {
-  const [active, setActive] = React.useState(false);
-  const [isEditingUser, setIsEditingUser] = React.useState(false);
-  const [isEditingCredit, setIsEditingCredit] = React.useState(false);
-  const [isEditingDiscount, setIsEditingDiscount] = React.useState(false);
-  const [isEditingNFT, setisEditingNFT] = React.useState(false);
-  const [UserData, setUserData] = useState<any>(null);
-  const [UserName, setUserName] = useState(props?.ActiveUser?.name);
-  const [UserNameLoader, setUserNameLoader] = useState(false);
-  const [Credits, setCredits] = useState(props?.ActiveUser?.credit);
-  const [CreditsLoader, setCreditsLoader] = useState(false);
-  const [Discount, setDiscount] = useState(props?.ActiveUser?.discount);
-  const [DiscountLoader, setDiscountLoader] = useState(false);
+  const [active, setActive] = React.useState(false)
+  const [isEditingUser, setIsEditingUser] = React.useState(false)
+  const [isEditingCredit, setIsEditingCredit] = React.useState(false)
+  const [isEditingDiscount, setIsEditingDiscount] = React.useState(false)
+  const [isEditingNFT, setisEditingNFT] = React.useState(false)
+  const [UserData, setUserData] = useState<any>(null)
+  const [UserName, setUserName] = useState(props?.ActiveUser?.name)
+  const [UserNameLoader, setUserNameLoader] = useState(false)
+  const [Credits, setCredits] = useState(props?.ActiveUser?.credit)
+  const [CreditsLoader, setCreditsLoader] = useState(false)
+  const [Discount, setDiscount] = useState(props?.ActiveUser?.discount)
+  const [DiscountLoader, setDiscountLoader] = useState(false)
 
-  const width = useWidth();
-  const router = useRouter();
+  const width = useWidth()
+  const router = useRouter()
 
   const handleSaveUserName = () => {
-    setUserNameLoader(true);
+    setUserNameLoader(true)
     let payload = {
       name: UserName,
-    };
+    }
     axios
       .post(`/api/admin/users/${props?.ActiveEditId}`, payload)
       .then((res) => {
-        console.log(res.data);
-        setUserNameLoader(false);
-        setIsEditingUser(false);
+        console.log(res.data)
+        setUserNameLoader(false)
+        setIsEditingUser(false)
       })
       .catch((err) => {
-        console.log(err);
-        setUserNameLoader(false);
-        setIsEditingUser(false);
-      });
-  };
+        console.log(err)
+        setUserNameLoader(false)
+        setIsEditingUser(false)
+      })
+  }
 
   const handleSaveCredits = () => {
-    setCreditsLoader(true);
+    setCreditsLoader(true)
     let payload = {
       balance: JSON.parse(Credits),
-    };
+    }
     if (props?.ActiveUser?.credit == null) {
       axios
         .post(`/api/admin/users/${props?.ActiveEditId}/create_credit`, payload)
         .then((res) => {
-          console.log(res.data);
-          setCreditsLoader(false);
-          setIsEditingCredit(false);
+          console.log(res.data)
+          setCreditsLoader(false)
+          setIsEditingCredit(false)
         })
         .catch((err) => {
-          console.log(err);
-          setCreditsLoader(false);
-          setIsEditingCredit(false);
-        });
+          console.log(err)
+          setCreditsLoader(false)
+          setIsEditingCredit(false)
+        })
     } else {
       axios
         .post(
@@ -79,39 +79,36 @@ const EditPage = (props: IEditProps) => {
           payload
         )
         .then((res) => {
-          console.log(res.data);
-          setCreditsLoader(false);
-          setIsEditingCredit(false);
+          console.log(res.data)
+          setCreditsLoader(false)
+          setIsEditingCredit(false)
         })
         .catch((err) => {
-          console.log(err);
-          setCreditsLoader(false);
-          setIsEditingCredit(false);
-        });
+          console.log(err)
+          setCreditsLoader(false)
+          setIsEditingCredit(false)
+        })
     }
-  };
+  }
 
   const handleSaveDiscount = () => {
-    setDiscountLoader(true);
+    setDiscountLoader(true)
     let payload = {
       discount: JSON.parse(Discount),
-    };
+    }
     if (props?.ActiveUser?.discount == null) {
       axios
-        .post(
-          `/api/admin/users/${props?.ActiveEditId}/create_discount`,
-          payload
-        )
+        .post(`/api/admin/users/${props?.ActiveEditId}/create_discount`, payload)
         .then((res) => {
-          console.log(res.data);
-          setDiscountLoader(false);
-          setIsEditingDiscount(false);
+          console.log(res.data)
+          setDiscountLoader(false)
+          setIsEditingDiscount(false)
         })
         .catch((err) => {
-          console.log(err);
-          setDiscountLoader(false);
-          setIsEditingDiscount(false);
-        });
+          console.log(err)
+          setDiscountLoader(false)
+          setIsEditingDiscount(false)
+        })
     } else {
       axios
         .post(
@@ -119,17 +116,17 @@ const EditPage = (props: IEditProps) => {
           payload
         )
         .then((res) => {
-          console.log(res.data);
-          setDiscountLoader(false);
-          setIsEditingDiscount(false);
+          console.log(res.data)
+          setDiscountLoader(false)
+          setIsEditingDiscount(false)
         })
         .catch((err) => {
-          console.log(err);
-          setDiscountLoader(false);
-          setIsEditingDiscount(false);
-        });
+          console.log(err)
+          setDiscountLoader(false)
+          setIsEditingDiscount(false)
+        })
     }
-  };
+  }
 
   // const getUserData = () => {
   //   axios
@@ -149,7 +146,7 @@ const EditPage = (props: IEditProps) => {
 
   useEffect(() => {
     // getUserData();
-  }, []);
+  }, [])
 
   return (
     <div className="w-full">
@@ -163,10 +160,7 @@ const EditPage = (props: IEditProps) => {
                 {!isEditingUser ? (
                   <div className="flex flex-[0.6] justify-between items-center">
                     <div className="">{UserName}</div>
-                    <span
-                      onClick={() => setIsEditingUser(true)}
-                      className="cursor-pointer"
-                    >
+                    <span onClick={() => setIsEditingUser(true)} className="cursor-pointer">
                       <Image height={16} width={16} src={EditIcon} alt="" />
                     </span>
                   </div>
@@ -182,7 +176,7 @@ const EditPage = (props: IEditProps) => {
                       <Button
                         className="px-6 py-2 rounded"
                         onClick={() => {
-                          handleSaveUserName();
+                          handleSaveUserName()
                         }}
                         disabled={UserName?.length === 0}
                         loading={UserNameLoader}
@@ -222,7 +216,9 @@ const EditPage = (props: IEditProps) => {
               </div>
               <div className="flex gap-3 mb-4">
                 <div className="flex-[0.4]">Account Creation Date</div>
-                <div className="flex-[0.6]">{moment(props?.ActiveUser?.created_at).format("DD MMM YYYY, HH:mm A")}</div>
+                <div className="flex-[0.6]">
+                  {moment(props?.ActiveUser?.created_at).format('DD MMM YYYY, HH:mm A')}
+                </div>
               </div>
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-[0.4]">Active</div>
@@ -241,19 +237,14 @@ const EditPage = (props: IEditProps) => {
           </div>
         </div>
         <div className="lg:flex-[0.4]">
-          <span className=" text-xl font-semibold mb-3">
-            Credits & Discount
-          </span>
+          <span className=" text-xl font-semibold mb-3">Credits & Discount</span>
           <div className=" rounded-lg shadow-shadow-tertiary p-6 mt-3 bg-white">
             <div className="flex flex-col md:flex-row justify-between md:items-center gap-2 mb-4">
               <div className="flex-[0.3]">Credits Balance</div>
               {!isEditingCredit ? (
                 <div className="flex justify-between items-center gap-2 md:w-1/2">
                   <div>{Credits || 0}</div>
-                  <span
-                    onClick={() => setIsEditingCredit(true)}
-                    className="cursor-pointer"
-                  >
+                  <span onClick={() => setIsEditingCredit(true)} className="cursor-pointer">
                     <Image height={16} width={16} src={EditIcon} alt="" />
                   </span>
                 </div>
@@ -290,10 +281,7 @@ const EditPage = (props: IEditProps) => {
               {!isEditingDiscount ? (
                 <div className="flex justify-between items-center gap-2 md:w-1/2">
                   <div>{Discount || 0}</div>
-                  <span
-                    onClick={() => setIsEditingDiscount(true)}
-                    className="cursor-pointer"
-                  >
+                  <span onClick={() => setIsEditingDiscount(true)} className="cursor-pointer">
                     <Image height={16} width={16} src={EditIcon} alt="" />
                   </span>
                 </div>
@@ -333,10 +321,7 @@ const EditPage = (props: IEditProps) => {
           <div className="flex justify-between items-center">
             <span className=" text-xl font-semibold mb-3">Assigned NFTs</span>
             {!isEditingNFT && (
-              <span
-                onClick={() => setisEditingNFT(true)}
-                className=" cursor-pointer"
-              >
+              <span onClick={() => setisEditingNFT(true)} className=" cursor-pointer">
                 <Image height={24} width={24} src={EditIcon} alt="" />
               </span>
             )}
@@ -345,27 +330,19 @@ const EditPage = (props: IEditProps) => {
             <div className="flex flex-wrap gap-2">
               <span className="relative">
                 <Image height={96} width={96} src={NFT1} alt="" />
-                {isEditingNFT && (
-                  <input className="absolute top-1 left-1" type="checkbox" />
-                )}
+                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
               </span>
               <span className="relative">
                 <Image height={96} width={96} src={NFT2} alt="" />
-                {isEditingNFT && (
-                  <input className="absolute top-1 left-1" type="checkbox" />
-                )}
+                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
               </span>
               <span className="relative">
                 <Image height={96} width={96} src={NFT3} alt="" />
-                {isEditingNFT && (
-                  <input className="absolute top-1 left-1" type="checkbox" />
-                )}
+                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
               </span>
               <span className="relative">
                 <Image height={96} width={96} src={NFT4} alt="" />
-                {isEditingNFT && (
-                  <input className="absolute top-1 left-1" type="checkbox" />
-                )}
+                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
               </span>
             </div>
             {isEditingNFT && (
@@ -385,7 +362,7 @@ const EditPage = (props: IEditProps) => {
         <div className=" hidden lg:block flex-[0.4]"></div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditPage;
+export default EditPage
