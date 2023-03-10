@@ -13,7 +13,7 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!(state.user.isLoggedIn || localStorage.getItem('isLoggedIn') == 'true')) {
+    if (!(state?.user?.isLoggedIn || localStorage.getItem('isLoggedIn') == 'true')) {
       router.push('/login')
     }
   })

@@ -86,8 +86,6 @@ const LoginLoaded = (props: { LoginData: any; setLoginData: Function }) => {
 
   const { LoginData, setLoginData } = props
 
-  console.log(LoginData, 'login data')
-
   useWebSocket(LoginData?.data?.refs?.websocket_status, {
     onOpen: () => {
       console.log('WebSocket connection established.')
