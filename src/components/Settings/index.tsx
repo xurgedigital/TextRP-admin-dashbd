@@ -117,11 +117,11 @@ const Settings = () => {
 
   return (
     <div
-      className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen max-h-screen bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8  relative border-r-[0.5px] border-primary-gray dark:border-secondary-text-dark ${
+      className={`md:transform-none settingPanel  min-h-screen max-h-screen bg-white dark:bg-gray-bg-dark py-6   relative border-r-[0.5px] border-primary-gray dark:border-secondary-text-dark ${
         isMount ? 'translate-x-full' : 'translate-x-0'
       } transition duration-300 overflow-hidden`}
     >
-      <div className="flex gap-5 items-center">
+      <div className="flex gap-5 items-center px-4 md:px-8">
         <Image
           src={ArrowLeft}
           alt="arrow-left"
@@ -131,7 +131,7 @@ const Settings = () => {
         />
         <p className="text-2xl font-semibold">Settings</p>
       </div>
-      <div className="overflow-y-scroll w-full h-screen">
+      <div className="overflow-y-auto w-full h-full px-4 md:px-8">
         {settingItems.map((si, i) => (
           <SettingItems key={i} {...si} />
         ))}

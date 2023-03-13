@@ -104,11 +104,11 @@ const Profile = () => {
 
   return (
     <div
-      className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] ${
+      className={`md:transform-none settingPanel ${
         isMount ? 'translate-x-full' : 'translate-x-0'
-      } min-h-screen max-h-screen overflow-hidden transition duration-300   bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray dark:border-secondary-text-dark`}
+      } min-h-screen max-h-screen overflow-hidden transition duration-300   bg-white dark:bg-gray-bg-dark py-6   relative border-r-[0.5px]  border-primary-gray dark:border-secondary-text-dark`}
     >
-      <div className="flex gap-5 items-center">
+      <div className="flex gap-5 items-center px-4 md:px-8">
         <Image
           src={ArrowLeft}
           alt="arrow-left"
@@ -118,7 +118,7 @@ const Profile = () => {
         />
         <p className="text-2xl font-semibold">Edit Profile</p>
       </div>
-      <div className="overflow-y-scroll h-[90vh]">
+      <div className="overflow-y-auto h-full px-4 md:px-8">
         <div className="relative w-full flex justify-center my-8">
           <div className="rounded-full h-28 w-28 relative min-w-[6rem] overflow-hidden ">
             <Image
