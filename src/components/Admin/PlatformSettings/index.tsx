@@ -55,15 +55,12 @@ const PlatformSettingsComp = () => {
         setPlatformData(res.data)
       })
       .catch((err) => {
-        console.log(err)
         if (err.response.status === 401) {
           localStorage.clear()
           router.push('/login')
         }
       })
   }
-
-  console.log(PlatformData, 'platform data')
 
   const handleSaveLoginBonus = () => {
     setBonusLoader(true)

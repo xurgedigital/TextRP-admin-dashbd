@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import ArrowLeft from '@public/Icons/setting/arrow.svg'
 import Img1 from '@public/Images/nft/img1.svg'
@@ -6,11 +6,12 @@ import Img2 from '@public/Images/nft/img2.svg'
 import Img3 from '@public/Images/nft/img3.svg'
 import Img4 from '@public/Images/nft/img4.svg'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 
 interface INftCard {
   imgSrc: StaticImageData
   title: string
-  subTitle: string
+  description: string
 }
 
 const NFTItems = [
@@ -38,21 +39,41 @@ const NFTItems = [
 
 const NFTSection = () => {
   const router = useRouter()
+  const [NftData, setNftData] = useState<any>([1, 2, 3, 4])
+  const [NftLoading, setNftLoading] = useState(false)
   const [isMount, setMount] = React.useState(true)
 
-  React.useEffect(() => {
+  const getNFT = () => {
+    setNftLoading(true)
+    axios
+      .get('/api/admin/supported_nfts')
+      .then((res) => {
+        setNftData(res.data)
+        setNftLoading(false)
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          localStorage.clear()
+          router.push('/login')
+        }
+        setNftLoading(false)
+      })
+  }
+
+  useEffect(() => {
     if (isMount) {
       setMount(false)
+      getNFT()
     }
   }, [])
 
   const NFTCard = (props: INftCard) => {
-    const { imgSrc, title, subTitle } = props
+    const { imgSrc, title, description } = props
     return (
       <div>
         <div>
           <Image
-            src={imgSrc}
+            src={Img1}
             alt="arrow-left"
             className="cursor-pointer object-cover border border-primary-gray"
             quality={100}
@@ -60,9 +81,7 @@ const NFTSection = () => {
         </div>
         <div className="mt-2">
           <p className="text-base font-semibold">{title}</p>
-          <p className="text-secondary-text dark:text-secondary-text-dark text-xs font-normal">
-            {subTitle}
-          </p>
+          <p className="text-secondary-text text-xs font-normal">{description}</p>
         </div>
       </div>
     )
@@ -84,8 +103,20 @@ const NFTSection = () => {
         />
         <p className="text-2xl font-semibold">My NFTs</p>
       </div>
-      <div className="grid grid-cols-2 gap-4 my-8 overflow-y-scroll h-[80vh]">
-        {NFTItems.map((ni, i) => (
+      {NftLoading && (
+        <div className="w-full flex justify-center mt-16">
+          <div
+            className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+              Loading...
+            </span>
+          </div>
+        </div>
+      )}
+      <div className="grid grid-cols-2 gap-4 my-8">
+        {NftData?.data?.map((ni: any, i: number) => (
           <NFTCard {...ni} key={i} />
         ))}
       </div>
