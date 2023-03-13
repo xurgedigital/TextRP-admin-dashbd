@@ -15,7 +15,7 @@ export default function SettingPage() {
   })
 
   return (
-    <div className="flex max-h-screen overflow-x-hidden">
+    <div className="flex max-h-screen">
       <Settings />
       <DummyChatSection />
     </div>

@@ -89,19 +89,17 @@ const SettingItems = (props: ISItemsProps) => {
   }
 
   return (
-    <div {...passProp}>
-      <div className="flex items-center justify-between my-8 cursor-pointer">
-        <div className="flex items-center justify-between sm:gap-2 md:justify-between w-full">
-          <div className="flex items-center gap-5">
-            <Image src={icon} alt={title} className="" quality={100} />
-            <p className="text-base font-normal truncate">{title}</p>
-          </div>
-          <ShowButtons />
+    <div {...passProp} className="flex items-center justify-between my-8 cursor-pointer">
+      <div className="flex items-center justify-between sm:gap-2 md:justify-between w-full">
+        <div className="flex items-center gap-5">
+          <Image src={icon} alt={title} className="" quality={100} />
+          <p className="text-base font-normal truncate">{title}</p>
         </div>
+        <ShowButtons />
+      </div>
 
-        <div className="flex flex-shrink-0 items-center">
-          <Image src={Chevron} alt="chevron" className="" quality={100} />
-        </div>
+      <div className="flex flex-shrink-0 items-center">
+        <Image src={Chevron} alt="chevron" className="" quality={100} />
       </div>
     </div>
   )
@@ -119,9 +117,9 @@ const Settings = () => {
 
   return (
     <div
-      className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen max-h-screen bg-white py-6 px-4 md:px-8  relative border-[0.5px] border-primary-gray ${
+      className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen max-h-screen bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8  relative border-r-[0.5px] border-primary-gray dark:border-secondary-text-dark ${
         isMount ? 'translate-x-full' : 'translate-x-0'
-      } transition duration-300`}
+      } transition duration-300 overflow-hidden`}
     >
       <div className="flex gap-5 items-center">
         <Image
@@ -133,9 +131,11 @@ const Settings = () => {
         />
         <p className="text-2xl font-semibold">Settings</p>
       </div>
-      {settingItems.map((si, i) => (
-        <SettingItems key={i} {...si} />
-      ))}
+      <div className="overflow-y-scroll w-full h-screen">
+        {settingItems.map((si, i) => (
+          <SettingItems key={i} {...si} />
+        ))}
+      </div>
     </div>
   )
 }

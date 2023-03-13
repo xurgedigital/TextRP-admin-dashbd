@@ -1,5 +1,5 @@
 import Image, { StaticImageData } from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FilterIcon from '@public/Icons/filterIcon.svg'
 import SearchIcon from '@public/Icons/searchIcon.svg'
 import TwitterIcon from '@public/Icons/twitterChatIcon.svg'
@@ -14,6 +14,7 @@ import AddChat from './AddChat'
 import AddChatModal from './AddChatModal'
 import useWidth from '@/hooks/useWidth'
 import FilterModal from './FilterModal'
+import ThemeChanger from '../ThemeChanger'
 
 const dummyData: IInboxChatProps[] = [
   {
@@ -132,7 +133,7 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
   return (
     <div
       className={` flex py-3.5 items-center justify-between cursor-pointer px-4 lg:px-8 overflow-hidden ${
-        ChatSelected?.userName == userName ? 'bg-white' : ''
+        ChatSelected?.userName == userName ? 'bg-white dark:bg-gray-bg2-dark/40' : ''
       } `}
       onClick={() => handleSelectChat(props)}
     >
@@ -148,8 +149,8 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
           )}
         </div>
         <div className="ml-3 grid ">
-          <span className="text-base text-primary-text font-semibold truncate ">{userName}</span>
-          <div className=" text-xs text-secondary-text font-normal max-w-[75%] truncate  ">
+          <span className="text-base font-semibold truncate ">{userName}</span>
+          <div className=" text-xs text-secondary-text dark:text-secondary-text-dark  font-normal max-w-[75%] truncate  ">
             {lastChat}
           </div>
         </div>
@@ -160,7 +161,9 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
             {unseenMessageCount}
           </div>
         )}
-        <div className=" text-xs text-secondary-text font-normal mt-1">{time}</div>
+        <div className=" text-xs text-secondary-text dark:text-secondary-text-dark  font-normal mt-1">
+          {time}
+        </div>
       </div>
     </div>
   )
@@ -183,6 +186,11 @@ const InboxComp = (props: IInboxCompProps) => {
   const [filter, setFilter] = useState<string>('All Chats')
   const [openNewChatModal, setOpenNewChatModal] = useState<boolean>(false)
   const [searchText, setSearchText] = useState<string>('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const width = useWidth()
 
@@ -192,11 +200,12 @@ const InboxComp = (props: IInboxCompProps) => {
 
   return (
     <>
-      <div className=" border-r  flex-1 md:flex-[0.35] xl:flex-[0.25] flex flex-col 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg pt-6 relative overflow-hidden">
+      <div className=" border-r dark:border-secondary-text-dark flex-1 md:flex-[0.35] xl:flex-[0.25] flex flex-col 3xl:flex-[0.2] min-h-screen max-h-screen md:bg-gray-bg dark:bg-gray-bg-dark pt-6 relative overflow-hidden">
         <div className="px-4 lg:px-8">
           <div className=" hidden md:flex justify-between items-center mb-5">
-            <div className=" text-primary-text font-semibold text-3xl">Chats</div>
+            <div className="font-semibold text-3xl">Chats</div>
             <div className="flex items-center gap-5">
+              {mounted && <ThemeChanger />}
               <FilterModal />
               <Link href={'/setting'}>
                 <span className=" overflow-hidden rounded-full h-8 w-8 ">
@@ -205,13 +214,13 @@ const InboxComp = (props: IInboxCompProps) => {
               </Link>
             </div>
           </div>
-          <div className="flex items-center border border-[#ACB1C1] rounded-lg h-12  overflow-hidden bg-[#F3F5FF] md:bg-white ">
+          <div className="flex items-center border border-primary-gray dark:border-secondary-text-dark rounded-lg h-12  overflow-hidden bg-gray-bg dark:bg-gray-bg2-dark md:bg-white ">
             <span className=" min-w-fit mr-2.5 ml-5">
               <Image src={SearchIcon} width={16} height={16} alt="Filter Icon" />
             </span>
             <input
               type="text"
-              className=" border-none outline-none h-full w-full bg-transparent text-secondary-text text-base "
+              className=" border-none outline-none h-full w-full bg-transparent text-secondary-text dark:text-secondary-text-dark text-base "
               placeholder="Search"
               onChange={(e) => setSearchText(e.target.value)}
             />
@@ -238,14 +247,18 @@ const InboxComp = (props: IInboxCompProps) => {
           </div>
         ) : (
           <div className="mt-2 md:mt-8 overflow-y-auto px-8">
-            <div className=" text-base font-normal text-secondary-text mb-4 mt-6">Groups</div>
+            <div className=" text-base font-normal text-secondary-text dark:text-secondary-text-dark  mb-4 mt-6">
+              Groups
+            </div>
             <div className="flex items-center gap-3 mb-4 cursor-pointer ">
               <span>
                 <Image height={40} width={40} src={UserImage} alt="" />
               </span>
               <div className="text-base font-semibold ">Leslie Last222</div>
             </div>
-            <div className=" text-base font-normal text-secondary-text mb-4 mt-6">Contacts</div>
+            <div className=" text-base font-normal text-secondary-text dark:text-secondary-text-dark mb-4 mt-6">
+              Contacts
+            </div>
             {Array.apply(null, Array(5)).map((contact, index) => {
               return (
                 <div key={index} className="flex items-center gap-3 mb-4 cursor-pointer ">
@@ -256,15 +269,17 @@ const InboxComp = (props: IInboxCompProps) => {
                 </div>
               )
             })}
-            <div className=" text-base font-normal text-secondary-text mt-6 mb-4">Messages</div>
+            <div className=" text-base font-normal text-secondary-text dark:text-secondary-text-dark mt-6 mb-4">
+              Messages
+            </div>
             {Array.apply(null, Array(2)).map((contact, index) => {
               return (
                 <div key={index} className="mb-4">
                   <div className="flex justify-between items-center mb-1">
-                    <span className=" text-primary-text text-base font-semibold ">
-                      Leslie Alexander
+                    <span className="text-base font-semibold ">Leslie Alexander</span>
+                    <span className="text-xs font-normal text-secondary-text dark:text-secondary-text-dark">
+                      11:21 pm
                     </span>
-                    <span className="text-xs font-normal text-secondary-text">11:21 pm</span>
                   </div>
                   <p className="text-secondary-text text-xs font-normal">
                     Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet. Lorem ipsum dolor sit

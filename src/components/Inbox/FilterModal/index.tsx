@@ -29,7 +29,7 @@ const platformData = [
 
 const FilterModal = () => {
   return (
-    <div className="h-4">
+    <div className="">
       <Popover className="relative">
         {({ open, close }) => (
           <>
@@ -51,11 +51,9 @@ const FilterModal = () => {
               leaveFrom="opacity-100 translate-y-0"
               leaveTo="opacity-0 translate-y-1"
             >
-              <Popover.Panel className="absolute right-0 z-10 w-[180px] lg:w-[208px] h-[264px] rounded-lg border-0.5 border-[#ACB1C1] bg-white p-4">
+              <Popover.Panel className="absolute right-0 z-10 w-[180px] lg:w-[208px] h-[264px] rounded-lg border-0.5 border-primary-gray dark:border-secondary-text-dark bg-white dark:bg-gray-bg2-dark p-4">
                 <div className=" flex justify-between items-center mb-4 ">
-                  <span className=" text-base font-semibold text-primary-text cursor-pointer ">
-                    Filter Chats
-                  </span>
+                  <span className=" text-base font-semibold cursor-pointer ">Filter Chats</span>
                   <span className=" cursor-pointer " onClick={close}>
                     <Image src={CrossIcon} alt="" />
                   </span>
@@ -64,7 +62,10 @@ const FilterModal = () => {
                   {platformData.map((platform, index) => {
                     return (
                       <div key={index} className=" mb-4 flex items-center ">
-                        <input className=" w-4 h-4" type={'checkbox'} />
+                        <input
+                          className=" w-4 h-4 border dark:border-primary-blue"
+                          type={'checkbox'}
+                        />
                         <span className="w-6 h-6 relative ml-3 mr-2 ">
                           <Image fill src={platform.icon} alt="" />
                         </span>

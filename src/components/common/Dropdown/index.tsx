@@ -45,7 +45,7 @@ const Dropdown: React.FC<IDropdownProps> = ({
         onClick={() => setShowDropdown(!showDropdown)}
         id="dropdownDefault"
         data-dropdown-toggle="dropdown"
-        className="text-secondary-text  rounded-lg text-base font-normal appearance-none border-[0.5px] bg-gray-bg border-primary-gray focus:outline-none py-2 px-3 text-center inline-flex justify-between items-center w-full shadow-shadow-primary"
+        className="text-secondary-text  rounded-lg text-base font-normal appearance-none border-[0.5px] bg-gray-bg dark:bg-gray-bg2-dark border-primary-gray dark:border-secondary-text-dark focus:outline-none py-2 px-3 text-center inline-flex justify-between items-center w-full shadow-shadow-primary"
         type="button"
       >
         <span className="truncate">{selectedOption ?? label}</span>
@@ -57,14 +57,17 @@ const Dropdown: React.FC<IDropdownProps> = ({
         id="dropdown"
         className={`${
           showDropdown ? 'block' : 'hidden'
-        } absolute z-50 bg-gray-bg rounded divide-y divide-gray-100 shadow w-full`}
+        } absolute z-50 bg-gray-bg dark:bg-gray-bg2-dark/80 rounded divide-y divide-gray-100 shadow w-full`}
       >
-        <ul className="py-1 text-sm text-gray-700" aria-labelledby="dropdownDefault">
+        <ul
+          className="py-1 text-sm text-gray-700 dark:text-primary-text-dark"
+          aria-labelledby="dropdownDefault"
+        >
           {dropdownList.map((dl, index) => (
             <li key={`dl-${index}`}>
               <div
                 onClick={() => handleSelectOption(dl)}
-                className="block cursor-pointer py-2 px-4 hover:bg-gray-100 font-medium text-sm"
+                className="block cursor-pointer py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-bg2-dark font-medium text-sm"
               >
                 {dl}
               </div>
