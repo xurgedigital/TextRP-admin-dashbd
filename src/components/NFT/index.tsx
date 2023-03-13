@@ -6,7 +6,8 @@ import Img2 from '@public/Images/nft/img2.svg'
 import Img3 from '@public/Images/nft/img3.svg'
 import Img4 from '@public/Images/nft/img4.svg'
 import { useRouter } from 'next/router'
-import axios from 'axios'
+import useSWR from 'swr'
+import { swrFetcher } from '@/helpers'
 
 interface INftCard {
   imgSrc: StaticImageData
@@ -40,30 +41,18 @@ const NFTItems = [
 const NFTSection = () => {
   const router = useRouter()
   const [NftData, setNftData] = useState<any>([1, 2, 3, 4])
-  const [NftLoading, setNftLoading] = useState(false)
+  // const [NftLoading, setNftLoading] = useState(false)
   const [isMount, setMount] = React.useState(true)
 
-  const getNFT = () => {
-    setNftLoading(true)
-    axios
-      .get('/api/admin/supported_nfts')
-      .then((res) => {
-        setNftData(res.data)
-        setNftLoading(false)
-      })
-      .catch((err) => {
-        if (err.response.status === 401) {
-          localStorage.clear()
-          router.push('/login')
-        }
-        setNftLoading(false)
-      })
-  }
+  const { data, isLoading } = useSWR(['/api/admin/supported_nfts'], swrFetcher)
+
+  useEffect(() => {
+    setNftData(data)
+  }, [data])
 
   useEffect(() => {
     if (isMount) {
       setMount(false)
-      getNFT()
     }
   }, [])
 
@@ -103,7 +92,7 @@ const NFTSection = () => {
         />
         <p className="text-2xl font-semibold">My NFTs</p>
       </div>
-      {NftLoading && (
+      {isLoading && (
         <div className="w-full flex justify-center mt-16">
           <div
             className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"

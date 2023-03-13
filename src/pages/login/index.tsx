@@ -3,18 +3,17 @@ import useWebSocket from 'react-use-websocket'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { Context } from '../_app'
+import useSWR from 'swr'
+import { swrFetcher } from '@/helpers'
 
 const LoginLoader = (props: { setLoginData: Function }) => {
   const { setLoginData } = props
-  const getQrCode = () => {
-    axios.get('/api/login').then((res) => {
-      setLoginData(res.data)
-    })
-  }
+
+  const { data, isLoading } = useSWR(['/api/login'], swrFetcher)
 
   useEffect(() => {
-    getQrCode()
-  }, [])
+    setLoginData(data)
+  }, [data])
 
   return (
     <div className="bg-primary-blue h-fit">
@@ -64,7 +63,7 @@ const LoginLoader = (props: { setLoginData: Function }) => {
               </label>
             </div>
           </div>
-          <div className="flex items-center justify-center mt-10 md:mt-0 md:w-1/2">
+          <div className="flex items-center justify-center mt-10 md:mt-0 md:w-1/2 text-primary-blue">
             <div
               className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
               role="status"
