@@ -60,7 +60,7 @@ const LinkedAccounts = () => {
     <div
       className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] ${
         isMount ? 'translate-x-full' : 'translate-x-0'
-      } transition duration-300 min-h-screen  bg-white py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray cursor-pointer`}
+      } transition duration-300 min-h-screen  bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray dark:border-secondary-text-dark cursor-pointer`}
     >
       <div className="flex gap-5 items-center">
         <Image

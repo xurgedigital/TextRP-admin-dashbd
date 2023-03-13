@@ -88,12 +88,14 @@ const Profile = () => {
           <Image src={icon} alt={title} quality={100} className="h-4 w-4" />
           <div className="w-full">
             <p className="text-sm font-semibold">{title}</p>
-            <p className="text-xs text-secondary-text font-normal">{value}</p>
+            <p className="text-xs text-secondary-text dark:text-secondary-text-dark font-normal">
+              {value}
+            </p>
           </div>
         </div>
         {isEditable ? (
           <div>
-            <MdEdit className="text-secondary-text cursor-pointer" />
+            <MdEdit className="text-secondary-text dark:text-secondary-text-dark cursor-pointer" />
           </div>
         ) : null}
       </div>
@@ -104,7 +106,7 @@ const Profile = () => {
     <div
       className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] ${
         isMount ? 'translate-x-full' : 'translate-x-0'
-      } transition duration-300 min-h-full  h-full bg-white py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray`}
+      } min-h-screen max-h-screen overflow-hidden transition duration-300   bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray dark:border-secondary-text-dark`}
     >
       <div className="flex gap-5 items-center">
         <Image
@@ -116,24 +118,26 @@ const Profile = () => {
         />
         <p className="text-2xl font-semibold">Edit Profile</p>
       </div>
-      <div className="relative w-full flex justify-center my-8">
-        <div className="rounded-full h-28 w-28 relative min-w-[6rem] overflow-hidden ">
-          <Image
-            src={`https://picsum.photos/204`}
-            alt="User Image"
-            fill
-            className=" object-cover"
-            quality={100}
-          />
+      <div className="overflow-y-scroll h-[90vh]">
+        <div className="relative w-full flex justify-center my-8">
+          <div className="rounded-full h-28 w-28 relative min-w-[6rem] overflow-hidden ">
+            <Image
+              src={`https://picsum.photos/204`}
+              alt="User Image"
+              fill
+              className=" object-cover"
+              quality={100}
+            />
+          </div>
+          <div className=" rounded-full h-7 w-7 cursor-pointer absolute right-[40%] md:right-[30%] bottom-0">
+            <Image src={Camera} alt="Filter Icon" />
+          </div>
         </div>
-        <div className=" rounded-full h-7 w-7 cursor-pointer absolute right-[40%] md:right-[30%] bottom-0">
-          <Image src={Camera} alt="Filter Icon" />
+        <div className="flex flex-col gap-8 my-8 w-full ">
+          {LinkItems.map((li, i) => (
+            <EditCard {...li} key={i} />
+          ))}
         </div>
-      </div>
-      <div className="flex flex-col gap-8 my-8 w-full">
-        {LinkItems.map((li, i) => (
-          <EditCard {...li} key={i} />
-        ))}
       </div>
     </div>
   )

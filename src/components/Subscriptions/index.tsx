@@ -55,13 +55,15 @@ const Subscriptions = () => {
           onClick={() => setSelectCard(time)}
           className={`p-4 shadow-shadow-primary ${
             selectCard === time
-              ? 'border-2 border-primary-blue bg-gray-bg'
-              : 'border-[0.5px] border-primary-gray'
+              ? 'border-2 border-primary-blue bg-gray-bg dark:bg-gray-bg2-dark'
+              : 'border-[0.5px] border-primary-gray dark:border-secondary-text-dark'
           }  rounded-lg mb-4 ${bestDeal ? 'rounded-t-none' : ''}`}
         >
           <div className="flex items-center justify-between">
             <div>
-              <p className="uppercase text-xs text-secondary-text mb-1">{time}</p>
+              <p className="uppercase text-xs text-secondary-text dark:text-secondary-text-dark mb-1">
+                {time}
+              </p>
               <p className="text-base font-semibold text-primary-blue">{price}</p>
             </div>
             <div className={`${selectCard === time ? 'hidden' : 'block'}`}>
@@ -92,7 +94,7 @@ const Subscriptions = () => {
 
   return (
     <div
-      className={`md:transform-none  flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2] min-h-screen h-full  bg-white py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray cursor-pointer`}
+      className={`md:transform-none  flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  h-full  bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8  relative border-r-[0.5px]  border-primary-gray cursor-pointer min-h-screen max-h-screen overflow-hidden `}
     >
       <div className="flex gap-5 items-center">
         <Image
@@ -104,17 +106,19 @@ const Subscriptions = () => {
         />
         <p className="text-2xl font-semibold">Subscriptions</p>
       </div>
-      <div className="my-8 flex flex-col">
-        {subsData.map((sub, i) => (
-          <SubscriptionCard {...sub} key={i} />
-        ))}
+      <div className="overflow-y-scroll h-[95vh]">
+        <div className="my-8 flex flex-col">
+          {subsData.map((sub, i) => (
+            <SubscriptionCard {...sub} key={i} />
+          ))}
+        </div>
+        <button className="outline-none text-base font-normal rounded p-2 bg-primary-blue text-white w-full flex justify-center">
+          Subscribe
+        </button>
+        <p className="text-sm text-secondary-text dark:text-secondary-text-dark mt-4">
+          You will be charged USD $59.88 (151.17 XRP)
+        </p>
       </div>
-      <button className="outline-none text-base font-normal rounded p-2 bg-primary-blue text-white w-full flex justify-center">
-        Subscribe
-      </button>
-      <p className="text-sm text-secondary-text mt-4">
-        You will be charged USD $59.88 (151.17 XRP)
-      </p>
     </div>
   )
 }

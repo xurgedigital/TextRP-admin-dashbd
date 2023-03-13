@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import AuthWrapper from '@/wrappers/authWrapper'
 import type { AppProps } from 'next/app'
+import { ThemeProvider } from 'next-themes'
 import React, { createContext, useReducer } from 'react'
 import { user } from '../reducers/user'
 
@@ -34,11 +35,13 @@ const Provider = ({ children }: any) => {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <Provider>
-      <AuthWrapper>
-        <Component {...pageProps} />
-      </AuthWrapper>
-    </Provider>
+    <ThemeProvider attribute="class">
+      <Provider>
+        <AuthWrapper>
+          <Component {...pageProps} />
+        </AuthWrapper>
+      </Provider>
+    </ThemeProvider>
   )
 }
 

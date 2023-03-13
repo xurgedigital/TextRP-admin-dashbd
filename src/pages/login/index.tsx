@@ -28,13 +28,13 @@ const LoginLoader = (props: { setLoginData: Function }) => {
         <div className="bg-white w-[95%] sm:w-[75%] xl:w-[60%] flex flex-col md:flex-row justify-between p-4 sm:p-12 rounded-2xl">
           <div>
             <h2 className=" font-normal text-2xl">Login with QR Code to use TextRP</h2>
-            <div className="flex mt-4 text-secondary-text font-normal text-base">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 1
               </div>
               Open the XUMM app on your phone
             </div>
-            <div className="flex mt-4 text-secondary-text font-normal text-base break-keep">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base break-keep">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 2
               </div>
@@ -45,13 +45,13 @@ const LoginLoader = (props: { setLoginData: Function }) => {
                 <div>in bottom navigation</div>
               </div>
             </div>
-            <div className="flex mt-4 text-secondary-text font-normal text-base">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 3
               </div>
               Tap on the scan QR code button
             </div>
-            <div className="flex mt-4 text-secondary-text font-normal text-base">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 4
               </div>
@@ -122,16 +122,16 @@ const LoginLoaded = (props: { LoginData: any; setLoginData: Function }) => {
             'linear-gradient(rgba(50, 84, 254, 0.93), rgba(50, 84, 254, 0.93)), url(images/loginBg.png)',
         }}
       >
-        <div className="bg-white w-[95%] sm:w-[75%] xl:w-[60%] flex flex-col md:flex-row justify-between p-4 sm:p-12 rounded-2xl">
+        <div className="bg-white dark:bg-gray-bg2-dark w-[95%] sm:w-[75%] xl:w-[60%] flex flex-col md:flex-row justify-between p-4 sm:p-12 rounded-2xl">
           <div>
             <h2 className=" font-normal text-2xl">Login with QR Code to use TextRP</h2>
-            <div className="flex mt-4 text-secondary-text font-normal text-base">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 1
               </div>
               Open the XUMM app on your phone
             </div>
-            <div className="flex mt-4 text-secondary-text font-normal text-base break-keep">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base break-keep">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 2
               </div>
@@ -142,13 +142,13 @@ const LoginLoaded = (props: { LoginData: any; setLoginData: Function }) => {
                 <div>in bottom navigation</div>
               </div>
             </div>
-            <div className="flex mt-4 text-secondary-text font-normal text-base">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 3
               </div>
               Tap on the scan QR code button
             </div>
-            <div className="flex mt-4 text-secondary-text font-normal text-base">
+            <div className="flex mt-4 text-secondary-text dark:text-secondary-text-dark font-normal text-base">
               <div className="mr-2 h-6 min-w-[24px] w-6 rounded-full bg-primary-blue text-white flex justify-center items-center font-semibold text-xs">
                 4
               </div>

@@ -56,7 +56,7 @@ const AddChat = () => {
             >
               <Popover.Panel className="absolute -right-4 -bottom-4 z-10  ">
                 {currentIndex == 0 && (
-                  <div className=" bg-white w-[208px] h-[216px] border p-4 rounded-lg ">
+                  <div className=" bg-white dark:bg-gray-bg2-dark w-[208px]  border dark:border-secondary-text-dark p-4 rounded-lg ">
                     <div className="text-base font-semibold mb-4">Choose Platform</div>
                     {platformData.map((item, index) => {
                       return (
@@ -78,11 +78,11 @@ const AddChat = () => {
                   </div>
                 )}
                 {currentIndex == 1 && (
-                  <div className=" bg-white w-[208px] border p-4 rounded-lg ">
+                  <div className=" bg-white dark:bg-gray-bg2-dark w-[208px] border dark:border-secondary-text-dark p-4 rounded-lg ">
                     <input
                       type="text"
                       placeholder="Search"
-                      className=" bg-gray-bg h-6 rounded text-xs px-2 w-full outline-none mb-4"
+                      className=" bg-gray-bg dark:bg-gray-bg-dark h-6 rounded text-xs px-2 w-full outline-none mb-4"
                     />
                     {platform == 'Twilio' && (
                       <div className="flex gap-2 items-center mb-4">

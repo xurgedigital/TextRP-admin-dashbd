@@ -143,12 +143,12 @@ const PersonalChat = (props: IPersonalProps) => {
 
   return (
     <div className="flex flex-col justify-between w-full min-h-screen max-h-screen relative py-16 md:py-20">
-      <div className=" absolute top-0 right-0 border h-16 lg:h-20 w-full flex justify-between items-center px-2 md:px-6 bg-[#F8FAFD] ">
+      <div className=" absolute top-0 right-0  border-b border-primary-gray dark:border-secondary-text-dark h-16 lg:h-20 w-full flex justify-between items-center px-2 md:px-6 bg-gray-bg2 dark:bg-gray-bg-dark ">
         {ShowSearch ? (
           <div className="flex justify-between items-center py-2 w-full">
             <input
               placeholder="Search.."
-              className="px-6 py-2 w-full bg-gray-bg rounded-lg outline-none"
+              className="px-6 py-2 w-full bg-gray-bg dark:bg-gray-bg2-dark rounded-lg outline-none"
             />
             <button className="outline-none p-4" onClick={() => setShowSearch(false)}>
               Cancel
@@ -174,19 +174,22 @@ const PersonalChat = (props: IPersonalProps) => {
                 <h4 className="text-lg font-semibold">{props?.ChatSelected?.userName}</h4>
                 <div className="flex items-center">
                   <div className="bg-primary-green h-2 w-2 rounded-full mr-2"></div>
-                  <p className="text-sm font-normal text-secondary-text">Online</p>
+                  <p className="text-sm font-normal text-secondary-text dark:text-secondary-text-dark">
+                    Online
+                  </p>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-7">
               <Image
+                className="cursor-pointer"
                 height={20}
                 width={20}
                 alt="mic"
                 src={SearchIcon}
                 onClick={() => setShowSearch(true)}
               />
-              <Image alt="mic" src={ThreeDotedIcon} className="mr-5" />
+              <Image alt="mic" src={ThreeDotedIcon} className="mr-5 cursor-pointer" />
             </div>
           </>
         )}
@@ -211,7 +214,7 @@ const PersonalChat = (props: IPersonalProps) => {
                   <audio src={msg.audio} controls={true} className="object-contain w-full"></audio>
                   <div
                     className={`font-normal text-xs ${
-                      isMe ? 'text-[#E6FFFFFF]' : 'text-secondary-text'
+                      isMe ? 'text-gray-bg2' : 'text-secondary-text'
                     } flex w-full justify-end`}
                   >
                     {formatAMPM(new Date(msg?.time))}
@@ -225,13 +228,13 @@ const PersonalChat = (props: IPersonalProps) => {
                 className={`p-4 max-w-[60%] ${
                   isMe
                     ? 'self-end rounded-br-none text-white bg-primary-blue'
-                    : 'self-start rounded-bl-none text-black bg-gray-bg'
+                    : 'self-start rounded-bl-none  bg-gray-bg dark:bg-gray-bg-dark'
                 } my-2 rounded-lg`}
               >
                 <p className="whitespace-pre-wrap">{msg?.msg}</p>
                 <div
                   className={`font-normal text-xs ${
-                    isMe ? 'text-[#E6FFFFFF]' : 'text-secondary-text'
+                    isMe ? 'text-gray-bg2' : 'text-secondary-text dark:text-secondary-text-dark'
                   } flex w-full justify-end`}
                 >
                   {formatAMPM(new Date(msg?.time))}
@@ -240,10 +243,10 @@ const PersonalChat = (props: IPersonalProps) => {
             )
           })}
       </div>
-      <div className="absolute bottom-0 right-0 border h-16 lg:h-20 w-full flex justify-between items-center px-6">
+      <div className="absolute bottom-0 right-0 border-t dark:border-secondary-text-dark h-16 lg:h-20 w-full dark:bg-gray-bg-dark flex justify-between items-center px-6">
         <textarea
           placeholder="Type a message"
-          className="outline-none w-full font-normal text-sm h-full pt-8"
+          className="outline-none w-full font-normal text-sm h-full pt-8 dark:bg-gray-bg-dark"
           onChange={(e) => setInputValue(e.target.value)}
           value={InputValue}
           // onKeyDown={onAction}
@@ -255,14 +258,14 @@ const PersonalChat = (props: IPersonalProps) => {
         )}
         {recorderControls?.isRecording ? (
           <FaStop
-            className=" cursor-pointer"
-            style={{ color: '#3254FE', fontSize: '26px' }}
+            className=" cursor-pointer text-primary-blue"
+            style={{ fontSize: '26px' }}
             onClick={recorderControls.stopRecording}
           />
         ) : (
           <ImMic
-            className=" cursor-pointer"
-            style={{ color: '#3254FE', fontSize: '26px' }}
+            className=" cursor-pointer text-primary-blue"
+            style={{ fontSize: '26px' }}
             onClick={recorderControls.startRecording}
           />
         )}

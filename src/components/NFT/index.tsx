@@ -60,7 +60,9 @@ const NFTSection = () => {
         </div>
         <div className="mt-2">
           <p className="text-base font-semibold">{title}</p>
-          <p className="text-secondary-text text-xs font-normal">{subTitle}</p>
+          <p className="text-secondary-text dark:text-secondary-text-dark text-xs font-normal">
+            {subTitle}
+          </p>
         </div>
       </div>
     )
@@ -68,7 +70,7 @@ const NFTSection = () => {
 
   return (
     <div
-      className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen  bg-white py-6 px-4 md:px-8 relative border-r-[0.5px]  border-primary-gray cursor-pointer ${
+      className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen  bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8 relative border-r-[0.5px]  border-primary-gray dark:border-secondary-text-dark cursor-pointer ${
         isMount ? 'translate-x-full' : 'translate-x-0'
       }  transition duration-300`}
     >
@@ -82,7 +84,7 @@ const NFTSection = () => {
         />
         <p className="text-2xl font-semibold">My NFTs</p>
       </div>
-      <div className="grid grid-cols-2 gap-4 my-8">
+      <div className="grid grid-cols-2 gap-4 my-8 overflow-y-scroll h-[80vh]">
         {NFTItems.map((ni, i) => (
           <NFTCard {...ni} key={i} />
         ))}
