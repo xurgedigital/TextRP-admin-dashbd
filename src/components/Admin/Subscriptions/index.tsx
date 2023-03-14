@@ -1,50 +1,32 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Edit from '@public/Icons/edit.svg'
 import Image from 'next/image'
 import axios from 'axios'
-import { useRouter } from 'next/router'
 import Button from '@/components/UI/Button'
 import Loader from '@/components/common/Loader'
+import { swrFetcher } from '@/helpers'
+import useSWR from 'swr'
 interface IRowprops {
   id: number
   name: string
   description: string
   available_credits: number
+  price: number
 }
 
 const SubscriptionComp = () => {
-  const [subscriptionData, setSubscriptionData] = useState<IRowprops[]>([])
-  const [loading, setLoading] = useState(false)
-  const [fetch, setFetch] = useState(false)
-  const router = useRouter()
-
-  const getSubscriptions = () => {
-    setLoading(true)
-    axios
-      .get('/api/admin/subscriptions')
-      .then((res) => {
-        setSubscriptionData(res.data.data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-        setLoading(false)
-        if (err.response.status === 401) {
-          localStorage.clear()
-          router.push('/login')
-        }
-      })
-  }
-
-  useEffect(() => {
-    getSubscriptions()
-  }, [fetch])
+  const {
+    data: subscriptionData,
+    isLoading,
+    mutate,
+  } = useSWR('/api/admin/subscriptions', swrFetcher)
 
   const Row = (props: IRowprops) => {
-    const { id, name, description, available_credits } = props
+    const { id, name, description, available_credits, price } = props
     const [isEditable, setIsEditable] = useState(false)
     const [credits, setCredits] = useState(available_credits)
     const [descript, setDescript] = useState(description)
+    const [newPrice, setNewPrice] = useState(price)
     const [isSaving, setIsSaving] = useState(false)
 
     const updateSubscription = () => {
@@ -54,15 +36,17 @@ const SubscriptionComp = () => {
           name: name,
           description: descript,
           available_credits: credits,
+          price: newPrice,
         })
         .then((res) => {
           setIsSaving(false)
           setIsEditable((prev) => !prev)
-          setFetch((prev) => !prev)
+          mutate()
           console.log('update_subscription', res)
         })
         .catch((err) => {
           setIsSaving(false)
+          setIsEditable((prev) => !prev)
           console.log(err)
         })
     }
@@ -71,9 +55,9 @@ const SubscriptionComp = () => {
       <tr className="text-sm font-normal ">
         <td className="pb-4 capitalize">
           {isEditable ? (
-            <div className="flex items-start h-[9.5rem]">{name}</div>
+            <div className="flex items-start h-[9.5rem]">{name ?? '-'}</div>
           ) : (
-            <span>{name}</span>
+            <span>{name ?? '-'}</span>
           )}
         </td>
         <td className="pb-4">
@@ -108,7 +92,7 @@ const SubscriptionComp = () => {
               </div>
             </div>
           ) : (
-            <span>{description}</span>
+            <span>{description ?? '-'}</span>
           )}
         </td>
         <td className="pb-4 text-secondary-text">
@@ -122,25 +106,23 @@ const SubscriptionComp = () => {
               />
             </div>
           ) : (
-            <span>{available_credits}</span>
+            <span>{available_credits ?? '-'}</span>
           )}
         </td>
-        {/* <td className='pb-4 text-secondary-text'>
-                    {
-                        isEditable ? (
-                            <div className='w-full flex items-start h-[9.5rem]'>
-                                <input
-                                    placeholder={price}
-                                    value={price}
-                                    className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text`}
-                                />
-                            </div>
-                        ) : (
-                            <span>
-                                {price}
-                            </span>
-                        )}
-                </td> */}
+        <td className="pb-4 text-secondary-text">
+          {isEditable ? (
+            <div className="w-full flex items-start h-[9.5rem]">
+              <input
+                placeholder={'Ex. 6'}
+                value={newPrice}
+                onChange={(e) => setNewPrice(Number(e.target.value))}
+                className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text`}
+              />
+            </div>
+          ) : (
+            <span>{price ?? '-'}</span>
+          )}
+        </td>
         <td className="pb-4">
           <div
             onClick={() => setIsEditable((prev) => !prev)}
@@ -173,7 +155,10 @@ const SubscriptionComp = () => {
                   {' '}
                   <div className="min-w-[9rem] text-left mb-4">Number of Credits</div>
                 </th>
-                {/* <th> <div className='min-w-[9rem] text-left mb-4'>Price (in USD $) </div></th> */}
+                <th>
+                  {' '}
+                  <div className="min-w-[9rem] text-left mb-4">Price (in USD $) </div>
+                </th>
                 <th>
                   {' '}
                   <div className="w-10 mb-4"></div>{' '}
@@ -182,12 +167,12 @@ const SubscriptionComp = () => {
             </thead>
             <tbody>
               {subscriptionData &&
-                subscriptionData?.length > 0 &&
-                subscriptionData.map((si, i) => <Row {...si} key={i} />)}
+                subscriptionData?.data?.length > 0 &&
+                subscriptionData?.data?.map((si: IRowprops, i: number) => <Row {...si} key={i} />)}
             </tbody>
           </table>
         </div>
-        {loading ? (
+        {isLoading ? (
           <div className="w-full flex justify-center items-center p-6 bg-white">
             <Loader />
           </div>

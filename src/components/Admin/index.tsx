@@ -68,7 +68,7 @@ const Admin = () => {
       <div
         onClick={() => {
           setSelectedTab(title)
-          if (width < 768) {
+          if (width < 1024) {
             setIsDrawerOpen((prev) => !prev)
           }
         }}
