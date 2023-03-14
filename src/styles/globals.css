@@ -22,3 +22,7 @@
 .blurBG {
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+.settingPanel {
+  @apply flex-1 sm:max-w-[45%] sm:basis-[45%] lg:max-w-[40%] lg:basis-[40%] xl:max-w-[30%] xl:basis-[30%];
+}

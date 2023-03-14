@@ -78,11 +78,11 @@ const NFTSection = () => {
 
   return (
     <div
-      className={`md:transform-none flex-1 md:flex-[0.3] lg:flex-[0.25] 3xl:flex-[0.2]  min-h-screen  bg-white dark:bg-gray-bg-dark py-6 px-4 md:px-8 relative border-r-[0.5px]  border-primary-gray dark:border-secondary-text-dark cursor-pointer ${
+      className={`md:transform-none settingPanel min-h-screen  bg-white dark:bg-gray-bg-dark py-6  relative border-r-[0.5px]  border-primary-gray dark:border-secondary-text-dark cursor-pointer ${
         isMount ? 'translate-x-full' : 'translate-x-0'
-      }  transition duration-300`}
+      }  transition duration-300 max-h-screen overflow-hidden`}
     >
-      <div className="flex gap-5 items-center">
+      <div className="flex gap-5 items-center px-4 md:px-8">
         <Image
           src={ArrowLeft}
           alt="arrow-left"
@@ -104,10 +104,12 @@ const NFTSection = () => {
           </div>
         </div>
       )}
-      <div className="grid grid-cols-2 gap-4 my-8">
-        {NftData?.data?.map((ni: any, i: number) => (
-          <NFTCard {...ni} key={i} />
-        ))}
+      <div className="h-full overflow-y-auto px-4 md:px-8">
+        <div className="grid grid-cols-2 gap-4 my-8 ">
+          {NftData?.data?.map((ni: any, i: number) => (
+            <NFTCard {...ni} key={i} />
+          ))}
+        </div>
       </div>
     </div>
   )
