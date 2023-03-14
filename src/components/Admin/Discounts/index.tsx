@@ -1,48 +1,31 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import CommonInput from '@/components/common/CommonInput'
 import axios from 'axios'
-import { useRouter } from 'next/router'
 import Button from '@/components/UI/Button'
 import Pagination from '@/components/common/Pagination'
 import Loader from '@/components/common/Loader'
+import { swrFetcher } from '@/helpers'
+import useSWR from 'swr'
+
+interface IDiscount {
+  discount: number
+  address: string
+}
 
 const DiscountComp = () => {
   const [showNewDiscount, setShowNewDiscount] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [discountData, setDiscountData] = useState<
-    {
-      discount: number
-      address: string
-    }[]
-  >([])
   const [meta, setMeta] = useState<any>(null)
-  const router = useRouter()
-  const [fetch, setFetch] = useState(false)
   const [page, setPage] = useState(1)
   const LIMIT = 10
 
-  const getDiscounts = () => {
-    setLoading(true)
-    axios
-      .get(`/api/admin/discounts?page=${page}&limit=${LIMIT}`)
-      .then((res) => {
-        setDiscountData(res.data.data)
-        setMeta(res.data.meta)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-        setLoading(false)
-        if (err.response.status === 401) {
-          localStorage.clear()
-          router.push('/login')
-        }
-      })
-  }
+  const query = useMemo(() => `/api/admin/discounts?page=${page}&limit=${LIMIT}`, [page])
+  const { data: discountData, isLoading, mutate } = useSWR(query, swrFetcher)
 
   useEffect(() => {
-    getDiscounts()
-  }, [fetch, page])
+    if (!isLoading && discountData) {
+      setMeta(discountData?.meta)
+    }
+  }, [discountData, isLoading])
 
   const SetNewDiscount = () => {
     const [address, setAddress] = useState('')
@@ -60,7 +43,7 @@ const DiscountComp = () => {
           console.log('set_discount', res)
           setIsSaving(false)
           setShowNewDiscount((prev) => !prev)
-          setFetch((prev) => !prev)
+          mutate()
         })
         .catch((err) => {
           setIsSaving(false)
@@ -139,17 +122,17 @@ const DiscountComp = () => {
                 </thead>
                 <tbody className="divide-y divide-primary-gray bg-white w-full">
                   {discountData &&
-                    discountData?.length > 0 &&
-                    discountData?.map((di, i) => (
+                    discountData?.data?.length > 0 &&
+                    discountData?.data?.map((di: IDiscount, i: number) => (
                       <tr key={i} className="text-sm font-normal text-secondary-text">
-                        <td className="pb-4 py-3 pl-4">{di.discount}</td>
-                        <td className="pb-4 py-3 pr-4">{di.address}</td>
+                        <td className="pb-4 py-3 pl-4">{di.discount ?? '-'}</td>
+                        <td className="pb-4 py-3 pr-4">{di.address ?? '-'}</td>
                       </tr>
                     ))}
                 </tbody>
               </table>
             </div>
-            {loading ? (
+            {isLoading ? (
               <div className="w-full flex justify-center items-center p-6 bg-white">
                 <Loader />
               </div>

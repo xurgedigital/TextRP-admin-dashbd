@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Edit from '@public/Icons/edit.svg'
 import Image from 'next/image'
 import axios from 'axios'
-import { useRouter } from 'next/router'
 import Button from '@/components/UI/Button'
 import Loader from '@/components/common/Loader'
+import { swrFetcher } from '@/helpers'
+import useSWR from 'swr'
 
 interface IRowData {
   name: string
@@ -14,30 +15,7 @@ interface IRowData {
 }
 
 const CreditComp = () => {
-  const [creditData, setCreditData] = useState<IRowData[]>([])
-  const [loading, setLoading] = useState(false)
-  const [fetch, setFetch] = useState(false)
-  const router = useRouter()
-  const getCredits = () => {
-    setLoading(true)
-    axios
-      .get('/api/admin/credits')
-      .then((res) => {
-        setCreditData(res.data.data)
-        setLoading(false)
-      })
-      .catch((err) => {
-        console.log(err)
-        setLoading(false)
-        if (err.response.status === 401) {
-          localStorage.clear()
-          router.push('/login')
-        }
-      })
-  }
-  useEffect(() => {
-    getCredits()
-  }, [fetch])
+  const { data: creditData, isLoading, mutate } = useSWR('/api/admin/credits', swrFetcher)
 
   const Row = (props: IRowData) => {
     const { name, price, available_credits, id } = props
@@ -57,7 +35,7 @@ const CreditComp = () => {
         .then((res) => {
           setIsSaving(false)
           setIsEditable((prev) => !prev)
-          setFetch((prev) => !prev)
+          mutate()
           console.log('update_credit', res)
         })
         .catch((err) => {
@@ -70,9 +48,9 @@ const CreditComp = () => {
       <tr className="text-sm font-normal mr-3">
         <td className="pb-4">
           {isEditable ? (
-            <div className="flex items-start h-[7.6rem]"> {name}</div>
+            <div className="flex items-start h-[7.6rem]"> {name ?? '-'}</div>
           ) : (
-            <span>{name}</span>
+            <span>{name ?? '-'}</span>
           )}
         </td>
         <td className="pb-4">
@@ -102,7 +80,7 @@ const CreditComp = () => {
               </div>
             </div>
           ) : (
-            <span>{price}</span>
+            <span>{price ?? '-'}</span>
           )}
         </td>
         <td className="pb-4">
@@ -116,7 +94,7 @@ const CreditComp = () => {
               />
             </div>
           ) : (
-            <span>{available_credits}</span>
+            <span>{available_credits ?? '-'}</span>
           )}
         </td>
         <td className="pb-4">
@@ -158,13 +136,14 @@ const CreditComp = () => {
               </tr>
             </thead>
             <tbody>
-              {creditData &&
-                creditData?.length > 0 &&
-                creditData?.map((ci, i) => <Row {...ci} key={i} />)}
+              {!isLoading &&
+                creditData &&
+                creditData?.data?.length > 0 &&
+                creditData?.data?.map((ci: IRowData, i: number) => <Row {...ci} key={i} />)}
             </tbody>
           </table>
         </div>
-        {loading ? (
+        {isLoading ? (
           <div className="w-full flex justify-center items-center p-6 bg-white">
             <Loader />
           </div>
