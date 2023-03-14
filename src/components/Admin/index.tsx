@@ -126,7 +126,7 @@ const Admin = () => {
         </div>
       )}
       <div
-        className={`overflow-y-auto min-h-screen flex w-full py-6 pt-14 px-4 lg:px-8 bg-gray-bg transition-all ease-linear duration-200 ${
+        className={`overflow-y-auto min-h-screen flex w-full py-6 pt-14 px-4 lg:px-8 bg-gray-bg text-black transition-all ease-linear duration-200 ${
           isDrawerOpen ? 'lg:ml-[14.5rem]' : 'ml-0'
         } `}
       >
