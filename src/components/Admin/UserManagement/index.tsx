@@ -7,36 +7,54 @@ import EditPage from './EditPage'
 import useWidth from '@/hooks/useWidth'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { trimAddress } from '@/helpers'
+import { swrFetcher, trimAddress } from '@/helpers'
+import useSWR from 'swr'
 
 const UserManagementComp = () => {
   const [openEditSection, setOpenEditSection] = React.useState(false)
-  const [UserList, setUserList] = useState<any>(null)
+  // const [UserList, setUserList] = useState<any>(null)
   const [ActiveEditId, setActiveEditId] = useState(0)
   const [ActiveUser, setActiveUser] = useState('')
+  const [query, setQuery] = useState('')
+  const [searchText, setSearchText] = useState('')
   const width = useWidth()
-
   const router = useRouter()
 
-  const getUserList = () => {
-    axios
-      .get('/api/admin/users')
-      .then((res) => {
-        setUserList(res.data)
-        console.log(res.data)
-      })
-      .catch((err) => {
-        console.log(err)
-        if (err.response.status === 401) {
-          localStorage.clear()
-          router.push('/login')
-        }
-      })
-  }
+  const {
+    data: UserList,
+    isLoading,
+    mutate,
+  } = useSWR(`api/admin/users?name=${searchText}`, swrFetcher)
 
-  useEffect(() => {
-    getUserList()
-  }, [])
+  // const getUserList = () => {
+  //   axios
+  //     .get(`/api/admin/users`, { params: { name: query } })
+  //     .then((res) => {
+  //       setUserList(res.data)
+  //       console.log('YYYYYY', res.data)
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //       if (err.response.status === 401) {
+  //         localStorage.clear()
+  //         router.push('/login')
+  //       }
+  //     })
+  // }
+
+  // useEffect(() => {
+  //   getUserList()
+  // }, [])
+
+  // const handleSearch = (e: any) => {
+  //   let txt = e.target.value
+  //   if (txt === '') {
+  //     setQuery(txt)
+  //     mutate()
+  //   } else {
+  //     setQuery(txt)
+  //   }
+  // }
 
   return (
     <>
@@ -53,10 +71,12 @@ const UserManagementComp = () => {
                   type="text"
                   className=" border-none outline-none h-full w-full bg-transparent text-secondary-text text-sm "
                   placeholder="Name or wallet address"
-                  //   onChange={(e) => setSearchText(e.target.value)}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
               </div>
-              <Button className="p-3">Search</Button>
+              <Button className="p-3" onClick={() => setSearchText(query)}>
+                Search
+              </Button>
             </div>
           </div>
           <div className=" border-0.5 border-[#ACB1C1] rounded-lg ">
