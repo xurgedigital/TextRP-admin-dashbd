@@ -64,7 +64,7 @@ const AddChatModal = (props: Iprops) => {
         <div className="absolute z-10 h-full w-full top-0 right-0 blurBG  ">
           <div
             ref={ref}
-            className={`absolute z-50 bottom-0 left-0 w-full border-[#ACB1C1] border-0.5 p-6 newChatMobile bg-white opacity-100 transition duration-300 ${
+            className={`absolute z-50 bottom-0 left-0 w-full border-primary-gray dark:border-secondary-text-dark border-0.5 p-6 newChatMobile bg-white dark:bg-gray-bg2-dark opacity-100 transition duration-300 ${
               isMount ? 'translate-y-full' : 'translate-y-0'
             } `}
           >
@@ -100,15 +100,17 @@ const AddChatModal = (props: Iprops) => {
         leaveFrom="translate-x-0"
         leaveTo="translate-x-full"
       >
-        <div className=" absolute z-10 h-screen w-full top-0 right-0 bg-white max-h-screen ">
-          <div className="flex justify-between items-center bg-[#F8FAFD] px-5 py-2 ">
+        <div className=" absolute z-10 h-screen w-full top-0 right-0 bg-white dark:bg-gray-bg2-dark max-h-screen ">
+          <div className="flex justify-between items-center bg-gray-bg2 dark:bg-gray-bg-dark px-5 py-2 ">
             <div className="flex items-center gap-5">
               <span onClick={() => props.setOpenNewChatModal(false)}>
                 <Image width={20} src={LeftArrorwIcon} alt="" />
               </span>
               <div>
                 <div className=" text-lg font-semibold">New chat</div>
-                <div className=" text-[#606885] text-xs font-normal">648 contacts</div>
+                <div className=" text-secondary-text dark:text-secondary-text-dark text-xs font-normal">
+                  648 contacts
+                </div>
               </div>
             </div>
             <Image width={20} src={SearchIcon} alt="" />
@@ -122,73 +124,17 @@ const AddChatModal = (props: Iprops) => {
             </div>
           )}
           <div className=" pt-4 px-4 h-[calc(100vh-60px)] overflow-y-auto ">
-            <div className=" text-sm text-secondary-text mb-4">All Contacts</div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Alexander</div>
+            <div className=" text-sm text-secondary-text dark:text-secondary-text-dark mb-4">
+              All Contacts
             </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Alexander</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Alexander</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Alexander</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Alexander</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Alexander</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Alexander</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Last</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Last</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Last</div>
-            </div>
-            <div className="flex items-center gap-3 mb-4 cursor-pointer ">
-              <span>
-                <Image height={40} width={40} src={UserImage} alt="" />
-              </span>
-              <div className="text-base font-semibold ">Leslie Last222</div>
-            </div>
+            {Array.from({ length: 16 }).map((_, index) => (
+              <div key={index} className="flex items-center gap-3 mb-4 cursor-pointer ">
+                <span>
+                  <Image height={40} width={40} src={UserImage} alt="" />
+                </span>
+                <div className="text-base font-semibold ">Leslie Alexander</div>
+              </div>
+            ))}
           </div>
         </div>
       </Transition>

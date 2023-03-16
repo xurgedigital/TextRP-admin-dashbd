@@ -9,22 +9,25 @@ import { ImMic } from 'react-icons/im'
 import { IoSendSharp } from 'react-icons/io5'
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder'
 import { FaStop } from 'react-icons/fa'
+import AboutUser from './AboutUser'
 
+export interface IChatData {
+  userImage: string | any
+  platformIcon: StaticImageData
+  userName: string
+  lastChat: string
+  time: string
+  unseenMessageCount: number
+  handleSelectChat: Function
+}
 interface IPersonalProps {
-  ChatSelected: {
-    userImage: string | any
-    platformIcon: StaticImageData
-    userName: string
-    lastChat: string
-    time: string
-    unseenMessageCount: number
-    handleSelectChat: Function
-  } | null
+  ChatSelected: IChatData | null
   setChatSelected: Function
 }
 
 const PersonalChat = (props: IPersonalProps) => {
   const [InputValue, setInputValue] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
 
   const [sampleMsgs, setSampleMsgs] = useState<any>([
     {
@@ -142,154 +145,170 @@ const PersonalChat = (props: IPersonalProps) => {
   }
 
   return (
-    <div className="flex flex-col justify-between w-full min-h-screen max-h-screen relative py-16 md:py-20">
-      <div className=" absolute top-0 right-0  border-b border-primary-gray dark:border-secondary-text-dark h-16 lg:h-20 w-full flex justify-between items-center px-2 md:px-6 bg-gray-bg2 dark:bg-gray-bg-dark ">
-        {ShowSearch ? (
-          <div className="flex justify-between items-center py-2 w-full">
-            <input
-              placeholder="Search.."
-              className="px-6 py-2 w-full bg-gray-bg dark:bg-gray-bg2-dark rounded-lg outline-none"
-            />
-            <button className="outline-none p-4" onClick={() => setShowSearch(false)}>
-              Cancel
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center">
-              <span
-                onClick={() => props.setChatSelected(null)}
-                className="h-[17px] mr-3 cursor-pointer md:hidden"
-              >
-                <Image src={LeftArrorwIcon} alt="" />
-              </span>
-              <Image
-                src={props?.ChatSelected?.userImage}
-                alt="user"
-                width={50}
-                height={50}
-                className="rounded-full"
+    <>
+      <div className="flex flex-col justify-between w-full min-h-screen max-h-screen relative py-16 md:py-20">
+        <div className=" absolute top-0 right-0  border-b border-primary-gray dark:border-secondary-text-dark h-16 lg:h-20 w-full flex justify-between items-center px-2 md:px-6 bg-gray-bg2 dark:bg-gray-bg-dark ">
+          {ShowSearch ? (
+            <div className="flex justify-between items-center py-2 w-full">
+              <input
+                placeholder="Search.."
+                className="px-6 py-2 w-full bg-gray-bg dark:bg-gray-bg2-dark rounded-lg outline-none"
               />
-              <div className="ml-2">
-                <h4 className="text-lg font-semibold">{props?.ChatSelected?.userName}</h4>
-                <div className="flex items-center">
-                  <div className="bg-primary-green h-2 w-2 rounded-full mr-2"></div>
-                  <p className="text-sm font-normal text-secondary-text dark:text-secondary-text-dark">
-                    Online
-                  </p>
+              <button className="outline-none p-4" onClick={() => setShowSearch(false)}>
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <>
+              <div
+                className="flex items-center cursor-pointer"
+                onClick={() => setIsOpen((prev) => !prev)}
+              >
+                <span
+                  onClick={() => props.setChatSelected(null)}
+                  className="h-[17px] mr-3 cursor-pointer md:hidden"
+                >
+                  <Image src={LeftArrorwIcon} alt="" />
+                </span>
+                <Image
+                  src={props?.ChatSelected?.userImage}
+                  alt="user"
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+                <div className="ml-2">
+                  <h4 className="text-lg font-semibold">{props?.ChatSelected?.userName}</h4>
+                  <div className="flex items-center">
+                    <div className="bg-primary-green h-2 w-2 rounded-full mr-2"></div>
+                    <p className="text-sm font-normal text-secondary-text dark:text-secondary-text-dark">
+                      Online
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center gap-7">
-              <Image
-                className="cursor-pointer"
-                height={20}
-                width={20}
-                alt="mic"
-                src={SearchIcon}
-                onClick={() => setShowSearch(true)}
-              />
-              <Image alt="mic" src={ThreeDotedIcon} className="mr-5 cursor-pointer" />
-            </div>
-          </>
-        )}
-      </div>
-      <div ref={ref} className="flex-1 flex flex-col px-6 overflow-y-auto pb-4" id="chatBox">
-        {sampleMsgs
-          .sort(
-            (msg1: any, msg2: any) => new Date(msg1.time).getTime() - new Date(msg2.time).getTime()
-          )
-          .map((msg: any, index: number) => {
-            const isMe = msg.sender === 'me'
-            if (msg.isAudio) {
+              <div className="flex items-center gap-7">
+                <Image
+                  className="cursor-pointer"
+                  height={20}
+                  width={20}
+                  alt="mic"
+                  src={SearchIcon}
+                  onClick={() => setShowSearch(true)}
+                />
+                <Image alt="mic" src={ThreeDotedIcon} className="mr-5 cursor-pointer" />
+              </div>
+            </>
+          )}
+        </div>
+        <AboutUser
+          setIsOpen={setIsOpen}
+          className={`${isOpen ? 'block' : 'hidden'} absolute top-24 left-6`}
+          data={props?.ChatSelected}
+        />
+
+        <div ref={ref} className="flex-1 flex flex-col px-6 overflow-y-auto pb-4" id="chatBox">
+          {sampleMsgs
+            .sort(
+              (msg1: any, msg2: any) =>
+                new Date(msg1.time).getTime() - new Date(msg2.time).getTime()
+            )
+            .map((msg: any, index: number) => {
+              const isMe = msg.sender === 'me'
+              if (msg.isAudio) {
+                return (
+                  <div
+                    key={index}
+                    className={`p-4 md:max-w-[60%] ${
+                      isMe
+                        ? 'self-end rounded-br-none text-white bg-primary-blue'
+                        : 'self-start rounded-bl-none text-black bg-gray-bg'
+                    } my-1 rounded-lg min-w-[90%] md:min-w-[60%]`}
+                  >
+                    <audio
+                      src={msg.audio}
+                      controls={true}
+                      className="object-contain w-full"
+                    ></audio>
+                    <div
+                      className={`font-normal text-xs ${
+                        isMe ? 'text-gray-bg2' : 'text-secondary-text'
+                      } flex w-full justify-end`}
+                    >
+                      {formatAMPM(new Date(msg?.time))}
+                    </div>
+                  </div>
+                )
+              }
               return (
                 <div
                   key={index}
-                  className={`p-4 md:max-w-[60%] ${
+                  className={`p-4 max-w-[60%] ${
                     isMe
                       ? 'self-end rounded-br-none text-white bg-primary-blue'
-                      : 'self-start rounded-bl-none text-black bg-gray-bg'
-                  } my-1 rounded-lg min-w-[90%] md:min-w-[60%]`}
+                      : 'self-start rounded-bl-none  bg-gray-bg dark:bg-gray-bg-dark'
+                  } my-2 rounded-lg`}
                 >
-                  <audio src={msg.audio} controls={true} className="object-contain w-full"></audio>
+                  <p className="whitespace-pre-wrap">{msg?.msg}</p>
                   <div
                     className={`font-normal text-xs ${
-                      isMe ? 'text-gray-bg2' : 'text-secondary-text'
+                      isMe ? 'text-gray-bg2' : 'text-secondary-text dark:text-secondary-text-dark'
                     } flex w-full justify-end`}
                   >
                     {formatAMPM(new Date(msg?.time))}
                   </div>
                 </div>
               )
-            }
-            return (
-              <div
-                key={index}
-                className={`p-4 max-w-[60%] ${
-                  isMe
-                    ? 'self-end rounded-br-none text-white bg-primary-blue'
-                    : 'self-start rounded-bl-none  bg-gray-bg dark:bg-gray-bg-dark'
-                } my-2 rounded-lg`}
-              >
-                <p className="whitespace-pre-wrap">{msg?.msg}</p>
-                <div
-                  className={`font-normal text-xs ${
-                    isMe ? 'text-gray-bg2' : 'text-secondary-text dark:text-secondary-text-dark'
-                  } flex w-full justify-end`}
-                >
-                  {formatAMPM(new Date(msg?.time))}
-                </div>
-              </div>
-            )
-          })}
-      </div>
-      <div className="absolute bottom-0 right-0 border-t dark:border-secondary-text-dark h-16 lg:h-20 w-full dark:bg-gray-bg-dark flex justify-between items-center px-6">
-        <textarea
-          placeholder="Type a message"
-          className="outline-none w-full font-normal text-sm h-full pt-8 dark:bg-gray-bg-dark"
-          onChange={(e) => setInputValue(e.target.value)}
-          value={InputValue}
-          // onKeyDown={onAction}
-        />
-        {recorderControls.isRecording && (
-          <p className="mr-2">
-            {new Date(recorderControls.recordingTime * 1000).toISOString().slice(11, 19)}
-          </p>
-        )}
-        {recorderControls?.isRecording ? (
-          <FaStop
-            className=" cursor-pointer text-primary-blue"
-            style={{ fontSize: '26px' }}
-            onClick={recorderControls.stopRecording}
-          />
-        ) : (
-          <ImMic
-            className=" cursor-pointer text-primary-blue"
-            style={{ fontSize: '26px' }}
-            onClick={recorderControls.startRecording}
-          />
-        )}
-        <div className="hidden">
-          <AudioRecorder
-            onRecordingComplete={addAudioElement}
-            recorderControls={recorderControls}
-          />
+            })}
         </div>
-        <input accept="image/*" id="icon-button-file" type="file" style={{ display: 'none' }} />
-        <label className=" cursor-pointer" htmlFor="icon-button-file">
-          <AiOutlinePaperClip style={{ color: '#3254FE', fontSize: '28px', marginLeft: '8px' }} />
-          {/* <IconButton color="primary" aria-label="upload picture"
+        <div className="absolute bottom-0 right-0 border-t dark:border-secondary-text-dark h-16 lg:h-20 w-full dark:bg-gray-bg-dark flex justify-between items-center px-6">
+          <textarea
+            placeholder="Type a message"
+            className="outline-none w-full font-normal text-sm h-full pt-8 dark:bg-gray-bg-dark"
+            onChange={(e) => setInputValue(e.target.value)}
+            value={InputValue}
+            // onKeyDown={onAction}
+          />
+          {recorderControls.isRecording && (
+            <p className="mr-2">
+              {new Date(recorderControls.recordingTime * 1000).toISOString().slice(11, 19)}
+            </p>
+          )}
+          {recorderControls?.isRecording ? (
+            <FaStop
+              className=" cursor-pointer text-primary-blue"
+              style={{ fontSize: '26px' }}
+              onClick={recorderControls.stopRecording}
+            />
+          ) : (
+            <ImMic
+              className=" cursor-pointer text-primary-blue"
+              style={{ fontSize: '26px' }}
+              onClick={recorderControls.startRecording}
+            />
+          )}
+          <div className="hidden">
+            <AudioRecorder
+              onRecordingComplete={addAudioElement}
+              recorderControls={recorderControls}
+            />
+          </div>
+          <input accept="image/*" id="icon-button-file" type="file" style={{ display: 'none' }} />
+          <label className=" cursor-pointer" htmlFor="icon-button-file">
+            <AiOutlinePaperClip style={{ color: '#3254FE', fontSize: '28px', marginLeft: '8px' }} />
+            {/* <IconButton color="primary" aria-label="upload picture"
         component="span">
           <PhotoCamera />
         </IconButton> */}
-        </label>
-        <IoSendSharp
-          className=" cursor-pointer"
-          onClick={() => sendMsg()}
-          style={{ color: '#3254FE', fontSize: '26px', marginLeft: '8px' }}
-        />
+          </label>
+          <IoSendSharp
+            className=" cursor-pointer"
+            onClick={() => sendMsg()}
+            style={{ color: '#3254FE', fontSize: '26px', marginLeft: '8px' }}
+          />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
