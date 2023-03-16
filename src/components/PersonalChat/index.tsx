@@ -201,11 +201,7 @@ const PersonalChat = (props: IPersonalProps) => {
             </>
           )}
         </div>
-        <AboutUser
-          setIsOpen={setIsOpen}
-          className={`${isOpen ? 'block' : 'hidden'} absolute top-24 left-6`}
-          data={props?.ChatSelected}
-        />
+        <AboutUser isOpen={isOpen} setIsOpen={setIsOpen} data={props?.ChatSelected} />
 
         <div ref={ref} className="flex-1 flex flex-col px-6 overflow-y-auto pb-4" id="chatBox">
           {sampleMsgs

@@ -12,11 +12,11 @@ export default function Home() {
       {width >= 768 && (
         <ChatSection ChatSelected={ChatSelected} setChatSelected={setChatSelected} />
       )}
-      {/* <div className=" overflow-hidden">
+      <div className=" overflow-hidden">
         {width < 768 && ChatSelected !== null && (
           <ChatSection ChatSelected={ChatSelected} setChatSelected={setChatSelected} />
         )}
-      </div> */}
+      </div>
     </div>
   )
 }
