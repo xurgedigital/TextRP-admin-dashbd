@@ -51,10 +51,16 @@ interface ITabProps {
 }
 
 const Admin = () => {
-  const [selectedTab, setSelectedTab] = useState('User Management')
+  const [selectedTab, setSelectedTab] = useState('usermanagement')
   const [isDrawerOpen, setIsDrawerOpen] = useState(true)
   const width = useWidth()
   const router = useRouter()
+
+  useEffect(() => {
+    router.push({
+      query: { tab: selectedTab },
+    })
+  }, [])
 
   useEffect(() => {
     if (width < 1024) {
@@ -70,7 +76,7 @@ const Admin = () => {
 
   const TabSection = (props: ITabProps) => {
     const { title } = props
-    const tab = title.toLowerCase().replaceAll(' ', '')
+    const tab = title.toLowerCase().replace(/ /g, '')
     return (
       <div
         onClick={() => {
