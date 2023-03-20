@@ -24,7 +24,7 @@ const UserManagementComp = () => {
     data: UserList,
     isLoading,
     mutate,
-  } = useSWR(`api/admin/users?name=${searchText}`, swrFetcher)
+  } = useSWR(`api/admin/users?search=${searchText}`, swrFetcher)
 
   // const getUserList = () => {
   //   axios

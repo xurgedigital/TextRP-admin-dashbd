@@ -16,6 +16,7 @@ import DiscountComp from './Discounts'
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from 'react-icons/ai'
 import useWidth from '@/hooks/useWidth'
 import NFTsComp from './NFTs'
+import { useRouter } from 'next/router'
 
 const AdminItems = [
   {
@@ -53,6 +54,7 @@ const Admin = () => {
   const [selectedTab, setSelectedTab] = useState('User Management')
   const [isDrawerOpen, setIsDrawerOpen] = useState(true)
   const width = useWidth()
+  const router = useRouter()
 
   useEffect(() => {
     if (width < 1024) {
@@ -62,24 +64,32 @@ const Admin = () => {
     }
   }, [width])
 
+  useEffect(() => {
+    setSelectedTab(router?.query?.tab as string)
+  }, [router.query])
+
   const TabSection = (props: ITabProps) => {
     const { title } = props
+    const tab = title.toLowerCase().replaceAll(' ', '')
     return (
       <div
         onClick={() => {
-          setSelectedTab(title)
+          setSelectedTab(tab)
+          router.push({
+            query: { tab: tab },
+          })
           if (width < 1024) {
             setIsDrawerOpen((prev) => !prev)
           }
         }}
         className={`flex items-center gap-3 cursor-pointer p-3 ${
-          selectedTab === title ? ' bg-primary-blue rounded-lg text-white' : ' text-black'
+          selectedTab === tab ? ' bg-primary-blue rounded-lg text-white' : ' text-black'
         }`}
       >
         <div className="relative text-white">
           <AdminIcon
             name={title.toLowerCase()}
-            colorCode={`${selectedTab === title ? '#ffffff' : '#000000'}`}
+            colorCode={`${selectedTab === tab ? '#ffffff' : '#000000'}`}
           />
         </div>
         <p className="text-sm font-normal truncate">{title}</p>
@@ -130,12 +140,12 @@ const Admin = () => {
           isDrawerOpen ? 'lg:ml-[14.5rem]' : 'ml-0'
         } `}
       >
-        {selectedTab === 'User Management' && <UserManagementComp />}
-        {selectedTab === 'Credits' && <CreditComp />}
-        {selectedTab === 'Subscriptions' && <SubscriptionComp />}
-        {selectedTab === 'Discounts' && <DiscountComp />}
-        {selectedTab === 'Platform Settings' && <PlatformSettingsComp />}
-        {selectedTab === 'NFTs' && <NFTsComp />}
+        {selectedTab === 'usermanagement' && <UserManagementComp />}
+        {selectedTab === 'credits' && <CreditComp />}
+        {selectedTab === 'subscriptions' && <SubscriptionComp />}
+        {selectedTab === 'discounts' && <DiscountComp />}
+        {selectedTab === 'platformsettings' && <PlatformSettingsComp />}
+        {selectedTab === 'nfts' && <NFTsComp />}
       </div>
     </div>
   )
