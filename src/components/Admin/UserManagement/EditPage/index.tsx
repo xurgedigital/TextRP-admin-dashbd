@@ -19,6 +19,8 @@ interface IEditProps {
 }
 
 const EditPage = (props: IEditProps) => {
+  console.log(props)
+
   const [active, setActive] = React.useState(false)
   const [isEditingUser, setIsEditingUser] = React.useState(false)
   const [isEditingCredit, setIsEditingCredit] = React.useState(false)

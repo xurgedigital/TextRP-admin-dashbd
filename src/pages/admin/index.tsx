@@ -12,7 +12,7 @@ const AdminPage = () => {
       router.push('/login')
     }
   })
-  return <Admin />
+  return <></>
 }
 
 export default AdminPage

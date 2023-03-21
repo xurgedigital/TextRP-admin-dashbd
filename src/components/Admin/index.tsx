@@ -17,40 +17,48 @@ import { AiOutlineMenuFold, AiOutlineMenuUnfold } from 'react-icons/ai'
 import useWidth from '@/hooks/useWidth'
 import NFTsComp from './NFTs'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const AdminItems = [
   {
     title: 'User Management',
     icon: UserManagement,
+    link: '/admin/user-management',
   },
   {
     title: 'NFTs',
     icon: Nft,
+    link: '/admin/nft',
   },
   {
     title: 'Credits',
     icon: Credit,
+    link: '/admin/credits',
   },
   {
     title: 'Subscriptions',
     icon: Subscription,
+    link: '/admin/subscriptions',
   },
   {
     title: 'Discounts',
     icon: Discount,
+    link: '/admin/discounts',
   },
   {
     title: 'Platform Settings',
     icon: Platform,
+    link: '/admin/platform-settings',
   },
 ]
 
 interface ITabProps {
   title: string
   icon?: StaticImageData
+  link: string
 }
 
-const Admin = () => {
+const Admin = ({ children }: { children: React.ReactNode }) => {
   const [selectedTab, setSelectedTab] = useState('usermanagement')
   const [isDrawerOpen, setIsDrawerOpen] = useState(true)
   const width = useWidth()
@@ -77,31 +85,31 @@ const Admin = () => {
   }, [router.query])
 
   const TabSection = (props: ITabProps) => {
-    const { title } = props
+    const { title, link } = props
     const tab = title.toLowerCase().replace(/ /g, '')
     return (
-      <div
-        onClick={() => {
-          setSelectedTab(tab)
-          router.push({
-            query: { tab: tab },
-          })
-          if (width < 1024) {
-            setIsDrawerOpen((prev) => !prev)
-          }
-        }}
-        className={`flex items-center gap-3 cursor-pointer p-3 ${
-          selectedTab === tab ? ' bg-primary-blue rounded-lg text-white' : ' text-black'
-        }`}
-      >
-        <div className="relative text-white">
-          <AdminIcon
-            name={title.toLowerCase()}
-            colorCode={`${selectedTab === tab ? '#ffffff' : '#000000'}`}
-          />
+      <Link href={link}>
+        <div
+          onClick={() => {
+            if (width < 1024) {
+              setIsDrawerOpen((prev) => !prev)
+            }
+          }}
+          className={`flex items-center gap-3 cursor-pointer p-3 ${
+            router.pathname.includes(link)
+              ? ' bg-primary-blue rounded-lg text-white'
+              : ' text-black'
+          }`}
+        >
+          <div className="relative text-white">
+            <AdminIcon
+              name={title.toLowerCase()}
+              colorCode={`${router.pathname.includes(link) ? '#ffffff' : '#000000'}`}
+            />
+          </div>
+          <p className="text-sm font-normal truncate">{title}</p>
         </div>
-        <p className="text-sm font-normal truncate">{title}</p>
-      </div>
+      </Link>
     )
   }
 
@@ -148,12 +156,13 @@ const Admin = () => {
           isDrawerOpen ? 'lg:ml-[14.5rem]' : 'ml-0'
         } `}
       >
-        {selectedTab === 'usermanagement' && <UserManagementComp />}
+        {children}
+        {/* {selectedTab === 'usermanagement' && <UserManagementComp />}
         {selectedTab === 'credits' && <CreditComp />}
         {selectedTab === 'subscriptions' && <SubscriptionComp />}
         {selectedTab === 'discounts' && <DiscountComp />}
         {selectedTab === 'platformsettings' && <PlatformSettingsComp />}
-        {selectedTab === 'nfts' && <NFTsComp />}
+        {selectedTab === 'nfts' && <NFTsComp />} */}
       </div>
     </div>
   )
