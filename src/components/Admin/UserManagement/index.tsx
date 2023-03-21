@@ -68,6 +68,11 @@ const UserManagementComp = () => {
                   <Image src={SearchIcon} width={16} height={16} alt="Filter Icon" />
                 </span>
                 <input
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setSearchText(query)
+                    }
+                  }}
                   type="text"
                   className=" border-none outline-none h-full w-full bg-transparent text-secondary-text text-sm "
                   placeholder="Name or wallet address"
@@ -114,16 +119,14 @@ const UserManagementComp = () => {
                           {user?.subscriptions?.length > 0 ? 'Yes' : 'No'}
                         </td>
                         <td className="px-4 py-3 text-end">
-                          <div
-                            onClick={() => {
-                              setOpenEditSection(true)
-                              setActiveEditId(user?.id)
-                              setActiveUser(user)
-                            }}
-                            className="flex justify-end cursor-pointer "
-                          >
+                          <div className="flex justify-end ">
                             <Image
-                              className="min-w-fit"
+                              onClick={() => {
+                                setOpenEditSection(true)
+                                setActiveEditId(user?.id)
+                                setActiveUser(user)
+                              }}
+                              className="min-w-fit cursor-pointer"
                               height={16}
                               width={16}
                               src={EditIcon}
