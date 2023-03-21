@@ -76,7 +76,7 @@ const SettingItems = (props: ISItemsProps) => {
   }
 
   const handleLogOut = () => {
-    axios.post('/api/logout').then((res) => {
+    axios.delete('/api/logout').then((res) => {
       router.push('/login')
       localStorage.clear()
     })
