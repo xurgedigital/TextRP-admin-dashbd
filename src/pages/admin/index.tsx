@@ -10,6 +10,8 @@ const AdminPage = () => {
   useEffect(() => {
     if (!(state.user.isLoggedIn || localStorage.getItem('isLoggedIn') == 'true')) {
       router.push('/login')
+    } else {
+      router.push('admin/user-management')
     }
   })
   return <></>

@@ -31,7 +31,7 @@ const EditPage = (props: IEditProps) => {
   const [UserNameLoader, setUserNameLoader] = useState(false)
   const [Credits, setCredits] = useState(props?.ActiveUser?.credit)
   const [CreditsLoader, setCreditsLoader] = useState(false)
-  const [Discount, setDiscount] = useState(props?.ActiveUser?.discount)
+  const [Discount, setDiscount] = useState(props?.ActiveUser?.discount?.discount)
   const [DiscountLoader, setDiscountLoader] = useState(false)
 
   const width = useWidth()
