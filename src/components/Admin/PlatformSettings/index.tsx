@@ -433,7 +433,7 @@ const PlatformSettingsComp = () => {
         />
       </div>
 
-      <p className="text-2xl font-semibold mt-8">Micropayments</p>
+      {/* <p className="text-2xl font-semibold mt-8">Micropayments</p>
       <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
         <CommonInput
           label="Wallet Address"
@@ -455,7 +455,7 @@ const PlatformSettingsComp = () => {
           isLoading={MicroPayLoader}
           disabled={WalletAddress.length === 0 || SeedKey.length === 0}
         />
-      </div>
+      </div> */}
 
       <p className="text-2xl font-semibold mt-8">Receive Payments</p>
       <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">

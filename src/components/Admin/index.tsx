@@ -56,11 +56,11 @@ const Admin = () => {
   const width = useWidth()
   const router = useRouter()
 
-  useEffect(() => {
-    router.push({
-      query: { tab: selectedTab },
-    })
-  }, [])
+  // useEffect(() => {
+  //   router.push({
+  //     query: { tab: selectedTab },
+  //   })
+  // }, [])
 
   useEffect(() => {
     if (width < 1024) {
