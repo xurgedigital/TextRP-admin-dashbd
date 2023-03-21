@@ -24,7 +24,7 @@ const UserManagementComp = () => {
     data: UserList,
     isLoading,
     mutate,
-  } = useSWR(`api/admin/users?search=${searchText}`, swrFetcher)
+  } = useSWR(`/api/admin/users?search=${searchText}`, swrFetcher)
 
   // const getUserList = () => {
   //   axios
@@ -122,9 +122,9 @@ const UserManagementComp = () => {
                           <div className="flex justify-end ">
                             <Image
                               onClick={() => {
+                                setActiveUser(user)
                                 setOpenEditSection(true)
                                 setActiveEditId(user?.id)
-                                setActiveUser(user)
                               }}
                               className="min-w-fit cursor-pointer"
                               height={16}

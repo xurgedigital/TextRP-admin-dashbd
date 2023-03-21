@@ -96,13 +96,15 @@ const Admin = ({ children }: { children: React.ReactNode }) => {
             }
           }}
           className={`flex items-center gap-3 cursor-pointer p-3 ${
-            selectedTab === tab ? ' bg-primary-blue rounded-lg text-white' : ' text-black'
+            router.pathname.includes(link)
+              ? ' bg-primary-blue rounded-lg text-white'
+              : ' text-black'
           }`}
         >
           <div className="relative text-white">
             <AdminIcon
               name={title.toLowerCase()}
-              colorCode={`${selectedTab === tab ? '#ffffff' : '#000000'}`}
+              colorCode={`${router.pathname.includes(link) ? '#ffffff' : '#000000'}`}
             />
           </div>
           <p className="text-sm font-normal truncate">{title}</p>
