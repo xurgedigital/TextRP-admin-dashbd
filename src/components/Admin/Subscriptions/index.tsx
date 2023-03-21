@@ -157,7 +157,7 @@ const SubscriptionComp = () => {
                 </th>
                 <th>
                   {' '}
-                  <div className="min-w-[9rem] text-left mb-4">Price (in USD $) </div>
+                  <div className="min-w-[9rem] text-left mb-4">Price (in XRP) </div>
                 </th>
                 <th>
                   {' '}
