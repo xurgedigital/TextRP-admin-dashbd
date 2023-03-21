@@ -71,7 +71,9 @@ const Admin = () => {
   }, [width])
 
   useEffect(() => {
-    setSelectedTab(router?.query?.tab as string)
+    if (router?.query?.tab) {
+      setSelectedTab(router?.query?.tab as string)
+    }
   }, [router.query])
 
   const TabSection = (props: ITabProps) => {

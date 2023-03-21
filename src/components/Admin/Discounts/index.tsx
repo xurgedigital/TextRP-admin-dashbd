@@ -5,7 +5,9 @@ import Button from '@/components/UI/Button'
 import Pagination from '@/components/common/Pagination'
 import Loader from '@/components/common/Loader'
 import { swrFetcher } from '@/helpers'
+import EditIcon from '@public/Icons/editIcon.svg'
 import useSWR from 'swr'
+import Image from 'next/image'
 
 interface IDiscount {
   discount: number
@@ -14,6 +16,7 @@ interface IDiscount {
 
 const DiscountComp = () => {
   const [showNewDiscount, setShowNewDiscount] = useState(false)
+  const [discountInfo, setDiscountInfo] = useState({ discount: 0, address: '' })
   const [meta, setMeta] = useState<any>(null)
   const [page, setPage] = useState(1)
   const LIMIT = 10
@@ -27,7 +30,13 @@ const DiscountComp = () => {
     }
   }, [discountData, isLoading])
 
-  const SetNewDiscount = () => {
+  const SetNewDiscount = ({
+    discountInfo,
+    setDiscountInfo,
+  }: {
+    discountInfo: { address: string; discount: number }
+    setDiscountInfo: Function
+  }) => {
     const [address, setAddress] = useState('')
     const [discount, setDiscount] = useState(0)
     const [isSaving, setIsSaving] = useState(false)
@@ -50,6 +59,13 @@ const DiscountComp = () => {
           console.log(err)
         })
     }
+
+    React.useEffect(() => {
+      if (discountInfo.address && discountInfo.discount) {
+        setAddress(discountInfo.address)
+        setDiscount(discountInfo.discount)
+      }
+    }, [discountInfo])
 
     return (
       <div className="w-full sm:w-auto">
@@ -78,7 +94,10 @@ const DiscountComp = () => {
               {'Save'}
             </Button>
             <Button
-              onClick={() => setShowNewDiscount((prev) => !prev)}
+              onClick={() => {
+                setShowNewDiscount((prev) => !prev)
+                setDiscountInfo({ address: '', discount: '' })
+              }}
               variant="blueOutline"
               className="px-4 py-2 rounded"
             >
@@ -93,7 +112,7 @@ const DiscountComp = () => {
   return (
     <>
       {showNewDiscount ? (
-        <SetNewDiscount />
+        <SetNewDiscount discountInfo={discountInfo} setDiscountInfo={setDiscountInfo} />
       ) : (
         <div className="w-full">
           <div className="flex flex-col md:flex-row w-full max-w-[600px] gap-y-2  md:items-center md:justify-between">
@@ -127,6 +146,19 @@ const DiscountComp = () => {
                       <tr key={i} className="text-sm font-normal text-secondary-text">
                         <td className="pb-4 py-3 pl-4">{di.discount ?? '-'}</td>
                         <td className="pb-4 py-3 pr-4">{di.address ?? '-'}</td>
+                        <td className="p-4">
+                          <Image
+                            onClick={() => {
+                              setDiscountInfo({ address: di.address, discount: di.discount })
+                              setShowNewDiscount(true)
+                            }}
+                            className="min-w-fit cursor-pointer"
+                            height={16}
+                            width={16}
+                            src={EditIcon}
+                            alt=""
+                          />
+                        </td>
                       </tr>
                     ))}
                 </tbody>
