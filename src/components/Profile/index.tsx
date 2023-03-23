@@ -85,6 +85,9 @@ const Profile = () => {
   useEffect(() => {
     if (!isLoading && userData) {
       setName(userData?.user?.name)
+      setImage(userData?.user?.profile_picture)
+      setAbout(userData?.user?.about)
+      setUserName(userData?.user?.text_rp_username)
     }
   }, [userData])
 
@@ -154,7 +157,12 @@ const Profile = () => {
   const handleSave = () => {
     setIsSave(true)
     axios
-      .post(`/api/user/update`, { name: name })
+      .post(`/api/user/update`, {
+        name: name,
+        textRpUsername: userName,
+        about: about,
+        profile_picture: image,
+      })
       .then((res) => {
         console.log(res)
         setIsSave(false)
