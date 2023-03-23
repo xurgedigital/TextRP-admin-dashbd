@@ -98,11 +98,14 @@ const CreditComp = () => {
           )}
         </td>
         <td className="pb-4">
-          <div
-            className={` ${isEditable ? 'hidden' : 'flex'} cursor-pointer  w-full justify-end`}
-            onClick={() => setIsEditable((prev) => !prev)}
-          >
-            <Image src={Edit} alt={'edit'} className="" quality={100} />
+          <div className={` ${isEditable ? 'hidden' : 'flex'}  w-full justify-end`}>
+            <Image
+              onClick={() => setIsEditable((prev) => !prev)}
+              src={Edit}
+              alt={'edit'}
+              className="cursor-pointer"
+              quality={100}
+            />
           </div>
         </td>
       </tr>
