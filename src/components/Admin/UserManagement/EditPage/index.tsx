@@ -12,30 +12,42 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { trimAddress } from '@/helpers'
 import moment from 'moment'
+import { swrFetcher } from '@/helpers'
+import useSWR from 'swr'
 
 interface IEditProps {
-  ActiveEditId: number
-  ActiveUser: any
+  ActiveEditId?: string | string[]
 }
 
 const EditPage = (props: IEditProps) => {
-  console.log(props)
+  const {
+    data: ActiveUser,
+    isLoading,
+    mutate,
+  } = useSWR(`/api/admin/users/${props?.ActiveEditId}`, swrFetcher)
 
-  const [active, setActive] = React.useState(false)
+  const [active, setActive] = React.useState<boolean>(false)
   const [isEditingUser, setIsEditingUser] = React.useState(false)
   const [isEditingCredit, setIsEditingCredit] = React.useState(false)
   const [isEditingDiscount, setIsEditingDiscount] = React.useState(false)
   const [isEditingNFT, setisEditingNFT] = React.useState(false)
-  const [UserData, setUserData] = useState<any>(null)
-  const [UserName, setUserName] = useState(props?.ActiveUser?.name)
+  const [UserName, setUserName] = useState(ActiveUser?.name)
   const [UserNameLoader, setUserNameLoader] = useState(false)
-  const [Credits, setCredits] = useState(props?.ActiveUser?.credit)
+  const [Credits, setCredits] = useState(ActiveUser?.credit?.balance)
   const [CreditsLoader, setCreditsLoader] = useState(false)
-  const [Discount, setDiscount] = useState(props?.ActiveUser?.discount?.discount)
+  const [Discount, setDiscount] = useState(ActiveUser?.discount?.discount)
   const [DiscountLoader, setDiscountLoader] = useState(false)
-
   const width = useWidth()
   const router = useRouter()
+
+  useEffect(() => {
+    if (ActiveUser && !isLoading) {
+      setUserName(ActiveUser?.name)
+      setCredits(ActiveUser?.credit?.balance)
+      setDiscount(ActiveUser?.discount?.discount)
+      setActive(ActiveUser?.is_active)
+    }
+  }, [ActiveUser])
 
   const handleSaveUserName = () => {
     setUserNameLoader(true)
@@ -61,7 +73,7 @@ const EditPage = (props: IEditProps) => {
     let payload = {
       balance: JSON.parse(Credits),
     }
-    if (props?.ActiveUser?.credit == null) {
+    if (ActiveUser?.credit == null) {
       axios
         .post(`/api/admin/users/${props?.ActiveEditId}/create_credit`, payload)
         .then((res) => {
@@ -76,10 +88,7 @@ const EditPage = (props: IEditProps) => {
         })
     } else {
       axios
-        .post(
-          `/api/admin/users/${props?.ActiveEditId}/credits/${props?.ActiveUser?.credit}`,
-          payload
-        )
+        .post(`/api/admin/users/${props?.ActiveEditId}/credits/${ActiveUser?.credit?.id}`, payload)
         .then((res) => {
           console.log(res.data)
           setCreditsLoader(false)
@@ -96,9 +105,10 @@ const EditPage = (props: IEditProps) => {
   const handleSaveDiscount = () => {
     setDiscountLoader(true)
     let payload = {
+      address: ActiveUser?.address,
       discount: JSON.parse(Discount),
     }
-    if (props?.ActiveUser?.discount == null) {
+    if (ActiveUser?.discount == null) {
       axios
         .post(`/api/admin/users/${props?.ActiveEditId}/create_discount`, payload)
         .then((res) => {
@@ -114,7 +124,7 @@ const EditPage = (props: IEditProps) => {
     } else {
       axios
         .post(
-          `/api/admin/users/${props?.ActiveEditId}/discounts/${props?.ActiveUser?.credit}`,
+          `/api/admin/users/${props?.ActiveEditId}/discounts/${ActiveUser?.discount?.id}`,
           payload
         )
         .then((res) => {
@@ -129,26 +139,6 @@ const EditPage = (props: IEditProps) => {
         })
     }
   }
-
-  // const getUserData = () => {
-  //   axios
-  //     .get(`/api/admin/users/${props?.ActiveEditId}`)
-  //     .then((res) => {
-  //       setUserData(res.data);
-  //       console.log(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       if (err.response.status === 401) {
-  //         localStorage.clear();
-  //         router.push("/login");
-  //       }
-  //     });
-  // };
-
-  useEffect(() => {
-    // getUserData();
-  }, [])
 
   return (
     <div className="w-full">
@@ -199,9 +189,7 @@ const EditPage = (props: IEditProps) => {
               <div className="flex gap-3 mb-4">
                 <div className="flex-[0.4]">Wallet Address</div>
                 <div className="flex-[0.6]">
-                  {width > 1250
-                    ? props?.ActiveUser?.address
-                    : trimAddress(props?.ActiveUser?.address)}
+                  {width > 1250 ? ActiveUser?.address : trimAddress(ActiveUser?.address)}
                 </div>
               </div>
               <div className="flex gap-3 mb-4">
@@ -219,7 +207,7 @@ const EditPage = (props: IEditProps) => {
               <div className="flex gap-3 mb-4">
                 <div className="flex-[0.4]">Account Creation Date</div>
                 <div className="flex-[0.6]">
-                  {moment(props?.ActiveUser?.created_at).format('DD MMM YYYY, HH:mm A')}
+                  {moment(ActiveUser?.created_at).format('DD MMM YYYY, HH:mm A')}
                 </div>
               </div>
               <div className="flex items-center gap-3 mb-4">
