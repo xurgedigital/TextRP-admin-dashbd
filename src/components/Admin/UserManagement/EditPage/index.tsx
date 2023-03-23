@@ -105,7 +105,6 @@ const EditPage = (props: IEditProps) => {
   const handleSaveDiscount = () => {
     setDiscountLoader(true)
     let payload = {
-      address: ActiveUser?.address,
       discount: JSON.parse(Discount),
     }
     if (ActiveUser?.discount == null) {
@@ -151,7 +150,7 @@ const EditPage = (props: IEditProps) => {
                 <div className="flex-[0.4]">Account Name</div>
                 {!isEditingUser ? (
                   <div className="flex flex-[0.6] justify-between items-center">
-                    <div className="">{UserName}</div>
+                    <div className="">{ActiveUser?.name}</div>
                     <span onClick={() => setIsEditingUser(true)} className="cursor-pointer">
                       <Image height={16} width={16} src={EditIcon} alt="" />
                     </span>
@@ -233,7 +232,7 @@ const EditPage = (props: IEditProps) => {
               <div className="flex-[0.3]">Credits Balance</div>
               {!isEditingCredit ? (
                 <div className="flex justify-between items-center gap-2 md:w-1/2">
-                  <div>{Credits || 0}</div>
+                  <div>{ActiveUser?.credit?.balance || 0}</div>
                   <span onClick={() => setIsEditingCredit(true)} className="cursor-pointer">
                     <Image height={16} width={16} src={EditIcon} alt="" />
                   </span>
@@ -270,7 +269,7 @@ const EditPage = (props: IEditProps) => {
               <div className="flex-[0.3]">Discount %</div>
               {!isEditingDiscount ? (
                 <div className="flex justify-between items-center gap-2 md:w-1/2">
-                  <div>{Discount || 0}</div>
+                  <div>{ActiveUser?.discount?.discount || 0}</div>
                   <span onClick={() => setIsEditingDiscount(true)} className="cursor-pointer">
                     <Image height={16} width={16} src={EditIcon} alt="" />
                   </span>
