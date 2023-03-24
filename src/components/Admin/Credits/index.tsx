@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Edit from '@public/Icons/edit.svg'
 import Image from 'next/image'
 import axios from 'axios'
@@ -6,6 +6,7 @@ import Button from '@/components/UI/Button'
 import Loader from '@/components/common/Loader'
 import { swrFetcher } from '@/helpers'
 import useSWR from 'swr'
+import CommonInput from '@/components/common/CommonInput'
 
 interface IRowData {
   name: string
@@ -14,8 +15,84 @@ interface IRowData {
   id: number
 }
 
+const CreateCredit = ({
+  setShowCreateCredit,
+}: {
+  setShowCreateCredit: Dispatch<SetStateAction<boolean>>
+}) => {
+  const { mutate } = useSWR('/api/admin/credits', swrFetcher)
+  const [name, setName] = useState<string>()
+  const [price, setPrice] = useState<number>()
+  const [credits, setCredits] = useState<number>()
+  const [isSaving, setIsSaving] = useState(false)
+
+  const handleCreate = () => {
+    setIsSaving(true)
+    axios
+      .post(`/api/admin/credits`, {
+        name: name,
+        price: price,
+        available_credits: credits,
+      })
+      .then((res) => {
+        console.log('set_credit', res)
+        setIsSaving(false)
+        setShowCreateCredit((prev) => !prev)
+        mutate()
+      })
+      .catch((err) => {
+        setIsSaving(false)
+        console.log(err)
+      })
+  }
+
+  return (
+    <div className="w-full sm:w-auto">
+      <p className="text-2xl font-semibold">Create Discount</p>
+      <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3 w-full">
+        <CommonInput
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ex. xyz"
+          fullWidth
+        />
+        <CommonInput
+          label="Price"
+          value={price}
+          onChange={(e) => setPrice(Number(e.target.value))}
+          placeholder="Ex. 10"
+          fullWidth
+        />
+        <CommonInput
+          label="Credit"
+          value={credits}
+          onChange={(e) => setCredits(Number(e.target.value))}
+          placeholder="Ex. 39"
+          fullWidth
+        />
+        <div className="flex items-center gap-2 mt-4 sm:ml-28">
+          <Button loading={isSaving} onClick={handleCreate} className="truncate px-4 py-2 rounded">
+            {'Save'}
+          </Button>
+          <Button
+            onClick={() => {
+              setShowCreateCredit((prev) => !prev)
+            }}
+            variant="blueOutline"
+            className="px-4 py-2 rounded"
+          >
+            {'Cancel'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const CreditComp = () => {
   const { data: creditData, isLoading, mutate } = useSWR('/api/admin/credits', swrFetcher)
+  const [showCreateCredit, setShowCreateCredit] = useState(false)
 
   const Row = (props: IRowData) => {
     const { name, price, available_credits, id } = props
@@ -113,46 +190,60 @@ const CreditComp = () => {
   }
 
   return (
-    <div className="w-full">
-      <p className="text-xl sm:text-2xl font-semibold">Credits Pricing</p>
-      <div className="max-w-[660px] w-full inline-block align-middle ">
-        <div className="overflow-auto shadow-shadow-tertiary rounded-lg p-6 pb-2 bg-white mt-3">
-          <table className="table-fixed">
-            <thead>
-              <tr className="text-sm font-semibold">
-                <th>
-                  {' '}
-                  <div className="min-w-[9rem] text-left mb-4">Package Name</div>
-                </th>
-                <th>
-                  {' '}
-                  <div className="min-w-[6rem] text-left mb-4">Price</div>
-                </th>
-                <th>
-                  {' '}
-                  <div className="min-w-[9rem] text-left mb-4">Number of Credits</div>
-                </th>
-                <th>
-                  {' '}
-                  <div className="w-10 mb-4"></div>{' '}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {!isLoading &&
-                creditData &&
-                creditData?.data?.length > 0 &&
-                creditData?.data?.map((ci: IRowData, i: number) => <Row {...ci} key={i} />)}
-            </tbody>
-          </table>
-        </div>
-        {isLoading ? (
-          <div className="w-full flex justify-center items-center p-6 bg-white">
-            <Loader />
+    <>
+      {showCreateCredit ? (
+        <CreateCredit setShowCreateCredit={setShowCreateCredit} />
+      ) : (
+        <div className="w-full max-w-[640px]">
+          <div className="flex flex-col md:flex-row w-full   gap-y-2  md:items-center md:justify-between">
+            <p className="text-xl sm:text-2xl font-semibold">Credits Pricing</p>
+            <Button
+              onClick={() => setShowCreateCredit((prev) => !prev)}
+              className="truncate px-4 py-2 w-max rounded"
+            >
+              {'Create Credit'}
+            </Button>
           </div>
-        ) : null}
-      </div>
-    </div>
+          <div className=" w-full inline-block align-middle ">
+            <div className="overflow-auto shadow-shadow-tertiary rounded-lg p-6 pb-2 bg-white mt-3">
+              <table className="table-fixed">
+                <thead>
+                  <tr className="text-sm font-semibold">
+                    <th>
+                      {' '}
+                      <div className="min-w-[9rem] text-left mb-4">Package Name</div>
+                    </th>
+                    <th>
+                      {' '}
+                      <div className="min-w-[6rem] text-left mb-4">Price</div>
+                    </th>
+                    <th>
+                      {' '}
+                      <div className="min-w-[9rem] text-left mb-4">Number of Credits</div>
+                    </th>
+                    <th>
+                      {' '}
+                      <div className="w-10 mb-4"></div>{' '}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!isLoading &&
+                    creditData &&
+                    creditData?.data?.length > 0 &&
+                    creditData?.data?.map((ci: IRowData, i: number) => <Row {...ci} key={i} />)}
+                </tbody>
+              </table>
+            </div>
+            {isLoading ? (
+              <div className="w-full flex justify-center items-center p-6 bg-white">
+                <Loader />
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
