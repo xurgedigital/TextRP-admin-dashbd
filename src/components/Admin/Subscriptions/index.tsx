@@ -147,7 +147,7 @@ const SubscriptionComp = () => {
             <span>{name ?? '-'}</span>
           )}
         </td>
-        <td className="pb-4">
+        <td className="pb-4 pr-4">
           {isEditable ? (
             <div className="w-full flex flex-col justify-start h-[9.5rem] pr-3">
               <textarea
@@ -211,11 +211,14 @@ const SubscriptionComp = () => {
           )}
         </td>
         <td className="pb-4">
-          <div
-            onClick={() => setIsEditable((prev) => !prev)}
-            className={`${isEditable ? 'hidden' : 'flex'} cursor-pointer flex w-full justify-end`}
-          >
-            <Image src={Edit} alt={'edit'} className="" quality={100} />
+          <div className={`${isEditable ? 'hidden' : 'flex'} flex w-full justify-end`}>
+            <Image
+              onClick={() => setIsEditable((prev) => !prev)}
+              src={Edit}
+              alt={'edit'}
+              className="cursor-pointer"
+              quality={100}
+            />
           </div>
         </td>
       </tr>

@@ -49,6 +49,26 @@ const EditPage = (props: IEditProps) => {
     }
   }, [ActiveUser])
 
+  const updateActiveStatus = () => {
+    if (ActiveUser?.is_active !== active) {
+      let payload = {
+        is_active: active,
+      }
+      axios
+        .post(`/api/admin/users/${props?.ActiveEditId}`, payload)
+        .then((res) => {
+          console.log(res.data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
+
+  useEffect(() => {
+    updateActiveStatus()
+  }, [active])
+
   const handleSaveUserName = () => {
     setUserNameLoader(true)
     let payload = {
