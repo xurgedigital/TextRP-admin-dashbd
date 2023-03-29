@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 import React, { createContext, useReducer } from 'react'
 import { user } from '../reducers/user'
+import Head from 'next/head'
 
 const Context = createContext({})
 
@@ -35,13 +36,18 @@ const Provider = ({ children }: any) => {
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider attribute="class">
-      <Provider>
-        <AuthWrapper>
-          <Component {...pageProps} />
-        </AuthWrapper>
-      </Provider>
-    </ThemeProvider>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+      </Head>
+      <ThemeProvider attribute="class">
+        <Provider>
+          <AuthWrapper>
+            <Component {...pageProps} />
+          </AuthWrapper>
+        </Provider>
+      </ThemeProvider>
+    </>
   )
 }
 

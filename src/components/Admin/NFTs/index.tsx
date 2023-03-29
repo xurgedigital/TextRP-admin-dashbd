@@ -6,32 +6,25 @@ import Button from '@/components/UI/Button'
 import CommonInput from '@/components/common/CommonInput'
 import { swrFetcher } from '@/helpers'
 import useSWR from 'swr'
+import { isValidClassicAddress } from 'ripple-address-codec'
 
 const CreateNFTSection = ({
   setShowCreateNFT,
 }: {
   setShowCreateNFT: Dispatch<SetStateAction<boolean>>
 }) => {
-  const { mutate } = useSWR('/api/admin/supported_nfts', swrFetcher)
   const [address, setAddress] = useState<string>()
   const [isSaving, setIsSaving] = useState(false)
+  const [addressError, setAddressError] = useState(false)
 
   const handleCreate = () => {
     setIsSaving(true)
-    axios
-      .post(`/api/admin/supported_nfts`, {
-        address: address,
-      })
-      .then((res) => {
-        console.log('set_subs', res)
-        setIsSaving(false)
-        setShowCreateNFT((prev) => !prev)
-        mutate()
-      })
-      .catch((err) => {
-        setIsSaving(false)
-        console.log(err)
-      })
+    if (address && !isValidClassicAddress(address)) {
+      setAddressError(true)
+      setIsSaving(false)
+      return
+    }
+    //  todo: API
   }
 
   return (
@@ -45,8 +38,11 @@ const CreateNFTSection = ({
           placeholder="Ex. 0xcdc1db9bf67E0f71e8E2e166f"
           fullWidth
         />
+        {addressError ? (
+          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid XRP address !</p>
+        ) : null}
         <div className="flex items-center gap-2 mt-4 sm:ml-24">
-          <Button loading={isSaving} className="truncate px-4 py-2 rounded">
+          <Button onClick={handleCreate} loading={isSaving} className="truncate px-4 py-2 rounded">
             {'Save'}
           </Button>
           <Button
