@@ -5,29 +5,7 @@ import SmallSwitch from '@/components/common/SmallSwitch'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-
-const CreditItems = [
-  {
-    packageName: 'Credits Package 1',
-    numberOfCredits1: 50,
-    numberOfCredits2: 3,
-  },
-  {
-    packageName: 'Credits Package 2',
-    numberOfCredits1: 60,
-    numberOfCredits2: 5,
-  },
-  {
-    packageName: 'Credits Package 3',
-    numberOfCredits1: 70,
-    numberOfCredits2: 2,
-  },
-  {
-    packageName: 'Credits Package 4',
-    numberOfCredits1: 40,
-    numberOfCredits2: 6,
-  },
-]
+import { isValidClassicAddress } from 'ripple-address-codec'
 
 const PlatformSettingsComp = () => {
   const [NewBonus, setNewBonus] = useState<any>(0)
@@ -46,6 +24,7 @@ const PlatformSettingsComp = () => {
   const [MicroPayLoader, setMicroPayLoader] = useState(false)
   const [ReceivePayLoader, setReceivePayLoader] = useState(false)
   const [ExternalAPILoader, setExternalAPILoader] = useState(false)
+  const [addressError, setAddressError] = useState(false)
 
   const router = useRouter()
   const getPlatformSettings = () => {
@@ -217,6 +196,11 @@ const PlatformSettingsComp = () => {
 
   const handleSaveReceivePay = () => {
     setReceivePayLoader(true)
+    if (!isValidClassicAddress(ReceiveAddress)) {
+      setAddressError(true)
+      setReceivePayLoader(false)
+      return
+    }
     let receiveWallet = {
       key: 'receiveWallet',
       value: ReceiveAddress,
@@ -466,9 +450,12 @@ const PlatformSettingsComp = () => {
           placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
           fullWidth
         />
+        {addressError ? (
+          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid XRP address !</p>
+        ) : null}
         <CommonButton
           label="Save"
-          onClick={() => handleSaveReceivePay()}
+          onClick={handleSaveReceivePay}
           isLoading={ReceivePayLoader}
           disabled={ReceiveAddress.length === 0}
         />

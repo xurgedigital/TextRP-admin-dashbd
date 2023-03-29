@@ -5,37 +5,28 @@ import Pointer from '@public/Icons/pointer.svg'
 import Circle from '@public/Icons/circle.svg'
 import Tick from '@public/Icons/tick.svg'
 import { useRouter } from 'next/router'
+import { swrFetcher } from '@/helpers'
+import useSWR from 'swr'
+import Button from '../UI/Button'
+import Loader from '../common/Loader'
+import axios from 'axios'
 
 interface ISubscriptionCard {
-  time: string
+  name: string
   price: string
-  pointers: string[]
+  available_credits: number
+  description: string
+  index: number
+  pointers?: string[]
   bestDeal?: boolean
-  selectCard: string
-  setSelectCard: Dispatch<SetStateAction<string>>
+  selectCardIndex: number
+  setSelectCardIndex: Dispatch<SetStateAction<number>>
 }
 
-const subsData = [
-  {
-    time: 'Monthly',
-    price: 'USD $6.99/month',
-    pointers: ['Get 25 bonus credits'],
-  },
-  {
-    time: 'Semi-Annually',
-    price: 'USD $5.99/month',
-    pointers: ['Get 50 bonus credits', 'Save 14%'],
-  },
-  {
-    time: 'Annually',
-    price: 'USD $4.99/month',
-    pointers: ['Get 200 bonus credits', 'Save 29%'],
-    bestDeal: true,
-  },
-]
-
 const SubscriptionCard = (props: ISubscriptionCard) => {
-  const { time, price, pointers, bestDeal, selectCard, setSelectCard } = props
+  const { name, price, bestDeal, selectCardIndex, setSelectCardIndex, index, available_credits } =
+    props
+
   return (
     <>
       {bestDeal ? (
@@ -44,9 +35,9 @@ const SubscriptionCard = (props: ISubscriptionCard) => {
         </div>
       ) : null}
       <div
-        onClick={() => setSelectCard(time)}
+        onClick={() => setSelectCardIndex(index)}
         className={`p-4 shadow-shadow-primary ${
-          selectCard === time
+          selectCardIndex === index
             ? 'border-2 border-primary-blue bg-gray-bg dark:bg-gray-bg2-dark'
             : 'border-[0.5px] border-primary-gray dark:border-secondary-text-dark'
         }  rounded-lg mb-4 ${bestDeal ? 'rounded-t-none' : ''}`}
@@ -54,16 +45,16 @@ const SubscriptionCard = (props: ISubscriptionCard) => {
         <div className="flex items-center justify-between">
           <div>
             <p className="uppercase text-xs text-secondary-text dark:text-secondary-text-dark mb-1">
-              {time}
+              {name}
             </p>
-            <p className="text-base font-semibold text-primary-blue">{price}</p>
+            <p className="text-base font-semibold text-primary-blue">{`${price} XRP`}</p>
           </div>
-          <div className={`${selectCard === time ? 'hidden' : 'block'}`}>
+          <div className={`${selectCardIndex === index ? 'hidden' : 'block'}`}>
             <Image src={Circle} alt={'circle'} className="" quality={100} />
           </div>
           <div
             className={`${
-              selectCard === time
+              selectCardIndex === index
                 ? 'flex items-center justify-center h-6 w-6 rounded-full bg-primary-blue'
                 : 'hidden'
             }`}
@@ -72,12 +63,10 @@ const SubscriptionCard = (props: ISubscriptionCard) => {
           </div>
         </div>
         <div className="mt-4">
-          {pointers.map((pt, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <Image src={Pointer} alt={'pointer'} className="" quality={100} />
-              <p className="text-base font-normal">{pt}</p>
-            </div>
-          ))}
+          <div className="flex items-center gap-3">
+            <Image src={Pointer} alt={'pointer'} className="" quality={100} />
+            <p className="text-base font-normal">{`Get ${available_credits} credits`}</p>
+          </div>
         </div>
       </div>
     </>
@@ -86,8 +75,29 @@ const SubscriptionCard = (props: ISubscriptionCard) => {
 
 const Subscriptions = () => {
   const router = useRouter()
-  const [selectCard, setSelectCard] = useState('')
+  const [selectCardIndex, setSelectCardIndex] = useState(-1)
   const [isMount, setMount] = React.useState(true)
+  const [isPayment, setIsPayment] = useState(false)
+  const { data: subsData, isLoading, mutate } = useSWR('/api/admin/subscriptions', swrFetcher)
+
+  const handleBuySubscription = () => {
+    setIsPayment(true)
+    const SUB_ID = subsData?.data[selectCardIndex]?.id
+    axios
+      .post(`/api/user/subscriptionPayment/${SUB_ID}`)
+      .then((res) => {
+        if (!isMount && window) {
+          window.open(res?.data?.data?.next?.always, '_blank')
+          router.back()
+        }
+        setIsPayment(false)
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+        setIsPayment(false)
+      })
+  }
 
   React.useEffect(() => {
     if (isMount) {
@@ -95,6 +105,9 @@ const Subscriptions = () => {
     }
   }, [])
 
+  const handleBack = () => {
+    router.back()
+  }
   return (
     <div
       className={`md:transform-none  settingPanel bg-white dark:bg-gray-bg-dark py-6   relative border-r-[0.5px]  border-primary-gray cursor-pointer min-h-screen max-h-screen overflow-hidden `}
@@ -104,28 +117,44 @@ const Subscriptions = () => {
           src={ArrowLeft}
           alt="arrow-left"
           className="cursor-pointer"
-          onClick={() => router.back()}
+          onClick={handleBack}
           quality={100}
         />
-        <p className="text-2xl font-semibold">Subscriptions</p>
+        <p className="text-2xl font-semibold">{'Subscriptions'}</p>
       </div>
-      <div className="overflow-y-auto h-full px-4 md:px-8">
-        <div className="my-8 flex flex-col">
-          {subsData.map((sub, i) => (
-            <SubscriptionCard
-              {...sub}
-              key={i}
-              selectCard={selectCard}
-              setSelectCard={setSelectCard}
-            />
-          ))}
-        </div>
-        <button className="outline-none text-base font-normal rounded p-2 bg-primary-blue text-white w-full flex justify-center">
-          Subscribe
-        </button>
-        <p className="text-sm text-secondary-text dark:text-secondary-text-dark mt-4">
-          You will be charged USD $59.88 (151.17 XRP)
-        </p>
+      <div className="overflow-y-auto h-full px-4 md:px-8 pb-8">
+        {isLoading ? (
+          <div className="flex justify-center py-6">
+            <Loader />
+          </div>
+        ) : (
+          <>
+            <div className="my-8 flex flex-col">
+              {subsData?.data?.map((sub: ISubscriptionCard, i: number) => (
+                <SubscriptionCard
+                  {...sub}
+                  key={i}
+                  index={i}
+                  selectCardIndex={selectCardIndex}
+                  setSelectCardIndex={setSelectCardIndex}
+                />
+              ))}
+            </div>
+            <Button
+              onClick={handleBuySubscription}
+              disabled={selectCardIndex === -1}
+              loading={isPayment}
+              className="outline-none text-base font-normal rounded p-2 bg-primary-blue text-white w-full flex justify-center"
+            >
+              Subscribe
+            </Button>
+            {selectCardIndex !== -1 && (
+              <p className="text-sm text-secondary-text dark:text-secondary-text-dark mt-4">
+                {` You will be charged ${subsData?.data[selectCardIndex]?.price} XRP (USD $59.88) `}
+              </p>
+            )}
+          </>
+        )}
       </div>
     </div>
   )

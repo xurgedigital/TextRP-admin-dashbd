@@ -75,7 +75,8 @@ const Profile = () => {
   const router = useRouter()
   const { data: userData, isLoading, mutate } = useSWR('/api/user/me', swrFetcher)
   const [isMount, setMount] = React.useState(true)
-  const [image, setImage] = useState<string>()
+  const [image, setImage] = useState<any>()
+  const [preview, setPreview] = useState<string>()
   const [isEditing, setIsEditing] = useState(false)
   const [isSave, setIsSave] = useState(false)
   const [name, setName] = useState<string>('unknown')
@@ -85,7 +86,6 @@ const Profile = () => {
   useEffect(() => {
     if (!isLoading && userData) {
       setName(userData?.user?.name)
-      setImage(userData?.user?.profile_picture)
       setAbout(userData?.user?.about)
       setUserName(userData?.user?.text_rp_username)
     }
@@ -149,8 +149,8 @@ const Profile = () => {
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files !== null) {
-      const file = URL.createObjectURL(e.target.files[0])
-      setImage(file)
+      let preview = URL.createObjectURL(e.target.files[0])
+      setPreview(preview)
     }
   }
 
@@ -161,7 +161,7 @@ const Profile = () => {
         name: name,
         textRpUsername: userName,
         about: about,
-        profile_picture: image,
+        profile_picture: 'test',
       })
       .then((res) => {
         console.log(res)
@@ -171,6 +171,7 @@ const Profile = () => {
       })
       .catch((err) => {
         console.log(err)
+        setIsSave(false)
       })
   }
 
@@ -205,7 +206,7 @@ const Profile = () => {
           <div className="relative w-full flex justify-center my-8">
             <div className="rounded-full h-28 w-28 relative min-w-[6rem] overflow-hidden ">
               <Image
-                src={image ?? 'https://picsum.photos/204'}
+                src={preview ?? 'https://picsum.photos/204'}
                 alt="User Image"
                 fill
                 className=" object-cover"

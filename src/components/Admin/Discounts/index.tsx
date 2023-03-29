@@ -8,6 +8,7 @@ import { swrFetcher } from '@/helpers'
 import EditIcon from '@public/Icons/editIcon.svg'
 import useSWR from 'swr'
 import Image from 'next/image'
+import { isValidClassicAddress } from 'ripple-address-codec'
 
 interface IDiscount {
   discount: number
@@ -38,11 +39,18 @@ const DiscountComp = () => {
     setDiscountInfo: Function
   }) => {
     const [address, setAddress] = useState('')
+    const [addressError, setAddressError] = useState(false)
     const [discount, setDiscount] = useState(0)
     const [isSaving, setIsSaving] = useState(false)
 
     const handleSetDiscount = () => {
       setIsSaving(true)
+      if (!isValidClassicAddress(address)) {
+        setAddressError(true)
+        setIsSaving(false)
+        return
+      }
+
       axios
         .post(`/api/admin/discounts`, {
           address: address,
@@ -85,6 +93,9 @@ const DiscountComp = () => {
             placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
             fullWidth
           />
+          {addressError ? (
+            <p className=" sm:pl-20 md:pl-30 text-xs text-red-500">Enter valid XRP address !</p>
+          ) : null}
           <div className="flex items-center gap-2 mt-4 sm:ml-28">
             <Button
               loading={isSaving}
