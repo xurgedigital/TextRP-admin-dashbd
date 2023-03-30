@@ -1,15 +1,25 @@
-import React, { Dispatch, Fragment, SetStateAction, useEffect, useRef } from 'react'
+import React, {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import { IoCloseOutline } from 'react-icons/io5'
 import { IChatData } from '..'
 import Image from 'next/image'
 import { Transition } from '@headlessui/react'
 import LeftArrorwIcon from '@public/Icons/leftArrowIcon.svg'
+import { Conversation } from '@twilio/conversations/lib'
+import { Context } from '@/pages/_app'
 
 interface IAboutUser {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
   className?: string
-  data: IChatData | null
+  data?: Conversation
 }
 
 const AboutUser: React.FC<IAboutUser> = ({ isOpen, setIsOpen, className, data }) => {
@@ -27,7 +37,15 @@ const AboutUser: React.FC<IAboutUser> = ({ isOpen, setIsOpen, className, data })
       document.removeEventListener('click', handleClickOutside, true)
     }
   }, [])
-
+  const { state } = useContext(Context)
+  const currentUser = state?.user?.address
+  const participantsAddress = useMemo(() => {
+    const users = data?.uniqueName?.split('-') || []
+    if (users[0] === currentUser) {
+      return users[1]
+    }
+    return users[0]
+  }, [currentUser, data?.uniqueName])
   return (
     <Transition
       as={Fragment}
@@ -53,20 +71,20 @@ const AboutUser: React.FC<IAboutUser> = ({ isOpen, setIsOpen, className, data })
         <Image src={LeftArrorwIcon} alt="" onClick={() => setIsOpen(false)} />
         <div className="w-full flex flex-col gap-8  items-center">
           <Image
-            src={data?.userImage}
+            src={`https://xumm.app/avatar/${participantsAddress}.png`}
             alt="user"
             width={100}
             height={100}
             className="rounded-full"
           />
           <div>
-            <p className="text-center text-2xl font-semibold">{data?.userName}</p>
-            {data?.platformIcon && (
-              <div className="flex items-center gap-3 text-secondary-text dark:text-secondary-text-dark text-base font-normal">
-                <Image src={data?.platformIcon} height={20} width={20} alt="Filter Icon" />
-                <p>{data?.userName}</p>
-              </div>
-            )}
+            <p className="text-base text-center text-2xl font-semibold">{participantsAddress}</p>
+            {/*{data?.platformIcon && (*/}
+            {/*  <div className="flex items-center gap-3 text-secondary-text dark:text-secondary-text-dark text-base font-normal">*/}
+            {/*    <Image src={data?.platformIcon} height={20} width={20} alt="Filter Icon" />*/}
+            {/*    <p>{data?.userName}</p>*/}
+            {/*  </div>*/}
+            {/*)}*/}
           </div>
           <div>
             <p className="text-left text-lg">About</p>

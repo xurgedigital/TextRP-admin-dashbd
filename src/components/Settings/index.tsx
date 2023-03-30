@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import ArrowLeft from '@public/Icons/setting/arrow.svg'
 import BuyCredit from '@public/Icons/setting/buy-credits.svg'
@@ -10,6 +10,7 @@ import Profile from '@public/Icons/setting/profile.svg'
 import Subscriptions from '@public/Icons/setting/subscriptions.svg'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import { Context } from '@/pages/_app'
 
 interface ISettingsProps {
   setShowSetting: Function
@@ -56,12 +57,13 @@ const settingItems = [
 const SettingItems = (props: ISItemsProps) => {
   const { title, icon, link } = props
   let router = useRouter()
+  const { state } = useContext(Context)
 
   const ShowButtons = () => {
     if (title === 'Buy credits') {
       return (
         <div className="text-xs mr-4  truncate rounded p-2 font-semibold text-primary-blue bg-gray-bg">
-          Bal: 10
+          Balance: {state?.user?.credit?.balance || 0}
         </div>
       )
     } else if (title === 'Subscriptions') {

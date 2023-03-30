@@ -1,6 +1,6 @@
 import Image, { StaticImageData } from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
-import MicImage from '@public/Images/mic.jpg'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import _ from 'lodash'
 import ThreeDotedIcon from '@public/Icons/threedotedIcon.svg'
 import LeftArrorwIcon from '@public/Icons/leftArrowIcon.svg'
 import SearchIcon from '@public/Icons/searchIcon.svg'
@@ -10,6 +10,10 @@ import { IoSendSharp } from 'react-icons/io5'
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder'
 import { FaStop } from 'react-icons/fa'
 import AboutUser from './AboutUser'
+import { Conversation } from '@twilio/conversations/lib'
+import { useConversation, useTwilio } from 'twilio-conversations-hooks'
+import { Context } from '@/pages/_app'
+import { SingleMessage } from '@components/PersonalChat/SingleMessage'
 
 export interface IChatData {
   userImage: string | any
@@ -21,59 +25,33 @@ export interface IChatData {
   handleSelectChat: Function
 }
 interface IPersonalProps {
-  ChatSelected: IChatData | null
+  ChatSelected?: Conversation
   setChatSelected: Function
 }
 
 const PersonalChat = (props: IPersonalProps) => {
   const [InputValue, setInputValue] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [recording, setRecording] = useState<Blob | undefined>(undefined)
 
-  const [sampleMsgs, setSampleMsgs] = useState<any>([
-    {
-      sender: 'test',
-      msg: 'Lorem ipsum dolor sit amet.',
-      time: '2023-02-23T11:07:56.697Z',
-    },
-    {
-      sender: 'test',
-      msg: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius nisi faucibus odio placerat pretium.',
-      time: '2023-02-23T11:37:56.697Z',
-    },
-    {
-      sender: 'me',
-      msg: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      time: '2023-02-23T13:09:56.697Z',
-    },
-    {
-      sender: 'test',
-      msg: 'Lorem ipsum dolor sit amet,. Maecenas varius nisi faucibus odio placerat pretium.',
-      time: '2023-02-23T13:46:37.761Z',
-    },
-    {
-      sender: 'me',
-      msg: 'Maecenas varius nisi faucibus odio placerat pretium.',
-      time: '2023-02-23T13:07:56.697Z',
-    },
-    {
-      sender: 'test',
-      msg: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas varius nisi faucibus odio placerat pretium.',
-      time: '2023-02-23T13:17:56.697Z',
-    },
-    {
-      sender: 'me',
-      msg: 'Consectetur adipiscing elit. Maecenas varius nisi faucibus odio placerat pretium.',
-      time: '2023-02-23T13:32:56.697Z',
-    },
-    {
-      sender: 'me',
-      msg: 'Lorem ipsum dolor sit amet. Maecenas varius nisi faucibus odio placerat pretium.',
-      time: '2023-02-23T13:37:56.697Z',
-    },
-  ])
+  const { state } = useContext(Context)
+  const currentUser = state?.user?.address
+  const { sendMessage, sendTyping, messages, typing, loading } = useConversation(
+    props.ChatSelected?.uniqueName || ''
+  )
+  // const {conversations} = useTwilio()
+  const conversation = props.ChatSelected
+  const participantsAddress = useMemo(() => {
+    const users = props?.ChatSelected?.uniqueName?.split('-') || []
+    if (users[0] === currentUser) {
+      return users[1]
+    }
+    return users[0]
+  }, [currentUser, props?.ChatSelected?.uniqueName])
 
-  const [messageCount, setMessageCount] = useState<number>(sampleMsgs.length)
+  const [messageCount, setMessageCount] = useState<number>(messages.length)
   const [ShowSearch, setShowSearch] = useState(false)
+  const [searchText, setSearchText] = useState('')
 
   const ref = React.useRef<any>()
   React.useEffect(() => {
@@ -82,67 +60,7 @@ const PersonalChat = (props: IPersonalProps) => {
     }
   }, [messageCount])
 
-  const onAction = (event: any) => {
-    if (event.key === 'Enter' && InputValue) {
-      let arr = sampleMsgs
-      arr.push({
-        sender: 'me',
-        msg: InputValue,
-        time: new Date().toISOString(),
-      })
-      setSampleMsgs(arr)
-      setInputValue('')
-      setMessageCount((prev) => prev + 1)
-    }
-  }
-
-  const sendMsg = () => {
-    if (InputValue) {
-      let arr = sampleMsgs
-      arr.push({
-        sender: 'me',
-        msg: InputValue,
-        time: new Date().toISOString(),
-      })
-      setSampleMsgs(arr)
-      setInputValue('')
-      setMessageCount((prev) => prev + 1)
-    }
-  }
-
   const recorderControls = useAudioRecorder()
-
-  const addAudioElement = (blob: any) => {
-    const url = URL.createObjectURL(blob)
-    // const audio = document.createElement("audio");
-    // audio.src = url;
-    // audio.controls = true;
-    // console.log(audio, "added audio")
-    let arr = sampleMsgs
-    arr.push({
-      sender: 'me',
-      isAudio: true,
-      audio: url,
-      time: new Date().toISOString(),
-    })
-    setSampleMsgs(arr)
-    setMessageCount((prev) => prev + 1)
-    // document.getElementById("chatBox")?.appendChild(audio)
-    // document.body.appendChild(audio);
-  }
-
-  console.log(sampleMsgs, 'sam')
-
-  function formatAMPM(date: any) {
-    var hours = date.getHours()
-    var minutes = date.getMinutes()
-    var ampm = hours >= 12 ? 'pm' : 'am'
-    hours = hours % 12
-    hours = hours ? hours : 12 // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes
-    var strTime = hours + ':' + minutes + ' ' + ampm
-    return strTime
-  }
 
   return (
     <>
@@ -152,6 +70,7 @@ const PersonalChat = (props: IPersonalProps) => {
             <div className="flex justify-between items-center py-2 w-full">
               <input
                 placeholder="Search.."
+                onChange={(e) => setSearchText(e.target.value)}
                 className="px-6 py-2 w-full bg-gray-bg dark:bg-gray-bg2-dark rounded-lg outline-none"
               />
               <button className="outline-none p-4" onClick={() => setShowSearch(false)}>
@@ -170,15 +89,17 @@ const PersonalChat = (props: IPersonalProps) => {
                 >
                   <Image src={LeftArrorwIcon} alt="" />
                 </span>
-                <Image
-                  src={props?.ChatSelected?.userImage}
-                  alt="user"
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                />
+                {/*<Image*/}
+                {/*  src={props?.ChatSelected?.uniqueName || ''}*/}
+                {/*  alt="user"*/}
+                {/*  width={50}*/}
+                {/*  height={50}*/}
+                {/*  className="rounded-full"*/}
+                {/*/>*/}
                 <div className="ml-2">
-                  <h4 className="text-lg font-semibold">{props?.ChatSelected?.userName}</h4>
+                  <div className="d-flex flex-row">
+                    <h4 className="text-lg font-semibold w-full">{participantsAddress}</h4>
+                  </div>
                   <div className="flex items-center">
                     <div className="bg-primary-green h-2 w-2 rounded-full mr-2"></div>
                     <p className="text-sm font-normal text-secondary-text dark:text-secondary-text-dark">
@@ -204,67 +125,50 @@ const PersonalChat = (props: IPersonalProps) => {
         <AboutUser isOpen={isOpen} setIsOpen={setIsOpen} data={props?.ChatSelected} />
 
         <div ref={ref} className="flex-1 flex flex-col px-6 overflow-y-auto pb-4" id="chatBox">
-          {sampleMsgs
+          {_.uniqBy(messages, 'sid')
             .sort(
-              (msg1: any, msg2: any) =>
-                new Date(msg1.time).getTime() - new Date(msg2.time).getTime()
+              (msg1, msg2) =>
+                new Date(msg1.dateCreated).getTime() - new Date(msg2.dateCreated).getTime()
             )
-            .map((msg: any, index: number) => {
-              const isMe = msg.sender === 'me'
-              if (msg.isAudio) {
-                return (
-                  <div
-                    key={index}
-                    className={`p-4 md:max-w-[60%] ${
-                      isMe
-                        ? 'self-end rounded-br-none text-white bg-primary-blue'
-                        : 'self-start rounded-bl-none text-black bg-gray-bg'
-                    } my-1 rounded-lg min-w-[90%] md:min-w-[60%]`}
-                  >
-                    <audio
-                      src={msg.audio}
-                      controls={true}
-                      className="object-contain w-full"
-                    ></audio>
-                    <div
-                      className={`font-normal text-xs ${
-                        isMe ? 'text-gray-bg2' : 'text-secondary-text'
-                      } flex w-full justify-end`}
-                    >
-                      {formatAMPM(new Date(msg?.time))}
-                    </div>
-                  </div>
-                )
+            .filter((m) => {
+              if (searchText !== '') {
+                return m?.body?.toLowerCase()?.includes(searchText.toLowerCase())
               }
-              return (
-                <div
-                  key={index}
-                  className={`p-4 max-w-[60%] ${
-                    isMe
-                      ? 'self-end rounded-br-none text-white bg-primary-blue'
-                      : 'self-start rounded-bl-none  bg-gray-bg dark:bg-gray-bg-dark'
-                  } my-2 rounded-lg`}
-                >
-                  <p className="whitespace-pre-wrap">{msg?.msg}</p>
-                  <div
-                    className={`font-normal text-xs ${
-                      isMe ? 'text-gray-bg2' : 'text-secondary-text dark:text-secondary-text-dark'
-                    } flex w-full justify-end`}
-                  >
-                    {formatAMPM(new Date(msg?.time))}
-                  </div>
-                </div>
-              )
+              return true
+            })
+            .map((msg, index: number) => {
+              const isMe = msg.author === currentUser
+              return <SingleMessage key={index} message={msg} isMe={isMe} />
             })}
+          {typing === participantsAddress && (
+            <div
+              className={`p-4 max-w-[60%] ${'self-start rounded-bl-none  bg-gray-bg dark:bg-gray-bg-dark'} my-2 rounded-lg`}
+            >
+              <p className="whitespace-pre-wrap">...</p>
+            </div>
+          )}
         </div>
         <div className="absolute bottom-0 right-0 border-t dark:border-secondary-text-dark h-16 lg:h-20 w-full dark:bg-gray-bg-dark flex justify-between items-center px-6">
-          <textarea
-            placeholder="Type a message"
-            className="outline-none w-full font-normal text-sm h-full pt-8 dark:bg-gray-bg-dark"
-            onChange={(e) => setInputValue(e.target.value)}
-            value={InputValue}
-            // onKeyDown={onAction}
-          />
+          {recording ? (
+            <>
+              <audio
+                src={URL.createObjectURL(recording)}
+                controls={true}
+                className="object-contain w-full"
+              ></audio>
+            </>
+          ) : (
+            <>
+              <textarea
+                placeholder="Type a message"
+                className="outline-none w-full font-normal text-sm h-full pt-8 dark:bg-gray-bg-dark"
+                onChange={(e) => setInputValue(e.target.value)}
+                value={InputValue}
+                onKeyDown={() => sendTyping()}
+                // onKeyDown={onAction}
+              />
+            </>
+          )}
           {recorderControls.isRecording && (
             <p className="mr-2">
               {new Date(recorderControls.recordingTime * 1000).toISOString().slice(11, 19)}
@@ -285,11 +189,30 @@ const PersonalChat = (props: IPersonalProps) => {
           )}
           <div className="hidden">
             <AudioRecorder
-              onRecordingComplete={addAudioElement}
+              onRecordingComplete={(v) => {
+                setRecording(v)
+              }}
               recorderControls={recorderControls}
             />
           </div>
-          <input accept="image/*" id="icon-button-file" type="file" style={{ display: 'none' }} />
+          <input
+            onChange={async (e) => {
+              // @ts-ignore
+              const file = e.target.files[0]
+              if (file) {
+                const raw = await file.arrayBuffer()
+                const buffer = Buffer.from(raw)
+                conversation?.sendMessage({
+                  contentType: file.type,
+                  media: buffer,
+                })
+              }
+            }}
+            accept="image/*"
+            id="icon-button-file"
+            type="file"
+            style={{ display: 'none' }}
+          />
           <label className=" cursor-pointer" htmlFor="icon-button-file">
             <AiOutlinePaperClip style={{ color: '#3254FE', fontSize: '28px', marginLeft: '8px' }} />
             {/* <IconButton color="primary" aria-label="upload picture"
@@ -299,7 +222,20 @@ const PersonalChat = (props: IPersonalProps) => {
           </label>
           <IoSendSharp
             className=" cursor-pointer"
-            onClick={() => sendMsg()}
+            onClick={async () => {
+              if (recording) {
+                const raw = await recording.arrayBuffer()
+                const buffer = Buffer.from(raw)
+                await conversation?.sendMessage({
+                  contentType: 'audio/mp3',
+                  media: buffer,
+                })
+              } else {
+                await sendMessage(InputValue)
+              }
+              setRecording(undefined)
+              setInputValue('')
+            }}
             style={{ color: '#3254FE', fontSize: '26px', marginLeft: '8px' }}
           />
         </div>

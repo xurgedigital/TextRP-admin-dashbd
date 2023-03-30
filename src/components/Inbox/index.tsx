@@ -1,8 +1,9 @@
 import Image, { StaticImageData } from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import FilterIcon from '@public/Icons/filterIcon.svg'
 import SearchIcon from '@public/Icons/searchIcon.svg'
 import TwitterIcon from '@public/Icons/twitterChatIcon.svg'
+import TwilioIcon from '@public/Icons/twiloFilterIcon.svg'
 import DiscordIcon from '@public/Icons/discordIcon.svg'
 import ChatIcon from '@public/Icons/chatIcon.svg'
 import UserImage from '@public/Images/userImage.png'
@@ -15,6 +16,10 @@ import AddChatModal from './AddChatModal'
 import useWidth from '@/hooks/useWidth'
 import FilterModal from './FilterModal'
 import ThemeChanger from '../ThemeChanger'
+import { Context } from '@/pages/_app'
+import { useTwilio } from 'twilio-conversations-hooks'
+import { Conversation } from '@twilio/conversations/lib'
+import moment from 'moment'
 
 const dummyData: IInboxChatProps[] = [
   {
@@ -100,47 +105,46 @@ interface IInboxChatProps {
 }
 
 interface IInboxChatCompProps {
-  userImage: string
+  conversation: Conversation
   platformIcon?: StaticImageData
-  userName: string
-  lastChat: string
-  time: string
-  unseenMessageCount: number
   handleSelectChat: Function
-  ChatSelected: {
-    userImage: string | any
-    platformIcon: StaticImageData
-    userName: string
-    lastChat: string
-    time: string
-    unseenMessageCount: number
-    handleSelectChat: Function
-  } | null
+  ChatSelected?: Conversation
 }
 
 const InboxCompChat = (props: IInboxChatCompProps) => {
-  const {
-    userImage,
-    userName,
-    lastChat,
-    time,
-    platformIcon,
-    unseenMessageCount,
-    handleSelectChat,
-    ChatSelected,
-  } = props
+  const { conversation, platformIcon, handleSelectChat, ChatSelected } = props
 
+  const { state } = useContext(Context)
+  const [unseenMessageCount, setUnreadMessagesCount] = useState<number>(0)
+  useEffect(() => {
+    conversation.getUnreadMessagesCount().then((count) => setUnreadMessagesCount(count || 0))
+  }, [])
+  const participantsAddress = useMemo(() => {
+    const users = conversation.uniqueName.split('-')
+    if (users[0] === state?.user?.address) {
+      return users[1]
+    }
+    return users[0]
+  }, [conversation.uniqueName, state?.user?.address])
   return (
     <div
       className={` flex py-3.5 items-center justify-between cursor-pointer px-4 lg:px-8 overflow-hidden ${
-        ChatSelected?.userName == userName ? 'bg-white dark:bg-gray-bg2-dark/40' : ''
+        ChatSelected?.uniqueName == conversation.uniqueName
+          ? 'bg-white dark:bg-gray-bg2-dark/40'
+          : ''
       } `}
-      onClick={() => handleSelectChat(props)}
+      onClick={() => handleSelectChat(conversation)}
     >
       <div className="flex">
         <div className="relative">
           <div className="rounded-full h-12 w-12 relative min-w-[40px] lg:min-w-[48px] overflow-hidden ">
-            <Image src={userImage} alt="User Image" fill className=" object-cover" quality={100} />
+            <Image
+              src={`https://xumm.app/avatar/${participantsAddress}.png`}
+              alt="User Image"
+              fill
+              className=" object-cover"
+              quality={100}
+            />
           </div>
           {platformIcon && (
             <div className=" rounded-full h-4 w-4 absolute right-0 bottom-0 ">
@@ -149,9 +153,9 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
           )}
         </div>
         <div className="ml-3 grid ">
-          <span className="text-base font-semibold truncate ">{userName}</span>
+          <span className="text-base font-semibold truncate ">{conversation.uniqueName}</span>
           <div className=" text-xs text-secondary-text dark:text-secondary-text-dark  font-normal max-w-[75%] truncate  ">
-            {lastChat}
+            {conversation?.lastMessage?.index}
           </div>
         </div>
       </div>
@@ -162,7 +166,7 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
           </div>
         )}
         <div className=" text-xs text-secondary-text dark:text-secondary-text-dark  font-normal mt-1">
-          {time}
+          {moment(conversation?.lastMessage?.dateCreated).format('D/M/Y')}
         </div>
       </div>
     </div>
@@ -171,15 +175,7 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
 
 interface IInboxCompProps {
   setChatSelected: Function
-  ChatSelected: {
-    userImage: string | any
-    platformIcon: StaticImageData
-    userName: string
-    lastChat: string
-    time: string
-    unseenMessageCount: number
-    handleSelectChat: Function
-  } | null
+  ChatSelected?: Conversation
 }
 
 const InboxComp = (props: IInboxCompProps) => {
@@ -187,7 +183,10 @@ const InboxComp = (props: IInboxCompProps) => {
   const [openNewChatModal, setOpenNewChatModal] = useState<boolean>(false)
   const [searchText, setSearchText] = useState<string>('')
   const [mounted, setMounted] = useState(false)
+  const { conversations } = useTwilio()
 
+  const { state } = useContext(Context)
+  const currentUser = state?.user?.address
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -209,7 +208,12 @@ const InboxComp = (props: IInboxCompProps) => {
               <FilterModal />
               <Link href={'/setting'}>
                 <span className=" overflow-hidden rounded-full h-8 w-8 ">
-                  <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
+                  <Image
+                    src={`https://xumm.app/avatar/${currentUser}.png`}
+                    width={32}
+                    height={32}
+                    alt="Filter Icon"
+                  />
                 </span>
               </Link>
             </div>
@@ -226,7 +230,12 @@ const InboxComp = (props: IInboxCompProps) => {
             />
             <span className=" md:hidden min-w-fit mr-2 overflow-hidden rounded-full h-8 w-8 ">
               <Link href={'/setting'}>
-                <Image src={UserImage} width={32} height={32} alt="Filter Icon" />
+                <Image
+                  src={`https://xumm.app/avatar/${currentUser}.png`}
+                  width={32}
+                  height={32}
+                  alt="Filter Icon"
+                />
               </Link>
             </span>
           </div>
@@ -234,13 +243,14 @@ const InboxComp = (props: IInboxCompProps) => {
         </div>
         {!searchText ? (
           <div className="mt-2 md:mt-8 overflow-y-auto">
-            {dummyData.map((data, index) => {
+            {conversations.map((data, index) => {
               return (
                 <InboxCompChat
                   key={index}
                   ChatSelected={props.ChatSelected}
                   handleSelectChat={handleSelectChat}
-                  {...data}
+                  conversation={data}
+                  platformIcon={TwilioIcon}
                 />
               )
             })}

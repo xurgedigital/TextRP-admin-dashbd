@@ -1,13 +1,14 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Popover, Transition } from '@headlessui/react'
-import ChatIcon from '@public/Icons/chatIcon.svg'
 import Image from 'next/image'
 import DiscordIcon from '@public/Icons/discordFilterIcon.svg'
 import TwitterIcon from '@public/Icons/twitterFilterIcon.svg'
 import TwiloIcon from '@public/Icons/twiloFilterIcon.svg'
 import XRPIcon from '@public/Icons/xrpFilterIcon.svg'
 import GroupIcon from '@public/Icons/groupIcon.svg'
+import ChatIcon from '@public/Icons/chatIcon.svg'
 import UserImage from '@public/Images/userImage.png'
+import CreateChat from '@components/Inbox/AddChat/CreateChat'
 
 const platformData = [
   {
@@ -31,6 +32,7 @@ const platformData = [
 const AddChat = () => {
   const [currentIndex, setCurrentIndex] = React.useState(0)
   const [platform, setPlatform] = React.useState('')
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <div className=" absolute right-8 bottom-8">
       <Popover className="">
@@ -85,12 +87,25 @@ const AddChat = () => {
                       className=" bg-gray-bg dark:bg-gray-bg-dark h-6 rounded text-xs px-2 w-full outline-none mb-4"
                     />
                     {platform == 'Twilio' && (
-                      <div className="flex gap-2 items-center mb-4">
-                        <span>
-                          <Image height={24} width={24} src={GroupIcon} alt="" />
-                        </span>
-                        <span className=" text-xs font-normal ">New group</span>
-                      </div>
+                      <>
+                        <div
+                          className="flex gap-2 items-center mb-4 cursor-pointer"
+                          onClick={() => {
+                            setIsOpen(true)
+                          }}
+                        >
+                          <span>
+                            <Image height={24} width={24} src={TwiloIcon} alt="" />
+                          </span>
+                          <span className=" text-xs font-normal ">New Chat</span>
+                        </div>
+                        <div className="flex gap-2 items-center mb-4">
+                          <span>
+                            <Image height={24} width={24} src={GroupIcon} alt="" />
+                          </span>
+                          <span className=" text-xs font-normal ">New group</span>
+                        </div>
+                      </>
                     )}
                     <div className=" text-[10px] font-normal mb-2">All contacts</div>
                     <div className="flex items-center gap-2 mb-2 cursor-pointer ">
@@ -130,6 +145,7 @@ const AddChat = () => {
           </>
         )}
       </Popover>
+      <CreateChat isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   )
 }

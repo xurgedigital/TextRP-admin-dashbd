@@ -2,17 +2,10 @@ import Image, { StaticImageData } from 'next/image'
 import React from 'react'
 import DefaultImage from '@public/Images/defaultChatImage.png'
 import PersonalChat from '../PersonalChat'
+import { Conversation } from '@twilio/conversations/lib'
 
 interface IPersonalProps {
-  ChatSelected: {
-    userImage: string | any
-    platformIcon: StaticImageData
-    userName: string
-    lastChat: string
-    time: string
-    unseenMessageCount: number
-    handleSelectChat: Function
-  } | null
+  ChatSelected?: Conversation
   setChatSelected?: Function
 }
 

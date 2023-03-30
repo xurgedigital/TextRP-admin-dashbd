@@ -8,12 +8,12 @@ const AdminPage = () => {
   const { state, dispatch }: any = useContext(Context)
 
   useEffect(() => {
-    if (!(state.user.isLoggedIn || localStorage.getItem('isLoggedIn') == 'true')) {
-      router.push('/login')
+    if (!(state?.user?.isLoggedIn || localStorage.getItem('isLoggedIn') == 'true')) {
+      router && router.push('/login')
     } else {
-      router.push('admin/user-management')
+      router && router.push('admin/user-management')
     }
-  })
+  }, [router, state?.user?.isLoggedIn])
   return <></>
 }
 

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import Image, { StaticImageData } from 'next/image'
 import ArrowLeft from '@public/Icons/setting/arrow.svg'
 import Twitter from '@public/Icons/twitter.svg'
@@ -18,6 +18,7 @@ import { swrFetcher } from '@/helpers'
 import useSWR from 'swr'
 import axios from 'axios'
 import Loader from '../common/Loader'
+import { Context } from '@/pages/_app'
 
 interface ILinkCardProps {
   icon: StaticImageData
@@ -76,12 +77,15 @@ const Profile = () => {
   const { data: userData, isLoading, mutate } = useSWR('/api/user/me', swrFetcher)
   const [isMount, setMount] = React.useState(true)
   const [image, setImage] = useState<any>()
-  const [preview, setPreview] = useState<string>()
+  const [preview, setPreview] = useState<string | undefined>()
   const [isEditing, setIsEditing] = useState(false)
   const [isSave, setIsSave] = useState(false)
   const [name, setName] = useState<string>('unknown')
   const [userName, setUserName] = useState('@alex134')
   const [about, setAbout] = useState('Lorem ipsum dolor sit amet consectetur adipisicing elit')
+
+  const { state } = useContext(Context)
+  const currentUser = state?.user?.address
 
   useEffect(() => {
     if (!isLoading && userData) {
@@ -198,7 +202,10 @@ const Profile = () => {
       ) : (
         <div className="overflow-y-auto h-full px-4 md:px-8 relative">
           <div
-            onClick={() => setIsEditing((prev) => !prev)}
+            onClick={() => {
+              setIsEditing((prev) => !prev)
+              setPreview(undefined)
+            }}
             className="absolute right-4 md:right-8 top-3 text-secondary-text dark:text-secondary-text-dark cursor-pointer"
           >
             {!isEditing ? <MdEdit size={26} /> : <IoCloseSharp size={26} />}
@@ -206,7 +213,7 @@ const Profile = () => {
           <div className="relative w-full flex justify-center my-8">
             <div className="rounded-full h-28 w-28 relative min-w-[6rem] overflow-hidden ">
               <Image
-                src={preview ?? 'https://picsum.photos/204'}
+                src={preview ?? `https://xumm.app/avatar/${currentUser}.png`}
                 alt="User Image"
                 fill
                 className=" object-cover"

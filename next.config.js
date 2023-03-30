@@ -4,7 +4,7 @@ const withPlugins = require('next-compose-plugins')
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['picsum.photos'],
+    domains: ['picsum.photos', 'xumm.app'],
   },
 }
 

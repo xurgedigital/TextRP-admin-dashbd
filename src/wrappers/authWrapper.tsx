@@ -9,21 +9,25 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!(state?.user?.isLoggedIn || localStorage.getItem('isLoggedIn') == 'true')) {
-      router.push('/login')
+      router && router.push('/login')
     }
     if (router.pathname !== '/login') {
       axios
         .get('/api/me')
         .then((res) => {
+          dispatch({
+            type: 'LOGGED_IN_USER',
+            payload: res.data?.user,
+          })
           //   console.log(res, 'hj')
         })
         .catch((err) => {
           if (err) {
-            router.push('/login')
+            router && router.push('/login')
           }
         })
     }
-  })
+  }, [state?.user?.isLoggedIn, router])
 
   return <>{children}</>
 }
