@@ -14,6 +14,7 @@ import { Conversation } from '@twilio/conversations/lib'
 import { useConversation, useTwilio } from 'twilio-conversations-hooks'
 import { Context } from '@/pages/_app'
 import { SingleMessage } from '@components/PersonalChat/SingleMessage'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 export interface IChatData {
   userImage: string | any
@@ -33,6 +34,7 @@ const PersonalChat = (props: IPersonalProps) => {
   const [InputValue, setInputValue] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [recording, setRecording] = useState<Blob | undefined>(undefined)
+  const [messageLoading, setMessageLoading] = useState(false)
 
   const { state } = useContext(Context)
   const currentUser = state?.user?.address
@@ -220,24 +222,39 @@ const PersonalChat = (props: IPersonalProps) => {
           <PhotoCamera />
         </IconButton> */}
           </label>
-          <IoSendSharp
+          <button
+            disabled={messageLoading}
             className=" cursor-pointer"
             onClick={async () => {
-              if (recording) {
-                const raw = await recording.arrayBuffer()
-                const buffer = Buffer.from(raw)
-                await conversation?.sendMessage({
-                  contentType: 'audio/mp3',
-                  media: buffer,
-                })
-              } else {
-                await sendMessage(InputValue)
+              setMessageLoading(true)
+              try {
+                if (recording) {
+                  const raw = await recording.arrayBuffer()
+                  const buffer = Buffer.from(raw)
+                  await conversation?.sendMessage({
+                    contentType: 'audio/mp3',
+                    media: buffer,
+                  })
+                } else {
+                  await sendMessage(InputValue)
+                }
+                setRecording(undefined)
+                setInputValue('')
+                setMessageLoading(false)
+              } catch (err) {
+                setMessageLoading(false)
+                console.log(err)
               }
-              setRecording(undefined)
-              setInputValue('')
             }}
-            style={{ color: '#3254FE', fontSize: '26px', marginLeft: '8px' }}
-          />
+          >
+            <IoSendSharp style={{ color: '#3254FE', fontSize: '26px', marginLeft: '8px' }} />
+          </button>
+          {messageLoading && (
+            <AiOutlineLoading3Quarters
+              size={30}
+              className=" text-primary-blue ml-3 animate-spin "
+            />
+          )}
         </div>
       </div>
     </>
