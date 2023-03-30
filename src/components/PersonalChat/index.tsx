@@ -6,7 +6,7 @@ import LeftArrorwIcon from '@public/Icons/leftArrowIcon.svg'
 import SearchIcon from '@public/Icons/searchIcon.svg'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 import { ImMic } from 'react-icons/im'
-import { IoSendSharp } from 'react-icons/io5'
+import { IoClose, IoSendSharp } from 'react-icons/io5'
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder'
 import { FaStop } from 'react-icons/fa'
 import AboutUser from './AboutUser'
@@ -215,16 +215,22 @@ const PersonalChat = (props: IPersonalProps) => {
             type="file"
             style={{ display: 'none' }}
           />
-          <label className=" cursor-pointer" htmlFor="icon-button-file">
-            <AiOutlinePaperClip style={{ color: '#3254FE', fontSize: '28px', marginLeft: '8px' }} />
-            {/* <IconButton color="primary" aria-label="upload picture"
-        component="span">
-          <PhotoCamera />
-        </IconButton> */}
-          </label>
+          {recording ? (
+            <IoClose
+              className="cursor-pointer text-primary-blue"
+              style={{ fontSize: '34px', marginLeft: '8px' }}
+              onClick={() => setRecording(undefined)}
+            />
+          ) : (
+            <label className=" cursor-pointer" htmlFor="icon-button-file">
+              <AiOutlinePaperClip
+                style={{ color: '#3254FE', fontSize: '28px', marginLeft: '8px' }}
+              />
+            </label>
+          )}
           <button
             disabled={messageLoading}
-            className=" cursor-pointer"
+            className={`${messageLoading ? 'hidden' : ''} cursor-pointer`}
             onClick={async () => {
               setMessageLoading(true)
               try {
@@ -251,8 +257,8 @@ const PersonalChat = (props: IPersonalProps) => {
           </button>
           {messageLoading && (
             <AiOutlineLoading3Quarters
-              size={30}
-              className=" text-primary-blue ml-3 animate-spin "
+              size={28}
+              className=" text-primary-blue ml-2 animate-spin "
             />
           )}
         </div>
