@@ -20,7 +20,7 @@ const ChatSection = (props: IPersonalProps) => {
 
   return (
     <div
-      className={` md:transform-none chatSection  flex md:flex-[0.65] xl:flex-[0.75] 3xl:flex-[0.8] justify-center items-center bg-white dark:bg-gray-bg2-dark ${
+      className={` md:transform-none chatSection absolute md:relative top-0 left-0 w-full  flex md:flex-[0.65] xl:flex-[0.75] 3xl:flex-[0.8] justify-center items-center bg-white dark:bg-gray-bg2-dark ${
         isMount ? 'translate-x-full' : 'translate-x-0'
       } transition duration-200 `}
     >

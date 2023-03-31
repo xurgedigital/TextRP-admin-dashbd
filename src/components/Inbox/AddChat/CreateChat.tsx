@@ -2,6 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useContext, useState } from 'react'
 import TwilioContext from 'twilio-conversations-hooks/lib/contexts/TwilioContext'
 import { Context } from '@/pages/_app'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 export default function CreateChat({
   isOpen,
@@ -17,15 +18,22 @@ export default function CreateChat({
 
   async function closeModal() {
     setLoading(true)
-    console.log('store?.user', state?.user)
-    const conversation = await client.createConversation({
-      uniqueName: `${state?.user?.address}-${address}`,
-      friendlyName: `${state?.user?.address}-${address}`,
-    })
-    await conversation.join()
-    await conversation.add(address)
-    setIsOpen(false)
-    setLoading(false)
+    try {
+      console.log('store?.user', state?.user)
+      const conversation = await client.createConversation({
+        uniqueName: `${state?.user?.address}-${address}`,
+        friendlyName: `${state?.user?.address}-${address}`,
+      })
+      await conversation.join()
+      await conversation.add(address)
+      console.log('conversation', conversation)
+
+      setIsOpen(false)
+      setLoading(false)
+    } catch (err) {
+      console.log(err)
+      setLoading(false)
+    }
   }
 
   function openModal() {
@@ -78,7 +86,14 @@ export default function CreateChat({
                       onClick={closeModal}
                       disabled={loading}
                     >
-                      Create
+                      {!loading ? (
+                        'Create'
+                      ) : (
+                        <AiOutlineLoading3Quarters
+                          size={20}
+                          className=" text-primary-blue animate-spin "
+                        />
+                      )}
                     </button>
                   </div>
                 </Dialog.Panel>

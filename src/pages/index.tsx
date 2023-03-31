@@ -39,8 +39,8 @@ export default function Home() {
       {width >= 768 && (
         <ChatSection ChatSelected={ChatSelected} setChatSelected={setChatSelected} />
       )}
-      <div className=" overflow-hidden">
-        {width < 768 && ChatSelected !== null && (
+      <div className=" overflow-hidden mobile">
+        {width < 768 && ChatSelected !== undefined && (
           <ChatSection ChatSelected={ChatSelected} setChatSelected={setChatSelected} />
         )}
       </div>
