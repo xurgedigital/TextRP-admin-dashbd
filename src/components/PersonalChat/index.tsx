@@ -15,6 +15,7 @@ import { useConversation, useTwilio } from 'twilio-conversations-hooks'
 import { Context } from '@/pages/_app'
 import { SingleMessage } from '@components/PersonalChat/SingleMessage'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import walletnametrimmer from '@/helpers/walletnametrimmer'
 
 export interface IChatData {
   userImage: string | any
@@ -60,7 +61,7 @@ const PersonalChat = (props: IPersonalProps) => {
     if (ref.current) {
       ref.current.scrollTop = ref.current.scrollHeight
     }
-  }, [messageCount])
+  }, [messages])
 
   const recorderControls = useAudioRecorder()
 
@@ -86,8 +87,8 @@ const PersonalChat = (props: IPersonalProps) => {
                 onClick={() => setIsOpen((prev) => !prev)}
               >
                 <span
-                  onClick={() => props.setChatSelected(null)}
-                  className="h-[17px] mr-3 cursor-pointer md:hidden"
+                  onClick={() => props.setChatSelected(undefined)}
+                  className="h-[17px] w-5 ml-2 mr-3 cursor-pointer md:hidden"
                 >
                   <Image src={LeftArrorwIcon} alt="" />
                 </span>
@@ -100,7 +101,12 @@ const PersonalChat = (props: IPersonalProps) => {
                 {/*/>*/}
                 <div className="ml-2">
                   <div className="d-flex flex-row">
-                    <h4 className="text-lg font-semibold w-full">{participantsAddress}</h4>
+                    <h4 className=" hidden md:block text-lg font-semibold w-full">
+                      {participantsAddress}
+                    </h4>
+                    <h4 className=" md:hidden text-lg font-semibold w-full">
+                      {walletnametrimmer(participantsAddress)}
+                    </h4>
                   </div>
                   <div className="flex items-center">
                     <div className="bg-primary-green h-2 w-2 rounded-full mr-2"></div>
@@ -163,7 +169,7 @@ const PersonalChat = (props: IPersonalProps) => {
             <>
               <textarea
                 placeholder="Type a message"
-                className="outline-none w-full font-normal text-sm h-full pt-8 dark:bg-gray-bg-dark"
+                className="outline-none w-full font-normal text-sm h-full pt-6 lg:pt-8 dark:bg-gray-bg-dark"
                 onChange={(e) => setInputValue(e.target.value)}
                 value={InputValue}
                 onKeyDown={() => sendTyping()}

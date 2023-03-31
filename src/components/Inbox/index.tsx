@@ -153,7 +153,7 @@ const InboxCompChat = (props: IInboxChatCompProps) => {
           )}
         </div>
         <div className="ml-3 grid ">
-          <span className="text-base font-semibold truncate ">{conversation.uniqueName}</span>
+          <span className="text-base font-semibold truncate ">{participantsAddress}</span>
           <div className=" text-xs text-secondary-text dark:text-secondary-text-dark  font-normal max-w-[75%] truncate  ">
             {conversation?.lastMessage?.index}
           </div>
@@ -196,6 +196,8 @@ const InboxComp = (props: IInboxCompProps) => {
   const handleSelectChat = (name: string) => {
     props?.setChatSelected(name)
   }
+
+  console.log('conversations', conversations)
 
   return (
     <>
