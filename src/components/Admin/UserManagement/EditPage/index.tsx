@@ -80,6 +80,7 @@ const EditPage = (props: IEditProps) => {
         console.log(res.data)
         setUserNameLoader(false)
         setIsEditingUser(false)
+        mutate()
       })
       .catch((err) => {
         console.log(err)
@@ -100,6 +101,7 @@ const EditPage = (props: IEditProps) => {
           console.log(res.data)
           setCreditsLoader(false)
           setIsEditingCredit(false)
+          mutate()
         })
         .catch((err) => {
           console.log(err)
@@ -113,6 +115,7 @@ const EditPage = (props: IEditProps) => {
           console.log(res.data)
           setCreditsLoader(false)
           setIsEditingCredit(false)
+          mutate()
         })
         .catch((err) => {
           console.log(err)
@@ -134,6 +137,7 @@ const EditPage = (props: IEditProps) => {
           console.log(res.data)
           setDiscountLoader(false)
           setIsEditingDiscount(false)
+          mutate()
         })
         .catch((err) => {
           console.log(err)
@@ -150,6 +154,7 @@ const EditPage = (props: IEditProps) => {
           console.log(res.data)
           setDiscountLoader(false)
           setIsEditingDiscount(false)
+          mutate()
         })
         .catch((err) => {
           console.log(err)
