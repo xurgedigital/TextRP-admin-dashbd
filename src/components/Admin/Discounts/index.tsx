@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { isValidClassicAddress } from 'ripple-address-codec'
 
 interface IDiscount {
+  id: number
   discount: number
   address: string
 }
@@ -120,6 +121,103 @@ const DiscountComp = () => {
     )
   }
 
+  const Row = (props: IDiscount) => {
+    const { id, discount, address } = props
+    const [isEditable, setIsEditable] = useState(false)
+    const [newDiscount, setNewDiscount] = useState(discount)
+    const [newAddress, setNewAddress] = useState(address)
+    const [isSaving, setIsSaving] = useState(false)
+    const [error, setError] = useState(false)
+
+    const updateDiscount = () => {
+      setIsSaving(true)
+      if (!isValidClassicAddress(newAddress)) {
+        setError(true)
+        setIsSaving(false)
+        return
+      }
+
+      axios
+        .post(`/api/admin/discounts/${id}`, {
+          discount: newDiscount,
+          address: newAddress,
+        })
+        .then((res) => {
+          setIsSaving(false)
+          setIsEditable((prev) => !prev)
+          mutate()
+        })
+        .catch((err) => {
+          setIsSaving(false)
+          console.log(err)
+        })
+    }
+
+    return (
+      <tr className="text-sm font-normal text-secondary-text">
+        <td className="pb-4 py-3 pl-4">
+          {' '}
+          {isEditable ? (
+            <div className="w-full flex items-start h-[7.6rem] pr-4">
+              <input
+                placeholder={'Ex. 45'}
+                value={newDiscount}
+                onChange={(e) => setNewDiscount(Number(e.target.value))}
+                className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text`}
+              />
+            </div>
+          ) : (
+            <span>{discount ?? '-'}</span>
+          )}
+        </td>
+        <td className="pb-4 py-3 pr-4">
+          {' '}
+          {isEditable ? (
+            <div className="w-full flex flex-col justify-start h-[7.6rem] pr-4">
+              <input
+                placeholder={'Ex. 66'}
+                value={newAddress}
+                onChange={(e) => setNewAddress(e.target.value)}
+                className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text`}
+              />
+              {error ? <p className="text-xs text-red-500">Enter valid XRP address !</p> : null}
+              <div className="flex items-center gap-2 mt-4">
+                <Button loading={isSaving} onClick={updateDiscount} className="px-6 py-2  rounded">
+                  {'Save'}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setIsEditable((prev) => !prev)
+                  }}
+                  variant="blueOutline"
+                  className=" px-6 py-2 rounded"
+                >
+                  {'Cancel'}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <span>{address ?? '-'}</span>
+          )}
+        </td>
+        <td className="p-4">
+          <div className={` ${isEditable ? 'hidden' : 'flex'}  w-full justify-end`}>
+            <Image
+              onClick={() => {
+                setIsEditable((prev) => !prev)
+              }}
+              className="min-w-fit cursor-pointer"
+              height={16}
+              width={16}
+              src={EditIcon}
+              alt=""
+            />
+          </div>
+        </td>
+      </tr>
+    )
+  }
+
   return (
     <>
       {showNewDiscount ? (
@@ -135,7 +233,7 @@ const DiscountComp = () => {
               {'Set New Discount'}
             </button>
           </div>
-          <div className="max-w-[600px] w-full inline-block align-middle ">
+          <div className="max-w-[680px] w-full inline-block align-middle ">
             <div className="overflow-auto w-full rounded-lg rounded-b-none border border-b-0  border-primary-gray mt-3">
               <table className="table-auto w-full ">
                 <thead className="bg-transparent border-b border-primary-gray">
@@ -153,25 +251,7 @@ const DiscountComp = () => {
                 <tbody className="divide-y divide-primary-gray bg-white w-full">
                   {discountData &&
                     discountData?.data?.length > 0 &&
-                    discountData?.data?.map((di: IDiscount, i: number) => (
-                      <tr key={i} className="text-sm font-normal text-secondary-text">
-                        <td className="pb-4 py-3 pl-4">{di.discount ?? '-'}</td>
-                        <td className="pb-4 py-3 pr-4">{di.address ?? '-'}</td>
-                        <td className="p-4">
-                          <Image
-                            onClick={() => {
-                              setDiscountInfo({ address: di.address, discount: di.discount })
-                              setShowNewDiscount(true)
-                            }}
-                            className="min-w-fit cursor-pointer"
-                            height={16}
-                            width={16}
-                            src={EditIcon}
-                            alt=""
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                    discountData?.data?.map((di: IDiscount, i: number) => <Row {...di} key={i} />)}
                 </tbody>
               </table>
             </div>
