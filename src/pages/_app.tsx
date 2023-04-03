@@ -8,6 +8,8 @@ import Head from 'next/head'
 import { TwilioProvider } from 'twilio-conversations-hooks'
 import { SWRConfig } from 'swr'
 import axios from 'axios'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Context = createContext<{
   state: IRootState
@@ -91,7 +93,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <ThemeProvider attribute="class">
               <Provider>
                 <AuthWrapper>
-                  <Component {...pageProps} />
+                  <Component {...pageProps} /> <ToastContainer />
                 </AuthWrapper>
               </Provider>
             </ThemeProvider>
