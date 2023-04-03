@@ -52,6 +52,7 @@
     "eslint-config-next": "13.1.6",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "multicoin-address-validator": "^0.5.12",
     "next": "13.1.6",
     "next-compose-plugins": "^2.2.1",
     "next-themes": "^0.2.1",
@@ -60,6 +61,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "react-switch": "^7.0.0",
+    "react-toastify": "^9.1.2",
     "react-use-websocket": "^4.3.1",
     "ripple-address-codec": "^4.2.5",
     "swr": "^2.1.1",
@@ -70,6 +72,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.192",
+    "@types/multicoin-address-validator": "^0.5.0",
     "autoprefixer": "^10.4.13",
     "eslint": "8.34.0",
     "eslint-config-prettier": "^8.6.0",

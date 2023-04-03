@@ -3,6 +3,9 @@ import { Fragment, useContext, useState } from 'react'
 import TwilioContext from 'twilio-conversations-hooks/lib/contexts/TwilioContext'
 import { Context } from '@/pages/_app'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { useRouter } from 'next/router'
+import WAValidator from 'multicoin-address-validator'
+import { toast } from 'react-toastify'
 
 export default function CreateChat({
   isOpen,
@@ -15,23 +18,31 @@ export default function CreateChat({
   const [loading, setLoading] = useState(false)
   const { client } = useContext(TwilioContext)
   const { state }: any = useContext(Context)
-
+  const router = useRouter()
   async function closeModal() {
     setLoading(true)
-    try {
-      console.log('store?.user', state?.user)
-      const conversation = await client.createConversation({
-        uniqueName: `${state?.user?.address}-${address}`,
-        friendlyName: `${state?.user?.address}-${address}`,
-      })
-      await conversation.join()
-      await conversation.add(address)
-      console.log('conversation', conversation)
+    if (WAValidator.validate(address, 'XRP')) {
+      try {
+        console.log('store?.user', state?.user)
+        const conversation = await client.createConversation({
+          uniqueName: `${state?.user?.address}-${address}`,
+          friendlyName: `${state?.user?.address}-${address}`,
+        })
+        await conversation.join()
+        await conversation.add(address)
+        console.log('conversation', conversation)
 
-      setIsOpen(false)
-      setLoading(false)
-    } catch (err) {
-      console.log(err)
+        setIsOpen(false)
+        setLoading(false)
+        router.reload()
+      } catch (err: any) {
+        console.log(err)
+        toast.error('Something went wrong')
+        setLoading(false)
+      }
+    } else {
+      toast.error('Invalid address')
+      console.log('address error')
       setLoading(false)
     }
   }
