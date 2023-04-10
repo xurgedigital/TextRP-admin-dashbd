@@ -64,6 +64,27 @@ const PersonalChat = (props: IPersonalProps) => {
   }, [messages])
 
   const recorderControls = useAudioRecorder()
+  const sendMessageHandler = async () => {
+    setMessageLoading(true)
+    try {
+      if (recording) {
+        const raw = await recording.arrayBuffer()
+        const buffer = Buffer.from(raw)
+        await conversation?.sendMessage({
+          contentType: 'audio/mp3',
+          media: buffer,
+        })
+      } else {
+        await sendMessage(InputValue)
+      }
+      setRecording(undefined)
+      setInputValue('')
+      setMessageLoading(false)
+    } catch (err) {
+      setMessageLoading(false)
+      console.log(err)
+    }
+  }
 
   return (
     <>
@@ -171,8 +192,13 @@ const PersonalChat = (props: IPersonalProps) => {
                 placeholder="Type a message"
                 className="outline-none w-full font-normal text-sm h-full pt-6 lg:pt-8 dark:bg-gray-bg-dark"
                 onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key == 'Enter') {
+                    sendMessageHandler()
+                  }
+                }}
                 value={InputValue}
-                onKeyDown={() => sendTyping()}
+                // onKeyDown={() => sendTyping()}
                 // onKeyDown={onAction}
               />
             </>
@@ -237,27 +263,7 @@ const PersonalChat = (props: IPersonalProps) => {
           <button
             disabled={messageLoading}
             className={`${messageLoading ? 'hidden' : ''} cursor-pointer`}
-            onClick={async () => {
-              setMessageLoading(true)
-              try {
-                if (recording) {
-                  const raw = await recording.arrayBuffer()
-                  const buffer = Buffer.from(raw)
-                  await conversation?.sendMessage({
-                    contentType: 'audio/mp3',
-                    media: buffer,
-                  })
-                } else {
-                  await sendMessage(InputValue)
-                }
-                setRecording(undefined)
-                setInputValue('')
-                setMessageLoading(false)
-              } catch (err) {
-                setMessageLoading(false)
-                console.log(err)
-              }
-            }}
+            onClick={sendMessageHandler}
           >
             <IoSendSharp style={{ color: '#3254FE', fontSize: '26px', marginLeft: '8px' }} />
           </button>
