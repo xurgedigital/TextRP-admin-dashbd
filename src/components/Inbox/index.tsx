@@ -197,7 +197,12 @@ const InboxComp = (props: IInboxCompProps) => {
     props?.setChatSelected(name)
   }
 
-  console.log('conversations', conversations)
+  const sortedArray = useMemo(() => {
+    let a = conversations.sort(
+      (a, b) => Number(moment(a?.dateUpdated).unix()) - Number(moment(b?.dateUpdated).unix())
+    )
+    return a.reverse()
+  }, [conversations])
 
   return (
     <>
@@ -245,7 +250,7 @@ const InboxComp = (props: IInboxCompProps) => {
         </div>
         {!searchText ? (
           <div className="mt-2 md:mt-8 overflow-y-auto">
-            {conversations.map((data, index) => {
+            {sortedArray.map((data, index) => {
               return (
                 <InboxCompChat
                   key={index}
