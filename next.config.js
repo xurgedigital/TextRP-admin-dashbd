@@ -14,7 +14,7 @@ module.exports = withPlugins([], {
       {
         source: '/api/:path*',
         destination: `${
-          process.env.BACKEND_URL || 'https://textrp-backend.35.77.151.153.nip.io'
+          process.env.BACKEND_URL || 'https://xlrp-backendprod.aticloud.atican.dev'
         }/:path*`, // Proxy to Backend
       },
     ]
