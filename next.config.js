@@ -7,7 +7,7 @@ const nextConfig = {
     domains: ['picsum.photos', 'xumm.app'],
   },
 }
-
+console.info('Using backend:', process.env.BACKEND_URL)
 module.exports = withPlugins([], {
   async rewrites() {
     return [
