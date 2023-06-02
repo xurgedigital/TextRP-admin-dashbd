@@ -8,6 +8,10 @@ import React, { useEffect, useState } from 'react'
 import { isValidClassicAddress } from 'ripple-address-codec'
 
 const PlatformSettingsComp = () => {
+  const [discordSendKey, setDiscordSendKey] = useState<any>('')
+  const [discordReceiveKey, setDiscordReceiveKey] = useState<any>('')
+  const [twitterSendKey, setTwitterSendKey] = useState<any>('')
+  const [twitterReceiveKey, setTwitterReceiveKey] = useState<any>('')
   const [NewBonus, setNewBonus] = useState<any>(0)
   const [NewMessage, setNewMessage] = useState<any>('')
   const [NewBonusEnabled, setNewBonusEnabled] = useState('false')
@@ -24,12 +28,13 @@ const PlatformSettingsComp = () => {
   const [MicroPayLoader, setMicroPayLoader] = useState(false)
   const [ReceivePayLoader, setReceivePayLoader] = useState(false)
   const [ExternalAPILoader, setExternalAPILoader] = useState(false)
+  const [creditsLoading, setCreditsLoading] = useState(false)
   const [addressError, setAddressError] = useState(false)
 
   const router = useRouter()
   const getPlatformSettings = () => {
     axios
-      .get('/api/admin/platform_settings')
+      .get('/api/admin/platform_settings?limit=20')
       .then((res) => {
         setPlatformData(res.data)
       })
@@ -192,6 +197,46 @@ const PlatformSettingsComp = () => {
           setMicroPayLoader(false)
         })
     }
+  }
+  const handleSaveCredits = () => {
+    setCreditsLoading(true)
+    let walletAddress = {
+      key: 'walletAddress',
+      value: WalletAddress,
+    }
+    let active = {
+      key: 'seeedKey',
+      value: NewBonusEnabled,
+    }
+    axios
+      .post(`/api/admin/platform_settings/bulk`, {
+        settings: [
+          {
+            key: 'discord_send',
+            value: discordSendKey,
+          },
+          {
+            key: 'discord_receive',
+            value: discordReceiveKey,
+          },
+          {
+            key: 'twitter_send',
+            value: twitterSendKey,
+          },
+          {
+            key: 'twitter_receive',
+            value: twitterReceiveKey,
+          },
+        ],
+      })
+      .then((res) => {
+        console.log(res.data)
+        setCreditsLoading(false)
+      })
+      .catch((err) => {
+        console.log(err)
+        setCreditsLoading(false)
+      })
   }
 
   const handleSaveReceivePay = () => {
@@ -370,6 +415,19 @@ const PlatformSettingsComp = () => {
       setDiscordKey(PlatformData?.data?.find((arr: any) => arr.key == 'discordKey')?.value)
     PlatformData?.data?.find((arr: any) => arr.key == 'XUMMKey')?.value &&
       setXummKey(PlatformData?.data?.find((arr: any) => arr.key == 'XUMMKey')?.value)
+
+    PlatformData?.data?.find((arr: any) => arr.key == 'discord_send')?.value &&
+      setDiscordSendKey(PlatformData?.data?.find((arr: any) => arr.key == 'discord_send')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'discord_receive')?.value &&
+      setDiscordReceiveKey(
+        PlatformData?.data?.find((arr: any) => arr.key == 'discord_receive')?.value
+      )
+    PlatformData?.data?.find((arr: any) => arr.key == 'twitter_send')?.value &&
+      setTwitterSendKey(PlatformData?.data?.find((arr: any) => arr.key == 'twitter_send')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'twitter_receive')?.value &&
+      setTwitterReceiveKey(
+        PlatformData?.data?.find((arr: any) => arr.key == 'twitter_receive')?.value
+      )
   }, [PlatformData])
 
   return (
@@ -500,6 +558,49 @@ const PlatformSettingsComp = () => {
             TwitterKey.length === 0 ||
             DiscordKey.length === 0 ||
             xummKey.length === 0
+          }
+        />
+      </div>
+
+      <p className="text-2xl font-semibold mt-8">Credits</p>
+      <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
+        <CommonInput
+          label="Discord Send Credit"
+          value={discordSendKey}
+          onChange={(e) => setDiscordSendKey(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Discord Receive Credit"
+          value={discordReceiveKey}
+          onChange={(e) => setDiscordReceiveKey(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Twitter Send Credit"
+          value={twitterSendKey}
+          onChange={(e) => setTwitterSendKey(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Twitter Receive Credit"
+          value={twitterReceiveKey}
+          onChange={(e) => setTwitterReceiveKey(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonButton
+          label="Save"
+          onClick={() => handleSaveCredits()}
+          isLoading={creditsLoading}
+          disabled={
+            discordSendKey.length === 0 ||
+            discordReceiveKey.length === 0 ||
+            twitterSendKey.length === 0 ||
+            twitterReceiveKey.length === 0
           }
         />
       </div>
