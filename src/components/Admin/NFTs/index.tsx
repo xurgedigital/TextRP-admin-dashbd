@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Img1 from '@public/Images/nft/img1.svg'
 import Image from 'next/image'
 import axios from 'axios'
@@ -7,24 +7,50 @@ import CommonInput from '@/components/common/CommonInput'
 import { swrFetcher } from '@/helpers'
 import useSWR from 'swr'
 import { isValidClassicAddress } from 'ripple-address-codec'
+import EditIcon from '@public/Icons/editIcon.svg'
 
 const CreateNFTSection = ({
   setShowCreateNFT,
+  setEdit,
+  edit,
 }: {
+  setEdit: Dispatch<SetStateAction<any>>
   setShowCreateNFT: Dispatch<SetStateAction<boolean>>
+  edit?: any
 }) => {
-  const [address, setAddress] = useState<string>()
+  const [title, setTitle] = useState<string>(edit?.title)
+  const [description, setDescription] = useState<string>(edit?.description)
+  const [contract_address, setContractAddress] = useState<string>(edit?.contract_address)
+  const [taxon, setTaxon] = useState<string>(edit?.taxon)
   const [isSaving, setIsSaving] = useState(false)
-  const [addressError, setAddressError] = useState(false)
+  const [title_error, setTitleError] = useState(false)
+  const [description_error, setDescriptionError] = useState(false)
+  const [contract_address_error, setContractAddressError] = useState(false)
+  const [taxon_error, setTaxonError] = useState(false)
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     setIsSaving(true)
-    if (address && !isValidClassicAddress(address)) {
-      setAddressError(true)
+    if (contract_address && !isValidClassicAddress(contract_address)) {
+      setContractAddressError(true)
       setIsSaving(false)
       return
     }
-    //  todo: API
+    if (!title || !description || !taxon) {
+      if (!title) setTitleError(true)
+      if (!description) setDescriptionError(true)
+      if (!taxon) setTaxonError(true)
+      setIsSaving(false)
+      return
+    }
+    await axios.post(`/api/admin/supported_nfts/${edit?.id}`, {
+      title,
+      description,
+      contract_address,
+      taxon,
+    })
+    setShowCreateNFT(false)
+    setEdit(false)
+    setIsSaving(false)
   }
 
   return (
@@ -32,21 +58,53 @@ const CreateNFTSection = ({
       <p className="text-2xl font-semibold">Create NFT</p>
       <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3 w-full">
         <CommonInput
-          label="Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Ex. 0xcdc1db9bf67E0f71e8E2e166f"
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Ex. "
           fullWidth
         />
-        {addressError ? (
-          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid XRP address !</p>
+        {title_error ? (
+          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Title!</p>
         ) : null}
+        <CommonInput
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Ex. "
+          fullWidth
+        />
+        {description_error ? (
+          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Description!</p>
+        ) : null}
+        <CommonInput
+          label="Contract Address"
+          value={contract_address}
+          onChange={(e) => setContractAddress(e.target.value)}
+          placeholder="Ex. "
+          fullWidth
+        />
+        {contract_address_error ? (
+          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Contract Address!</p>
+        ) : null}
+        <CommonInput
+          label="Taxon"
+          value={taxon}
+          onChange={(e) => setTaxon(e.target.value)}
+          placeholder="Ex. "
+          fullWidth
+        />
+        {taxon_error ? (
+          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Taxon!</p>
+        ) : null}
+
         <div className="flex items-center gap-2 mt-4 sm:ml-24">
           <Button onClick={handleCreate} loading={isSaving} className="truncate px-4 py-2 rounded">
             {'Save'}
           </Button>
           <Button
             onClick={() => {
+              setEdit(undefined)
               setShowCreateNFT((prev) => !prev)
             }}
             variant="blueOutline"
@@ -62,12 +120,16 @@ const CreateNFTSection = ({
 
 const NFTsComp = () => {
   const [showCreateNFT, setShowCreateNFT] = useState(false)
+  const [edit, setEdit] = useState()
   const { data: NftData, isLoading, mutate } = useSWR('/api/admin/supported_nfts', swrFetcher)
 
+  useEffect(() => {
+    if (!edit) mutate()
+  }, [edit])
   return (
     <>
-      {showCreateNFT ? (
-        <CreateNFTSection setShowCreateNFT={setShowCreateNFT} />
+      {showCreateNFT || edit ? (
+        <CreateNFTSection setShowCreateNFT={setShowCreateNFT} edit={edit} setEdit={setEdit} />
       ) : (
         <div className="w-full">
           <div className="flex flex-col md:flex-row w-full gap-y-2 mb-3  md:items-center md:justify-between">
@@ -85,10 +147,6 @@ const NFTsComp = () => {
                 <tr className="text-sm font-semibold">
                   <th className="min-w-[7rem] text-left mb-4">
                     {' '}
-                    <div>NFT Image</div>
-                  </th>
-                  <th className="min-w-[7rem] text-left mb-4">
-                    {' '}
                     <div>NFT Title</div>
                   </th>
                   <th className="min-w-[19rem] text-left mb-4" colSpan={2}>
@@ -103,29 +161,30 @@ const NFTsComp = () => {
                     {' '}
                     <div>Taxon</div>
                   </th>
-                  <th className="min-w-[7rem] text-left mb-4">
-                    {' '}
-                    <div>Remaining Count</div>
-                  </th>
                 </tr>
               </thead>
               <tbody>
                 {NftData && NftData?.data?.length > 0 ? (
                   NftData?.data?.map((ci: any, i: number) => (
                     <tr key={i} className="text-sm font-normal">
-                      <td>
-                        <Image
-                          src={Img1}
-                          alt="arrow-left"
-                          className="cursor-pointer object-cover h-24 w-24"
-                          quality={100}
-                        />
-                      </td>
                       <td>{ci?.title}</td>
                       <td colSpan={2}>{ci?.description}</td>
                       <td className="break-all text-secondary-text">{ci?.contract_address}</td>
                       <td className="break-all text-secondary-text">{ci?.taxon}</td>
-                      <td className="text-secondary-text">1000</td>
+                      <td className="px-4 py-3 text-end">
+                        <div className="flex justify-end ">
+                          <Image
+                            onClick={() => {
+                              setEdit(ci)
+                            }}
+                            className="min-w-fit cursor-pointer"
+                            height={16}
+                            width={16}
+                            src={EditIcon}
+                            alt=""
+                          />
+                        </div>
+                      </td>
                     </tr>
                   ))
                 ) : (
