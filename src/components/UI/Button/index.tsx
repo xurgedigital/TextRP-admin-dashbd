@@ -1,7 +1,7 @@
 import React from 'react'
 import { AiOutlineLoading } from 'react-icons/ai'
 
-type IVariant = 'blueOutline' | 'primary'
+type IVariant = 'blueOutline' | 'primary' | 'redOutline'
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
@@ -26,9 +26,11 @@ const Button: React.FC<IButtonProps> = ({
   const returnBg = (variant: IVariant) => {
     switch (variant) {
       case 'primary':
-        return 'rounded bg-primary-blue text-white text-sm '
+        return 'rounded bg-primary-blue text-white text-sm border-2 border-primary-blue'
       case 'blueOutline':
         return 'text-primary-blue bg-white border-2 border-primary-blue text-sm font-medium'
+      case 'redOutline':
+        return 'text-rose-500 bg-white border-2 border-rose-500 text-sm font-medium'
     }
   }
 

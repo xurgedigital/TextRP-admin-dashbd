@@ -22,21 +22,21 @@ interface ISItemsProps {
 }
 
 const settingItems = [
-  {
-    title: 'Profile',
-    icon: Profile,
-    link: '/setting/profile',
-  },
-  {
-    title: 'Linked accounts',
-    icon: LinkedAccount,
-    link: '/setting/linked-accounts',
-  },
-  {
-    title: 'My NFTs',
-    icon: MyNFT,
-    link: '/setting/my-nft',
-  },
+  // {
+  //   title: 'Profile',
+  //   icon: Profile,
+  //   link: '/setting/profile',
+  // },
+  // {
+  //   title: 'Linked accounts',
+  //   icon: LinkedAccount,
+  //   link: '/setting/linked-accounts',
+  // },
+  // {
+  //   title: 'My NFTs',
+  //   icon: MyNFT,
+  //   link: '/setting/my-nft',
+  // },
   {
     title: 'Buy credits',
     icon: BuyCredit,
