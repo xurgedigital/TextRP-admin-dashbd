@@ -154,6 +154,9 @@ const CreditComp = () => {
                 >
                   {'Cancel'}
                 </Button>
+                <Button onClick={() => {}} variant="redOutline" className=" px-6 py-2 rounded">
+                  {'Delete'}
+                </Button>
               </div>
             </div>
           ) : (
@@ -194,7 +197,7 @@ const CreditComp = () => {
       {showCreateCredit ? (
         <CreateCredit setShowCreateCredit={setShowCreateCredit} />
       ) : (
-        <div className="w-full max-w-[640px]">
+        <div className="w-full max-w-[840px]">
           <div className="flex flex-col md:flex-row w-full   gap-y-2  md:items-center md:justify-between">
             <p className="text-xl sm:text-2xl font-semibold">Credits Pricing</p>
             <Button
