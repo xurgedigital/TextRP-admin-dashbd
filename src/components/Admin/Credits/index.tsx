@@ -92,10 +92,15 @@ const CreateCredit = ({
 
 const CreditComp = () => {
   const { data: creditData, isLoading, mutate } = useSWR('/api/admin/credits', swrFetcher)
+  const { data: usdXrpPriceData } = useSWR(
+    'https://api.binance.com/api/v3/avgPrice?symbol=XRPUSDT',
+    swrFetcher
+  )
   const [showCreateCredit, setShowCreateCredit] = useState(false)
 
   const Row = (props: IRowData) => {
-    const { name, price, available_credits, id } = props
+    const { name, price: xrpPrice, available_credits, id } = props
+    const price = usdXrpPriceData?.price ? (usdXrpPriceData?.price * xrpPrice).toFixed(2) : xrpPrice
     const [isEditable, setIsEditable] = useState(false)
     const [updatePrice, setUpdatePrice] = useState(price)
     const [credits, setCredits] = useState(available_credits)
@@ -134,6 +139,7 @@ const CreditComp = () => {
           {isEditable ? (
             <div className="w-full flex flex-col justify-start h-[7.6rem] pr-3">
               <input
+                type="number"
                 placeholder={'Ex. 66'}
                 value={updatePrice}
                 onChange={(e) => setUpdatePrice(Number(e.target.value))}
