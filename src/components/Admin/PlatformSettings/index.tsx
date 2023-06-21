@@ -9,9 +9,7 @@ import { isValidClassicAddress } from 'ripple-address-codec'
 
 const PlatformSettingsComp = () => {
   const [discordSendKey, setDiscordSendKey] = useState<any>('')
-  const [discordReceiveKey, setDiscordReceiveKey] = useState<any>('')
   const [twitterSendKey, setTwitterSendKey] = useState<any>('')
-  const [twitterReceiveKey, setTwitterReceiveKey] = useState<any>('')
   const [NewBonus, setNewBonus] = useState<any>(0)
   const [NewMessage, setNewMessage] = useState<any>('')
   const [NewBonusEnabled, setNewBonusEnabled] = useState('false')
@@ -30,6 +28,18 @@ const PlatformSettingsComp = () => {
   const [ExternalAPILoader, setExternalAPILoader] = useState(false)
   const [creditsLoading, setCreditsLoading] = useState(false)
   const [addressError, setAddressError] = useState(false)
+  const [nodeUrl, setNodeUrl] = useState('')
+  const [intraSend, setIntraSend] = useState('')
+  const [smsSend, setSmsSend] = useState('')
+  const [smsReceive, setSmsReceive] = useState('')
+  const [callForward, setCallForward] = useState('')
+  const [xrplSend, setXrplSend] = useState('')
+  const [voiceMessage, setVoiceMessage] = useState('')
+  const [intraVoice, setIntraVoice] = useState('')
+  const [videoCall, setVideoCall] = useState('')
+  const [slackSend, setSlackSend] = useState('')
+  const [linkedinSend, setLinkedinSend] = useState('')
+  const [instagramSend, setInstagramSend] = useState('')
 
   const router = useRouter()
   const getPlatformSettings = () => {
@@ -212,20 +222,56 @@ const PlatformSettingsComp = () => {
       .post(`/api/admin/platform_settings/bulk`, {
         settings: [
           {
-            key: 'discord_send',
-            value: discordSendKey,
+            key: 'intra_app_send',
+            value: intraSend,
           },
           {
-            key: 'discord_receive',
-            value: discordReceiveKey,
+            key: 'sms_mms_send',
+            value: smsSend,
+          },
+          {
+            key: 'sms_mms_receive',
+            value: smsReceive,
+          },
+          {
+            key: 'call_forwarding',
+            value: callForward,
+          },
+          {
+            key: 'XRPL_send',
+            value: xrplSend,
+          },
+          {
+            key: 'voice_message',
+            value: voiceMessage,
+          },
+          {
+            key: 'intra_app_voice_call',
+            value: intraVoice,
+          },
+          {
+            key: 'video_call',
+            value: videoCall,
+          },
+          {
+            key: 'discord_send',
+            value: discordSendKey,
           },
           {
             key: 'twitter_send',
             value: twitterSendKey,
           },
           {
-            key: 'twitter_receive',
-            value: twitterReceiveKey,
+            key: 'slack_send',
+            value: slackSend,
+          },
+          {
+            key: 'linkedin_send',
+            value: linkedinSend,
+          },
+          {
+            key: 'instagram_send',
+            value: instagramSend,
           },
         ],
       })
@@ -418,21 +464,30 @@ const PlatformSettingsComp = () => {
 
     PlatformData?.data?.find((arr: any) => arr.key == 'discord_send')?.value &&
       setDiscordSendKey(PlatformData?.data?.find((arr: any) => arr.key == 'discord_send')?.value)
-    PlatformData?.data?.find((arr: any) => arr.key == 'discord_receive')?.value &&
-      setDiscordReceiveKey(
-        PlatformData?.data?.find((arr: any) => arr.key == 'discord_receive')?.value
-      )
     PlatformData?.data?.find((arr: any) => arr.key == 'twitter_send')?.value &&
       setTwitterSendKey(PlatformData?.data?.find((arr: any) => arr.key == 'twitter_send')?.value)
-    PlatformData?.data?.find((arr: any) => arr.key == 'twitter_receive')?.value &&
-      setTwitterReceiveKey(
-        PlatformData?.data?.find((arr: any) => arr.key == 'twitter_receive')?.value
-      )
   }, [PlatformData])
 
   return (
     <div className="w-full max-w-[660px]">
-      <p className="text-2xl font-semibold">First Time Login Bonus</p>
+      <p className="text-2xl font-semibold">XRPL Node</p>
+      <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
+        <CommonInput
+          label="Node URL"
+          placeholder="wss://s.altnet.rippletest.net:5123"
+          value={nodeUrl}
+          type="text"
+          onChange={(e) => setNodeUrl(e.target.value)}
+        />
+        <CommonButton
+          label="Save"
+          isLoading={BonusLoader}
+          onClick={() => handleSaveLoginBonus()}
+          disabled={NewBonus.length === 0}
+        />
+      </div>
+
+      <p className="text-2xl font-semibold mt-8">First Time Login Bonus</p>
       <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
         <CommonInput
           label="Set New Bonus (in Credits)"
@@ -565,30 +620,93 @@ const PlatformSettingsComp = () => {
       <p className="text-2xl font-semibold mt-8">Credits</p>
       <div className="shadow-shadow-tertiary rounded-lg p-6 pt-3 bg-white mt-3">
         <CommonInput
-          label="Discord Send Credit"
+          label="Intra-app Send"
+          value={intraSend}
+          onChange={(e) => setIntraSend(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="SMS/MMS Send"
+          value={smsSend}
+          onChange={(e) => setSmsSend(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="SMS/MMS Receive"
+          value={smsReceive}
+          onChange={(e) => setSmsReceive(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Call-forwarding (per call)"
+          value={callForward}
+          onChange={(e) => setCallForward(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="XRPL Send"
+          value={xrplSend}
+          onChange={(e) => setXrplSend(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Voice Message"
+          value={voiceMessage}
+          onChange={(e) => setVoiceMessage(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Intra-app Voice Call (per minute)"
+          value={intraVoice}
+          onChange={(e) => setIntraVoice(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Video Call (per minute)"
+          value={videoCall}
+          onChange={(e) => setVideoCall(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Discord Send"
           value={discordSendKey}
           onChange={(e) => setDiscordSendKey(e.target.value)}
           placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
           fullWidth
         />
         <CommonInput
-          label="Discord Receive Credit"
-          value={discordReceiveKey}
-          onChange={(e) => setDiscordReceiveKey(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
-          fullWidth
-        />
-        <CommonInput
-          label="Twitter Send Credit"
+          label="Twitter Send"
           value={twitterSendKey}
           onChange={(e) => setTwitterSendKey(e.target.value)}
           placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
           fullWidth
         />
         <CommonInput
-          label="Twitter Receive Credit"
-          value={twitterReceiveKey}
-          onChange={(e) => setTwitterReceiveKey(e.target.value)}
+          label="Slack Send"
+          value={slackSend}
+          onChange={(e) => setSlackSend(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Linkedin Send"
+          value={linkedinSend}
+          onChange={(e) => setLinkedinSend(e.target.value)}
+          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          fullWidth
+        />
+        <CommonInput
+          label="Instagram Send"
+          value={instagramSend}
+          onChange={(e) => setInstagramSend(e.target.value)}
           placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
           fullWidth
         />
@@ -596,12 +714,7 @@ const PlatformSettingsComp = () => {
           label="Save"
           onClick={() => handleSaveCredits()}
           isLoading={creditsLoading}
-          disabled={
-            discordSendKey.length === 0 ||
-            discordReceiveKey.length === 0 ||
-            twitterSendKey.length === 0 ||
-            twitterReceiveKey.length === 0
-          }
+          disabled={discordSendKey.length === 0 || twitterSendKey.length === 0}
         />
       </div>
     </div>

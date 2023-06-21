@@ -8,6 +8,7 @@ interface IInputProps {
   value?: string | number
   onChange?: ChangeEventHandler<HTMLInputElement>
   type?: string
+  name?: string
 }
 
 const CommonInput = (props: IInputProps) => {
@@ -17,12 +18,13 @@ const CommonInput = (props: IInputProps) => {
         !props?.fullWidth && 'sm:pr-20 lg:pr-40'
       } flex flex-col sm:flex-row justify-between items-start mt-3 ${props?.message && 'mb-10'}`}
     >
-      <label className="pr-6 text-black">{props?.label}</label>
+      <label className="pr-6 text-black capitalize">{props?.label?.replace('_', ' ')}</label>
       <div className="relative w-full sm:w-auto">
         <input
           placeholder={props?.placeholder}
           value={props?.value}
           type={props?.type}
+          name={props?.name}
           onChange={props?.onChange}
           className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text ${
             props?.fullWidth
