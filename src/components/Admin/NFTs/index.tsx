@@ -13,10 +13,12 @@ const CreateNFTSection = ({
   setShowCreateNFT,
   setEdit,
   edit,
+  showCreateNFT,
 }: {
   setEdit: Dispatch<SetStateAction<any>>
   setShowCreateNFT: Dispatch<SetStateAction<boolean>>
   edit?: any
+  showCreateNFT: boolean
 }) => {
   const { data: featuresData, isLoading } = useSWR('/api/available-features', swrFetcher)
   const [title, setTitle] = useState<string>(edit?.title)
@@ -29,8 +31,15 @@ const CreateNFTSection = ({
   const [description_error, setDescriptionError] = useState(false)
   const [contract_address_error, setContractAddressError] = useState(false)
   const [taxon_error, setTaxonError] = useState(false)
+  let apiEndpoint: string
 
   const handleCreate = async () => {
+    if (showCreateNFT) {
+      apiEndpoint = `/api/admin/supported_nfts`
+    } else {
+      apiEndpoint = `/api/admin/supported_nfts/${edit?.id}`
+    }
+
     setIsSaving(true)
     if (contract_address && !isValidClassicAddress(contract_address)) {
       setContractAddressError(true)
@@ -44,7 +53,7 @@ const CreateNFTSection = ({
       setIsSaving(false)
       return
     }
-    await axios.post(`/api/admin/supported_nfts/${edit?.id}`, {
+    await axios.post(apiEndpoint, {
       title,
       description,
       contract_address,
@@ -161,7 +170,12 @@ const NFTsComp = () => {
   return (
     <>
       {showCreateNFT || edit ? (
-        <CreateNFTSection setShowCreateNFT={setShowCreateNFT} edit={edit} setEdit={setEdit} />
+        <CreateNFTSection
+          setShowCreateNFT={setShowCreateNFT}
+          edit={edit}
+          setEdit={setEdit}
+          showCreateNFT={showCreateNFT}
+        />
       ) : (
         <div className="w-full">
           <div className="flex flex-col md:flex-row w-full gap-y-2 mb-3  md:items-center md:justify-between">
