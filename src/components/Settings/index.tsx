@@ -11,6 +11,10 @@ import Subscriptions from '@public/Icons/setting/subscriptions.svg'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { Context } from '@/pages/_app'
+import { swrFetcher } from '@/helpers'
+import useSWR from 'swr'
+import walletnametrimmer from '@/helpers/walletnametrimmer'
+import Wallet from '@public/Icons/profile/wallet.svg'
 
 interface ISettingsProps {
   setShowSetting: Function
@@ -46,6 +50,11 @@ const settingItems = [
     title: 'Subscriptions',
     icon: Subscriptions,
     link: '/setting/subscriptions',
+  },
+  {
+    title: 'Features',
+    icon: LinkedAccount,
+    link: '/setting/features',
   },
   {
     title: 'Log out',
@@ -110,6 +119,7 @@ const SettingItems = (props: ISItemsProps) => {
 const Settings = () => {
   const router = useRouter()
   const [isMount, setMount] = React.useState(true)
+  const { data: userData, isLoading } = useSWR('/api/user/me', swrFetcher)
 
   React.useEffect(() => {
     if (isMount) {
@@ -124,16 +134,26 @@ const Settings = () => {
       } transition duration-300 overflow-hidden`}
     >
       <div className="flex gap-5 items-center px-4 md:px-8">
-        <Image
+        {/* <Image
           src={ArrowLeft}
           alt="arrow-left"
           className="cursor-pointer"
           quality={100}
           onClick={() => router.back()}
-        />
+        /> */}
         <p className="text-2xl font-semibold">Settings</p>
       </div>
-      <div className="overflow-y-auto w-full h-full px-4 md:px-8">
+
+      <div className="overflow-y-auto w-full h-full px-4 md:px-8 mt-8">
+        <div className="flex items-center w-full  gap-4">
+          <Image src={Wallet} alt={'Wallet'} quality={100} className="h-4 w-4" />
+          <div>
+            <p className="text-sm font-semibold">Wallet Address</p>
+            <p className="text-xs w-full truncate text-secondary-text dark:text-secondary-text-dark font-normal">
+              {userData?.user?.address ?? '-'}
+            </p>
+          </div>
+        </div>
         {settingItems.map((si, i) => (
           <SettingItems key={i} {...si} />
         ))}

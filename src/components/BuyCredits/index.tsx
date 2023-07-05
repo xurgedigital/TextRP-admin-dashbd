@@ -15,7 +15,10 @@ const BuyCredits = () => {
   const [isPaying, setIsPaying] = useState(false)
   const { data: userData } = useSWR('/api/user/me', swrFetcher)
   const { data: creditData, isLoading, mutate } = useSWR('/api/admin/credits', swrFetcher)
-
+  const { data: usdXrpPriceData, isLoading: isPriceLoading } = useSWR(
+    'https://api.binance.com/api/v3/avgPrice?symbol=XRPUSDT',
+    swrFetcher
+  )
   const dropdownItems = useMemo(() => {
     return creditData?.data?.map(
       (cd: { available_credits: number; price: number }) =>
@@ -101,13 +104,20 @@ const BuyCredits = () => {
               <p className="">You will be charged</p>
               <p className="font-semibold">{`${
                 creditData?.data[dropdownItems.indexOf(selectedOption)]?.price
-              } XRP (7.537 USD)`}</p>
+              } XRP (${
+                !isPriceLoading && usdXrpPriceData?.price
+                  ? (
+                      usdXrpPriceData?.price *
+                      creditData?.data[dropdownItems.indexOf(selectedOption)]?.price
+                    ).toFixed(2)
+                  : '-'
+              } USD)`}</p>
             </div>
             <div className="text-base font-normal my-8">
               <p className="">Your new credits balance will be</p>
               <p className="font-semibold">{`${
                 creditData?.data[dropdownItems.indexOf(selectedOption)]?.available_credits +
-                (userData?.user?.credit?.balance ?? 0)
+                parseFloat(userData?.user?.credit?.balance ?? 0)
               }`}</p>
             </div>
             <Button

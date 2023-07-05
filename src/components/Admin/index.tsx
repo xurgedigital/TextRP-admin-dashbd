@@ -25,11 +25,11 @@ const AdminItems = [
     icon: UserManagement,
     link: '/admin/user-management',
   },
-  {
-    title: 'Features',
-    icon: Nft,
-    link: '/admin/features',
-  },
+  // {
+  //   title: 'Features',
+  //   icon: Nft,
+  //   link: '/admin/features',
+  // },
   {
     title: 'NFTs',
     icon: Nft,

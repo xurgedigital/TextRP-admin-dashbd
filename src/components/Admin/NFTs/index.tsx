@@ -18,10 +18,12 @@ const CreateNFTSection = ({
   setShowCreateNFT: Dispatch<SetStateAction<boolean>>
   edit?: any
 }) => {
+  const { data: featuresData, isLoading } = useSWR('/api/available-features', swrFetcher)
   const [title, setTitle] = useState<string>(edit?.title)
   const [description, setDescription] = useState<string>(edit?.description)
   const [contract_address, setContractAddress] = useState<string>(edit?.contract_address)
   const [taxon, setTaxon] = useState<string>(edit?.taxon)
+  const [features, setFeatures] = useState<string[]>([])
   const [isSaving, setIsSaving] = useState(false)
   const [title_error, setTitleError] = useState(false)
   const [description_error, setDescriptionError] = useState(false)
@@ -47,10 +49,21 @@ const CreateNFTSection = ({
       description,
       contract_address,
       taxon,
+      features,
     })
     setShowCreateNFT(false)
     setEdit(false)
     setIsSaving(false)
+  }
+  // console.log(features, 'FFF')
+  const handleSelectChange = (e: any) => {
+    if (features.includes(e.target.value)) {
+      setFeatures((prevfeatures) => [
+        ...prevfeatures.filter((feature) => feature !== e.target.value),
+      ])
+    } else {
+      setFeatures((prevfeatures) => [...prevfeatures, e.target.value])
+    }
   }
 
   return (
@@ -94,6 +107,25 @@ const CreateNFTSection = ({
           placeholder="Ex. "
           fullWidth
         />
+        <div
+          className={`text-sm font-normal flex flex-col sm:flex-row justify-between items-start mt-3`}
+        >
+          <label className="pr-6 text-black capitalize">{'Features'}</label>
+          <div className="relative w-full sm:w-auto">
+            <select
+              value={features}
+              multiple
+              onClick={handleSelectChange}
+              className="p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text min-w-full sm:min-w-[290px] lg:min-w-[360px] overflow-y-auto"
+            >
+              {featuresData?.features?.map((feature: string, i: number) => (
+                <option key={i} value={feature} className="capitalize cursor-pointer border-b">
+                  {feature.replace('_', ' ')}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         {taxon_error ? (
           <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Taxon!</p>
         ) : null}
@@ -161,6 +193,10 @@ const NFTsComp = () => {
                     {' '}
                     <div>Taxon</div>
                   </th>
+                  <th className="min-w-[7rem] text-left mb-4">
+                    {' '}
+                    <div>Features</div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -171,6 +207,13 @@ const NFTsComp = () => {
                       <td colSpan={2}>{ci?.description}</td>
                       <td className="break-all text-secondary-text">{ci?.contract_address}</td>
                       <td className="break-all text-secondary-text">{ci?.taxon}</td>
+                      <td className="break-all text-secondary-text">
+                        {ci?.features
+                          ? ci?.features?.map((f: string, i: number) => (
+                              <span key={i}>{`${f} `}</span>
+                            ))
+                          : '-'}
+                      </td>
                       <td className="px-4 py-3 text-end">
                         <div className="flex justify-end ">
                           <Image

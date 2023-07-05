@@ -63,7 +63,7 @@ const Dropdown: React.FC<IDropdownProps> = ({
           className="py-1 text-sm text-gray-700 dark:text-primary-text-dark"
           aria-labelledby="dropdownDefault"
         >
-          {dropdownList.map((dl, index) => (
+          {dropdownList?.map((dl, index) => (
             <li key={`dl-${index}`}>
               <div
                 onClick={() => handleSelectOption(dl)}
