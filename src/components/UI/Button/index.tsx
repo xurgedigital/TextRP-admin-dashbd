@@ -1,48 +1,55 @@
-import React from "react";
-import { AiOutlineLoading } from "react-icons/ai";
+import React from 'react'
+import { AiOutlineLoading } from 'react-icons/ai'
 
-type IVariant = "blueOutline" | "primary";
+type IVariant = 'blueOutline' | 'primary' | 'redOutline'
 
 interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
-  children: React.ReactNode | string;
-  type?: "button" | "submit" | "reset";
-  variant?: IVariant;
-  disabled?: boolean;
-  onClick?: (e: React.FormEvent<HTMLButtonElement>) => void;
-  loading?: boolean;
+  className?: string
+  children: React.ReactNode | string
+  type?: 'button' | 'submit' | 'reset'
+  variant?: IVariant
+  disabled?: boolean
+  onClick?: (e: React.FormEvent<HTMLButtonElement>) => void
+  loading?: boolean
 }
 
 const Button: React.FC<IButtonProps> = ({
   className,
   children,
-  type = "button",
+  type = 'button',
   disabled,
-  variant = "primary",
+  variant = 'primary',
   onClick,
   loading,
   ...rest
 }) => {
   const returnBg = (variant: IVariant) => {
     switch (variant) {
-      case "primary":
-        return "rounded bg-primary-blue text-white text-sm ";
-      case "blueOutline":
-        return "text-primary-blue bg-white border-2 border-primary-blue text-sm font-medium ";
+      case 'primary':
+        return 'rounded bg-primary-blue text-white text-sm border-2 border-primary-blue'
+      case 'blueOutline':
+        return 'text-primary-blue bg-white border-2 border-primary-blue text-sm font-medium'
+      case 'redOutline':
+        return 'text-rose-500 bg-white border-2 border-rose-500 text-sm font-medium'
     }
-  };
+  }
 
   return (
-    <button onClick={onClick} className={` ${returnBg(variant)} ${className}`}>
+    <button
+      onClick={onClick}
+      className={` ${returnBg(variant)} ${className} disabled:opacity-30`}
+      disabled={disabled}
+      {...rest}
+    >
       {loading ? (
         <div className="animate-spin inline-flex h-full">
-          <AiOutlineLoading className=" font-medium" size={24} />
+          <AiOutlineLoading className="font-bold" size={20} />
         </div>
       ) : (
         children
       )}
     </button>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button

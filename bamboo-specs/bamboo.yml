@@ -124,11 +124,11 @@ release-naming:
   auto-increment: true
   auto-increment-variables: []
 environments:
-- Production Server
-- Development Server
+  - Production Server
+  - Development Server
 Development Server:
   triggers:
-  - build-success
+    - build-success
   tasks:
     - clean
     - checkout:
@@ -201,24 +201,24 @@ deployment-permissions:
       - view
       - edit
 environment-permissions:
-- Production Server:
-  - users:
-    - nick
-    permissions:
-    - view
-    - edit
-    - deploy
-  - users:
-    - venkatesh.chakraborty
-    - anup.swarnkar
-    permissions:
-    - view
-    - deploy
-  - groups:
-    - TFW DevOps
-    - the-fast-way-pm
-    - TFW Frontend Devs
-    permissions:
-    - view
-    - edit
-    - deploy
+  - Production Server:
+      - users:
+          - nick
+        permissions:
+          - view
+          - edit
+          - deploy
+      - users:
+          - venkatesh.chakraborty
+          - anup.swarnkar
+        permissions:
+          - view
+          - deploy
+      - groups:
+          - TFW DevOps
+          - the-fast-way-pm
+          - TFW Frontend Devs
+        permissions:
+          - view
+          - edit
+          - deploy
