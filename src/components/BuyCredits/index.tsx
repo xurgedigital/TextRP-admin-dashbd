@@ -90,7 +90,9 @@ const BuyCredits = () => {
           <>
             <div className="text-base font-normal my-8">
               <p className="">Your credits balance</p>
-              <p className="font-semibold">{userData?.user?.credit?.balance}</p>
+              <p className="font-semibold">
+                {parseFloat(String(userData?.user?.credit?.balance)).toFixed(2)}
+              </p>
             </div>
             <div className="text-base font-normal my-8">
               <p className="mb-2">Select the amount to buy</p>
@@ -115,10 +117,11 @@ const BuyCredits = () => {
             </div>
             <div className="text-base font-normal my-8">
               <p className="">Your new credits balance will be</p>
-              <p className="font-semibold">{`${
-                creditData?.data[dropdownItems.indexOf(selectedOption)]?.available_credits +
-                parseFloat(userData?.user?.credit?.balance ?? 0)
-              }`}</p>
+              <p className="font-semibold">{`${(
+                parseFloat(
+                  String(creditData?.data[dropdownItems.indexOf(selectedOption)]?.available_credits)
+                ) + parseFloat(userData?.user?.credit?.balance ?? 0)
+              ).toFixed(2)}`}</p>
             </div>
             <Button
               onClick={handleBuyCredits}

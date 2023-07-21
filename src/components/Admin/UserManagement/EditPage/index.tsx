@@ -14,6 +14,7 @@ import { trimAddress } from '@/helpers'
 import moment from 'moment'
 import { swrFetcher } from '@/helpers'
 import useSWR from 'swr'
+import { NFTCard } from '@components/Features'
 
 interface IEditProps {
   ActiveEditId?: string | string[]
@@ -26,6 +27,7 @@ const EditPage = (props: IEditProps) => {
     mutate,
   } = useSWR(`/api/admin/users/${props?.ActiveEditId}`, swrFetcher)
 
+  const { data: nftData } = useSWR(`/api/my-features/${ActiveUser?.address}/main`, swrFetcher)
   const [active, setActive] = React.useState<boolean>(false)
   const [isEditingUser, setIsEditingUser] = React.useState(false)
   const [isEditingCredit, setIsEditingCredit] = React.useState(false)
@@ -334,30 +336,12 @@ const EditPage = (props: IEditProps) => {
         <div className="lg:flex-[0.6] w-full">
           <div className="flex justify-between items-center">
             <span className=" text-xl font-semibold mb-3">Assigned NFTs</span>
-            {!isEditingNFT && (
-              <span onClick={() => setisEditingNFT(true)} className=" cursor-pointer">
-                <Image height={24} width={24} src={EditIcon} alt="" />
-              </span>
-            )}
           </div>
           <div className=" rounded-lg shadow-shadow-tertiary p-6 bg-white mt-3">
             <div className="flex flex-wrap gap-2">
-              <span className="relative">
-                <Image height={96} width={96} src={NFT1} alt="" />
-                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
-              </span>
-              <span className="relative">
-                <Image height={96} width={96} src={NFT2} alt="" />
-                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
-              </span>
-              <span className="relative">
-                <Image height={96} width={96} src={NFT3} alt="" />
-                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
-              </span>
-              <span className="relative">
-                <Image height={96} width={96} src={NFT4} alt="" />
-                {isEditingNFT && <input className="absolute top-1 left-1" type="checkbox" />}
-              </span>
+              {nftData?.nfts?.map((ni: any, i: number) => (
+                <NFTCard {...ni} key={i} />
+              ))}
             </div>
             {isEditingNFT && (
               <div className=" inline-flex gap-2 mt-4">

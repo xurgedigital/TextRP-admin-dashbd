@@ -26,6 +26,7 @@ const CreateNFTSection = ({
   const [contract_address, setContractAddress] = useState<string>(edit?.contract_address)
   const [taxon, setTaxon] = useState<string>(edit?.taxon)
   const [features, setFeatures] = useState<string[]>(edit?.features ?? [])
+  const [image_link, setImageLink] = useState<string>(edit?.image_link || '')
   const [isSaving, setIsSaving] = useState(false)
   const [title_error, setTitleError] = useState(false)
   const [description_error, setDescriptionError] = useState(false)
@@ -59,6 +60,7 @@ const CreateNFTSection = ({
       contract_address,
       taxon,
       features,
+      image_link,
     })
     setShowCreateNFT(false)
     setEdit(false)
@@ -113,6 +115,13 @@ const CreateNFTSection = ({
           label="Taxon"
           value={taxon}
           onChange={(e) => setTaxon(e.target.value)}
+          placeholder="Ex. "
+          fullWidth
+        />
+        <CommonInput
+          label="Image Link"
+          value={image_link}
+          onChange={(e) => setImageLink(e.target.value)}
           placeholder="Ex. "
           fullWidth
         />

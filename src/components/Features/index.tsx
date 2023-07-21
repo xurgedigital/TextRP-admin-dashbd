@@ -6,7 +6,48 @@ import { swrFetcher } from '@/helpers'
 import useSWR from 'swr'
 import Loader from '../common/Loader'
 import { isBoolean } from 'lodash'
+import Img1 from '@public/Images/nft/img1.svg'
 
+export const NFTCard = (props: {
+  contract_address: string
+  image_link?: string
+  discord: boolean
+  twitter: boolean
+  twilio: boolean
+  dark_mode: boolean
+  with_content?: boolean
+}) => {
+  return (
+    <div>
+      {props.image_link && (
+        <div>
+          <Image
+            src={props.image_link}
+            alt="arrow-left"
+            className="cursor-pointer object-cover border border-primary-gray"
+            quality={100}
+            height={96}
+            width={96}
+          />
+        </div>
+      )}
+      {props.with_content &&
+        Object.keys(props).map((v) => {
+          if (['image_link', 'with_content'].includes(v)) return <></>
+          return (
+            // eslint-disable-next-line react/jsx-key
+            <div className="mt-2">
+              <p className="text-base font-semibold">{v.replaceAll('_', ' ')}</p>
+              <p className="text-secondary-text text-xs font-normal">
+                {/* @ts-ignore               */}
+                {isBoolean(props[v]) ? (props[v] === true ? 'Yes' : 'No') : props[v]}
+              </p>
+            </div>
+          )
+        })}
+    </div>
+  )
+}
 const Features = () => {
   const router = useRouter()
   const [NftData, setNftData] = useState<any>([1, 2, 3, 4])
@@ -24,29 +65,6 @@ const Features = () => {
       setMount(false)
     }
   }, [])
-
-  const NFTCard = (props: {
-    contract_address: string
-    discord: boolean
-    twitter: boolean
-    twilio: boolean
-    dark_mode: boolean
-  }) => {
-    return (
-      <div>
-        {Object.keys(props).map((v) => (
-          // eslint-disable-next-line react/jsx-key
-          <div className="mt-2">
-            <p className="text-base font-semibold">{v}</p>
-            <p className="text-secondary-text text-xs font-normal">
-              {/* @ts-ignore               */}
-              {isBoolean(props[v]) ? (props[v] === true ? 'Yes' : 'No') : props[v]}
-            </p>
-          </div>
-        ))}
-      </div>
-    )
-  }
 
   return (
     <div
@@ -79,7 +97,7 @@ const Features = () => {
       <div className="h-full overflow-y-auto px-4 md:px-8">
         <div className="grid grid-cols-2 gap-4 my-8 ">
           {featuresData?.nfts?.map((ni: any, i: number) => (
-            <NFTCard {...ni} key={i} />
+            <NFTCard {...ni} key={i} with_content={true} />
           ))}
           {featuresData?.nfts?.length === 0 || (!featuresData && !isLoading)
             ? 'No NFTs found on your address'

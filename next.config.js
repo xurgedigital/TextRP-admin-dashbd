@@ -4,7 +4,7 @@ const withPlugins = require('next-compose-plugins')
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['picsum.photos', 'xumm.app'],
+    domains: ['picsum.photos', 'xumm.app', 'ipfs.bithomp.com'],
   },
 }
 console.info('Using backend:', process.env.BACKEND_URL)

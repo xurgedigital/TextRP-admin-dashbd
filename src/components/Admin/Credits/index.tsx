@@ -92,15 +92,11 @@ const CreateCredit = ({
 
 const CreditComp = () => {
   const { data: creditData, isLoading, mutate } = useSWR('/api/admin/credits', swrFetcher)
-  const { data: usdXrpPriceData } = useSWR(
-    'https://api.binance.com/api/v3/avgPrice?symbol=XRPUSDT',
-    swrFetcher
-  )
   const [showCreateCredit, setShowCreateCredit] = useState(false)
 
   const Row = (props: IRowData) => {
     const { name, price: xrpPrice, available_credits, id } = props
-    const price = usdXrpPriceData?.price ? (usdXrpPriceData?.price * xrpPrice).toFixed(2) : xrpPrice
+    const price = xrpPrice
     const [isEditable, setIsEditable] = useState(false)
     const [updatePrice, setUpdatePrice] = useState(price)
     const [credits, setCredits] = useState(available_credits)

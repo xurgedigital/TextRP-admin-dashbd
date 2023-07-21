@@ -72,7 +72,7 @@ const SettingItems = (props: ISItemsProps) => {
     if (title === 'Buy credits') {
       return (
         <div className="text-xs mr-4  truncate rounded p-2 font-semibold text-primary-blue bg-gray-bg">
-          Balance: {state?.user?.credit?.balance || 0}
+          Balance: {parseFloat(String(state?.user?.credit?.balance || 0)).toFixed(2)}
         </div>
       )
     } else if (title === 'Subscriptions') {
