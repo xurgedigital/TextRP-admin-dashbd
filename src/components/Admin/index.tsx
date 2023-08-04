@@ -18,6 +18,7 @@ import useWidth from '@/hooks/useWidth'
 import NFTsComp from './NFTs'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import axios from 'axios'
 
 const AdminItems = [
   {
@@ -148,7 +149,13 @@ const Admin = ({ children }: { children: React.ReactNode }) => {
               </div>
             </div>
             <div className="flex cursor-pointer items-center gap-3 p-3">
-              <div className="relative">
+              <div
+                className="relative"
+                onClick={async () => {
+                  await axios.delete('/api/logout')
+                  router.reload()
+                }}
+              >
                 <Image src={Logout} alt={'logout'} className="" quality={100} />
               </div>
               <p className="text-sm font-normal">{'Logout'}</p>
