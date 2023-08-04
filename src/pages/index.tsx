@@ -8,6 +8,7 @@ import { useTwilio } from 'twilio-conversations-hooks'
 import { Conversation } from '@twilio/conversations/lib'
 import DummyChatSection from '@/components/DummyChatSection'
 import Settings from '@/components/Settings'
+import AdminPage from '@/pages/admin'
 
 // export default function Home() {
 //   const [ChatSelected, setChatSelected] = useState<Conversation | undefined>(undefined)
@@ -53,8 +54,7 @@ import Settings from '@/components/Settings'
 export default function Home() {
   return (
     <div className="flex max-h-screen">
-      <Settings />
-      <DummyChatSection />
+      <AdminPage />
     </div>
   )
 }
