@@ -9,6 +9,7 @@ import { isValidClassicAddress } from 'ripple-address-codec'
 
 const PlatformSettingsComp = () => {
   const [discordSendKey, setDiscordSendKey] = useState<any>('')
+  const [twilioSendKey, setTwilioSendKey] = useState<any>('')
   const [twitterSendKey, setTwitterSendKey] = useState<any>('')
   const [NewBonus, setNewBonus] = useState<any>(0)
   const [NewMessage, setNewMessage] = useState<any>('')
@@ -262,6 +263,10 @@ const PlatformSettingsComp = () => {
             value: twitterSendKey,
           },
           {
+            key: 'twilio_send',
+            value: twitterSendKey,
+          },
+          {
             key: 'slack_send',
             value: slackSend,
           },
@@ -466,6 +471,8 @@ const PlatformSettingsComp = () => {
       setDiscordSendKey(PlatformData?.data?.find((arr: any) => arr.key == 'discord_send')?.value)
     PlatformData?.data?.find((arr: any) => arr.key == 'twitter_send')?.value &&
       setTwitterSendKey(PlatformData?.data?.find((arr: any) => arr.key == 'twitter_send')?.value)
+    PlatformData?.data?.find((arr: any) => arr.key == 'twilio_send')?.value &&
+      setTwilioSendKey(PlatformData?.data?.find((arr: any) => arr.key == 'twilio_send')?.value)
   }, [PlatformData])
 
   return (
@@ -623,91 +630,98 @@ const PlatformSettingsComp = () => {
           label="Intra-app Send"
           value={intraSend}
           onChange={(e) => setIntraSend(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="SMS/MMS Send"
           value={smsSend}
           onChange={(e) => setSmsSend(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="SMS/MMS Receive"
           value={smsReceive}
           onChange={(e) => setSmsReceive(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Call-forwarding (per call)"
           value={callForward}
           onChange={(e) => setCallForward(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="XRPL Send"
           value={xrplSend}
           onChange={(e) => setXrplSend(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Voice Message"
           value={voiceMessage}
           onChange={(e) => setVoiceMessage(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Intra-app Voice Call (per minute)"
           value={intraVoice}
           onChange={(e) => setIntraVoice(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Video Call (per minute)"
           value={videoCall}
           onChange={(e) => setVideoCall(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Discord Send"
           value={discordSendKey}
           onChange={(e) => setDiscordSendKey(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
+          fullWidth
+        />
+        <CommonInput
+          label="Twilio Send"
+          value={twitterSendKey}
+          onChange={(e) => setTwilioSendKey(e.target.value)}
+          placeholder="Ex. 0.1"
           fullWidth
         />
         <CommonInput
           label="Twitter Send"
           value={twitterSendKey}
           onChange={(e) => setTwitterSendKey(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Slack Send"
           value={slackSend}
           onChange={(e) => setSlackSend(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Linkedin Send"
           value={linkedinSend}
           onChange={(e) => setLinkedinSend(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonInput
           label="Instagram Send"
           value={instagramSend}
           onChange={(e) => setInstagramSend(e.target.value)}
-          placeholder="Ex. 0x05f7903195f7110e318fce46973aa72adeafd0e8"
+          placeholder="Ex. 1"
           fullWidth
         />
         <CommonButton
