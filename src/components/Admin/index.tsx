@@ -26,15 +26,16 @@ const AdminItems = [
     icon: UserManagement,
     link: '/admin/user-management',
   },
-  // {
-  //   title: 'Features',
-  //   icon: Nft,
-  //   link: '/admin/features',
-  // },
+ 
   {
     title: 'NFTs',
     icon: Nft,
     link: '/admin/nft',
+  },
+   {
+    title: 'Features',
+    icon: Nft,
+    link: '/admin/nftFeatures',
   },
   {
     title: 'Credits',
@@ -150,15 +151,15 @@ const Admin = ({ children }: { children: React.ReactNode }) => {
             </div>
             <div className="flex cursor-pointer items-center gap-3 p-3">
               <div
-                className="relative"
+                className="flex gap-2 relative"
                 onClick={async () => {
                   await axios.delete('/api/logout')
                   router.reload()
                 }}
               >
                 <Image src={Logout} alt={'logout'} className="" quality={100} />
+                <p className="text-sm font-normal">{'Logout'}</p>
               </div>
-              <p className="text-sm font-normal">{'Logout'}</p>
             </div>
           </div>
         </div>

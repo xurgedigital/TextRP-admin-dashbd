@@ -9,6 +9,7 @@ interface IInputProps {
   onChange?: ChangeEventHandler<HTMLInputElement>
   type?: string
   name?: string
+  disabled?: boolean
 }
 
 const CommonInput = (props: IInputProps) => {
@@ -25,8 +26,9 @@ const CommonInput = (props: IInputProps) => {
           value={props?.value}
           type={props?.type}
           name={props?.name}
+          disabled={props?.disabled}
           onChange={props?.onChange}
-          className={`p-3 rounded-lg bg-gray-bg outline-none border border-primary-gray text-secondary-text ${
+          className={`p-3 rounded-lg ${props?.disabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'cursor-pointer'} outline-none border border-primary-gray  ${
             props?.fullWidth
               ? 'min-w-full sm:min-w-[290px] lg:min-w-[360px]'
               : 'min-w-full sm:min-w-[200px]'

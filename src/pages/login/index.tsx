@@ -10,7 +10,7 @@ const LoginLoader = (props: { setLoginData: Function }) => {
   const { setLoginData } = props
 
   const { data, isLoading, mutate } = useSWR(['/api/login-user'], swrFetcher)
-
+  const [loading, setLoading] = useState<boolean>(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   useEffect(() => {
@@ -33,14 +33,15 @@ const LoginLoader = (props: { setLoginData: Function }) => {
             </h1>
             <form
               className="space-y-4 md:space-y-6"
-              aria-disabled={isLoading}
+              aria-disabled={loading}
               onSubmit={async (e) => {
                 e.preventDefault()
+                setLoading(true)
                 await axios.post('/api/login-user', {
                   email: email,
                   password: password,
                 })
-                console.log('FORM', e)
+                console.log('FORM', e)  
               }}
             >
               <div>
@@ -80,11 +81,11 @@ const LoginLoader = (props: { setLoginData: Function }) => {
                 />
               </div>
               <button
-                disabled={isLoading}
+                disabled={loading}
                 type="submit"
-                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                className="w-full bg-primary-blue text-white bg-primary-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Sign in
+                {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </form>
           </div>
