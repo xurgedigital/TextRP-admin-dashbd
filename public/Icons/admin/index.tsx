@@ -7,6 +7,8 @@ interface IIconProps {
 
 const AdminIcon = (props: IIconProps) => {
   const { name, colorCode } = props
+  console.log(name);
+  
   switch (name) {
     case 'user management':
       return (
@@ -25,7 +27,7 @@ const AdminIcon = (props: IIconProps) => {
           />
         </svg>
       )
-    case 'nfts':
+    case 'feature packs ':
       return (
         <svg
           width="18"

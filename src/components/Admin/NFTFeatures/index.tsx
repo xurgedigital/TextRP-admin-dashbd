@@ -29,6 +29,7 @@ const CreateNFTSection = ({
     Array.isArray(edit?.features) ? edit?.features[0] : edit?.features
   )
   const [image_link, setImageLink] = useState<string>(edit?.image_link || '')
+  const [nftLink, setNftLink] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [title_error, setTitleError] = useState(false)
   const [description_error, setDescriptionError] = useState(false)
@@ -52,19 +53,23 @@ const CreateNFTSection = ({
       setIsSaving(false)
       return
     }
-    if (!title || !description || !taxon) {
-      if (!title) setTitleError(true)
-      if (!description) setDescriptionError(true)
-      if (!taxon) setTaxonError(true)
-      setIsSaving(false)
-      return
-    }
+    // if (selectedRule === rules[2]) {
+    //   if (!title || !description || !taxon) {
+    //     if (!title) setTitleError(true)
+    //     if (!description) setDescriptionError(true)
+    //     if (!taxon) setTaxonError(true)
+    //     setIsSaving(false)
+    //     return
+    //   }
+    // }
     await axios.post(apiEndpoint, {
       title,
       description,
       contract_address,
       taxon,
-      features,
+      url: nftLink,
+      feature: features,
+      rule: selectedRule,
       image_link,
     })
     setShowCreateNFT(false)
@@ -108,9 +113,7 @@ const CreateNFTSection = ({
           <label className="pr-6 text-black capitalize">Rule</label>
           <div className="relative w-full sm:w-auto">
             <select
-              onClick={(e) => 
-                setSelectedRule((e.target as HTMLInputElement).value)
-              }
+              onClick={(e) => setSelectedRule((e.target as HTMLInputElement).value)}
               className="p-3 rounded-lg outline-none border border-primary-gray min-w-full sm:min-w-[290px] lg:min-w-[360px] overflow-y-auto"
             >
               {rules.map((rule: string, i: number) => (
@@ -121,6 +124,16 @@ const CreateNFTSection = ({
             </select>
           </div>
         </div>
+
+        <CommonInput
+          label="NFT URL"
+          value={nftLink}
+          onChange={(e) => setNftLink(e.target.value)}
+          placeholder="Ex. "
+          // disabled={selectedRule !== rules[2]}
+          fullWidth
+        />
+
         <CommonInput
           label="NFT Title"
           value={title}
@@ -215,21 +228,24 @@ const NFTFeaturesComp = () => {
       ) : (
         <div className="w-full">
           <div className="flex flex-col md:flex-row w-full gap-y-2 mb-3  md:items-center md:justify-between">
-            <p className="text-xl sm:text-2xl font-semibold">Features</p>
+            <p className="text-xl sm:text-2xl font-semibold">Feature Packs</p>
             <Button
               onClick={() => setShowCreateNFT((prev) => !prev)}
               className="truncate px-4 py-2 mr-0 w-max rounded"
             >
-              Add Feature Permission
+              Create Feature Packs
             </Button>
           </div>
           <div className="w-full bg-white mt-8 overflow-auto">
-            <table border={1} className="table-fixed w-full min-w-[800px]  border-spacing-4 border-[2px] ">
+            <table
+              border={1}
+              className="table-fixed w-full min-w-[800px]  border-spacing-4 border-[2px] "
+            >
               <thead>
                 <tr className="bg-blue-100 text-sm font-semibold">
                   <th className=" border-[1px] py-2 px-4  text-left mb-4">
                     {' '}
-                    <div>Features</div>
+                    <div>Feature</div>
                   </th>
                   <th className="border-[1px] p-2 text-left mb-4">
                     {' '}
@@ -239,7 +255,7 @@ const NFTFeaturesComp = () => {
                     {' '}
                     <div>NFT Title</div>
                   </th>
-              
+
                   <th className="border-[1px] p-2  text-left mb-4">
                     {' '}
                     <div>Address</div>
@@ -258,15 +274,9 @@ const NFTFeaturesComp = () => {
                 {NftData && NftData?.data?.length > 0 ? (
                   NftData?.data?.map((ci: any, i: number) => (
                     <tr key={i} className="text-sm p-4 font-normal">
-                      <td className="break-all p-4">
-                        {ci?.features
-                          ? ci?.features?.map((f: string, i: number) => (
-                              <span key={i}>{`${f} `}</span>
-                            ))
-                          : '-'}
-                      </td>
-                      <td className='p-4'>Always Enabled</td>
-                      <td className='p-4'>{ci?.title}</td>
+                      <td className="break-all p-4">{ci?.feature || '--'}</td>
+                      <td className="p-4">{ci?.rule || '--'}</td>
+                      <td className="p-4">{ci?.title}</td>
                       <td className="p-4 w-[300px] overflow-hidden">{ci?.contract_address}</td>
                       <td className="p-4 text-center">{ci?.taxon}</td>
 

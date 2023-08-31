@@ -6,6 +6,7 @@ import Subscription from '@public/Icons/admin/subscription.svg'
 import Platform from '@public/Icons/admin/platform.svg'
 import Discount from '@public/Icons/admin/discount.svg'
 import Logout from '@public/Icons/logout.svg'
+import Logo from '@public/Images/elogo.svg'
 import Image, { StaticImageData } from 'next/image'
 import AdminIcon from '@public/Icons/admin'
 import UserManagementComp from './UserManagement'
@@ -26,14 +27,14 @@ const AdminItems = [
     icon: UserManagement,
     link: '/admin/user-management',
   },
- 
+
+  // {
+  //   title: 'NFTs',
+  //   icon: Nft,
+  //   link: '/admin/nft',
+  // },
   {
-    title: 'NFTs',
-    icon: Nft,
-    link: '/admin/nft',
-  },
-   {
-    title: 'Features',
+    title: 'Feature Packs ',
     icon: Nft,
     link: '/admin/nftFeatures',
   },
@@ -142,7 +143,10 @@ const Admin = ({ children }: { children: React.ReactNode }) => {
         <div className="fixed top-0 z-20 h-full min-h-screen px-4 lg:px-8 md:w-[14.5rem] shadow-shadow-secondary py-6 pt-12 bg-white">
           <div className="flex flex-col h-[92vh] justify-between">
             <div>
-              <p className="text-primary-blue text-2xl font-semibold">TextRP Logo</p>
+              <center>
+                {' '}
+                <Image src={Logo} alt="Logo" width={80} />{' '}
+              </center>
               <div className="mt-8 flex flex-col gap-4">
                 {AdminItems.map((ai, i) => (
                   <TabSection {...ai} key={i} />

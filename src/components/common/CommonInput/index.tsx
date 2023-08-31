@@ -28,7 +28,9 @@ const CommonInput = (props: IInputProps) => {
           name={props?.name}
           disabled={props?.disabled}
           onChange={props?.onChange}
-          className={`p-3 rounded-lg ${props?.disabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'cursor-pointer'} outline-none border border-primary-gray  ${
+          className={`p-3 rounded-lg ${
+            props?.disabled ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'cursor-pointer'
+          } outline-none border border-primary-gray  ${
             props?.fullWidth
               ? 'min-w-full sm:min-w-[290px] lg:min-w-[360px]'
               : 'min-w-full sm:min-w-[200px]'
