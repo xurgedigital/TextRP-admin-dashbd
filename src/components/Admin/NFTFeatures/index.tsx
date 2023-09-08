@@ -24,6 +24,7 @@ const CreateNFTSection = ({
   showCreateNFT: boolean
 }) => {
   const { data: featuresData, isLoading } = useSWR('/api/available-features', swrFetcher)
+
   const [title, setTitle] = useState<string>(edit?.title)
   const [description, setDescription] = useState<string>(edit?.description)
   const [contract_address, setContractAddress] = useState<string>(edit?.contract_address)
@@ -57,13 +58,17 @@ const CreateNFTSection = ({
     //   setIsSaving(false)
     //   return
     // }
+
     if (selectedRule === rules[2]) {
       setTitleError(!title)
       setContractAddressError(!contract_address)
       setDescriptionError(!description)
       setTaxonError(!taxon)
       setIsSaving(false)
-      return
+
+      if (title_error || contract_address_error || description_error || taxon_error) {
+        return
+      }
     }
     await axios
       .post(apiEndpoint, {
@@ -258,10 +263,22 @@ const NFTFeaturesComp = () => {
   const [showCreateNFT, setShowCreateNFT] = useState(false)
   const [edit, setEdit] = useState()
   const { data: NftData, isLoading, mutate } = useSWR('/api/admin/supported_nfts', swrFetcher)
+  const [loading, setLoading] = useState(isLoading)
 
   useEffect(() => {
     if (!edit) mutate()
-  }, [edit])
+  }, [edit, mutate])
+
+  const deleteFeature = async (id: number) => {
+    await axios
+      .delete(`/api/admin/supported_nfts/${id}`)
+      .then((res) => {
+        mutate()
+        toast.success('Feature Pack Deleted', { position: 'top-center' })
+      })
+      .catch((err) => toast.error('Cannot Delete Feature Pack', { position: 'top-center' }))
+  }
+
   return (
     <>
       {showCreateNFT || edit ? (
@@ -337,6 +354,7 @@ const NFTFeaturesComp = () => {
                             }}
                           />
                           <BsTrashFill
+                            onClick={() => deleteFeature(parseInt(ci.id))}
                             className="text-[blue] cursor-pointer"
                             style={{ color: 'Red' }}
                           />
@@ -359,7 +377,7 @@ const NFTFeaturesComp = () => {
                     <td colSpan={7} className="w-full">
                       <div className="text-base font-medium w-full text-center p-8">
                         {' '}
-                        {isLoading ? (
+                        {loading ? (
                           <div className="inline-flex h-full">
                             <div className="animate-spin inline-flex h-full">
                               <AiOutlineLoading style={{ fontSize: '26px', color: '#3052FF' }} />
