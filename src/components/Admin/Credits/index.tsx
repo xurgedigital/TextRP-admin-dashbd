@@ -199,7 +199,7 @@ const CreditComp = () => {
       {showCreateCredit ? (
         <CreateCredit setShowCreateCredit={setShowCreateCredit} />
       ) : (
-        <div className="w-full max-w-[840px]">
+        <div className="w-full max-w-[860px]">
           <div className="flex flex-col md:flex-row w-full   gap-y-2  md:items-center md:justify-between">
             <p className="text-xl sm:text-2xl font-semibold">Credits Pricing</p>
             <Button
@@ -211,11 +211,10 @@ const CreditComp = () => {
           </div>
           <div className=" w-full inline-block align-middle ">
             <div className="overflow-auto shadow-shadow-tertiary rounded-lg p-6 pb-2 bg-white mt-3">
-              <table className="table-fixed">
+              <table className="table-fixed w-full min-w-[800px]  border-spacing-4 border-[2px] ">
                 <thead>
-                  <tr className="text-sm font-semibold">
-                    <th>
-                      {' '}
+                  <tr className="bg-blue-100 text-sm font-semibold">
+                    <th className=" border-[1px] py-2 px-4  text-left mb-4">
                       <div className="min-w-[9rem] text-left mb-4">Package Name</div>
                     </th>
                     <th>

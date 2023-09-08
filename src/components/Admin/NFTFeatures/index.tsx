@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import Img1 from '@public/Images/nft/img1.svg'
+import { AiFillEdit, AiOutlineLoading } from 'react-icons/ai'
 import Image from 'next/image'
 import axios from 'axios'
 import Button from '@/components/UI/Button'
@@ -10,6 +10,7 @@ import useSWR from 'swr'
 import { isValidClassicAddress } from 'ripple-address-codec'
 import EditIcon from '@public/Icons/editIcon.svg'
 import { toast } from 'react-toastify'
+import { BsPencilFill, BsTrash2Fill, BsTrashFill } from 'react-icons/bs'
 
 const CreateNFTSection = ({
   setShowCreateNFT,
@@ -51,21 +52,18 @@ const CreateNFTSection = ({
     }
 
     setIsSaving(true)
-    if (contract_address && !isValidClassicAddress(contract_address)) {
-      setContractAddressError(true)
+    // if (contract_address && !isValidClassicAddress(contract_address)) {
+    //   setContractAddressError(true)
+    //   setIsSaving(false)
+    //   return
+    // }
+    if (selectedRule === rules[2]) {
+      setTitleError(!title)
+      setContractAddressError(!contract_address)
+      setDescriptionError(!description)
+      setTaxonError(!taxon)
       setIsSaving(false)
       return
-    }
-    if (selectedRule === rules[2]) {
-      if (!title || !description || !taxon || !contract_address || !image_link) {
-        if (!title) setTitleError(true)
-        if (!contract_address_error) setContractAddressError(true)
-        if (!description) setDescriptionError(true)
-        if (!image_link) setImageError(true)
-        if (!taxon) setTaxonError(true)
-        setIsSaving(false)
-        return
-      }
     }
     await axios
       .post(apiEndpoint, {
@@ -128,8 +126,11 @@ const CreateNFTSection = ({
           <label className="pr-6 text-black capitalize">Feature</label>
           <div className="relative w-full sm:w-auto">
             <select
+              disabled={edit}
               onClick={(e) => setFeatures((e.target as HTMLInputElement).value)}
-              className="p-3 rounded-lg outline-none border border-primary-gray min-w-full sm:min-w-[290px] lg:min-w-[360px] overflow-y-auto"
+              className={`p-3 rounded-lg outline-none border border-primary-gray min-w-full sm:min-w-[290px] lg:min-w-[360px] overflow-y-auto ${
+                edit ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'cursor-pointer'
+              }`}
             >
               {featuresData?.features?.map((feature: string, i: number) => (
                 <option
@@ -171,7 +172,7 @@ const CreateNFTSection = ({
           value={nftLink}
           onChange={(e) => setNftLink(e.target.value)}
           placeholder="Ex. "
-          // disabled={selectedRule !== rules[2]}
+          disabled={selectedRule !== rules[2]}
           fullWidth
           customStyle={{ width: '80px !important' }}
           hasFetchBtn={true}
@@ -227,6 +228,7 @@ const CreateNFTSection = ({
           onChange={(e) => setImageLink(e.target.value)}
           placeholder="Ex. "
           fullWidth
+          optional={true}
           disabled={selectedRule !== rules[2]}
         />
         {image_error ? (
@@ -277,16 +279,13 @@ const NFTFeaturesComp = () => {
               onClick={() => setShowCreateNFT((prev) => !prev)}
               className="truncate px-4 py-2 mr-0 w-max rounded"
             >
-              Create Feature Packs
+              Create Feature Pack
             </Button>
           </div>
-          <div className="w-full bg-white mt-8 overflow-auto">
-            <table
-              border={1}
-              className="table-fixed w-full min-w-[800px]  border-spacing-4 border-[2px] "
-            >
+          <div className="w-full bg-white mt-8 overflow-auto rounded-md">
+            <table className="table border-collapse rounded-md border-1 w-full border-spacing-4 border-[2px] ">
               <thead>
-                <tr className="bg-blue-100 text-sm font-semibold">
+                <tr className="border-1 bg-blue-100 text-sm font-semibold">
                   <th className=" border-[1px] py-2 px-4  text-left mb-4">
                     {' '}
                     <div>Feature</div>
@@ -300,7 +299,7 @@ const NFTFeaturesComp = () => {
                     <div>NFT Title</div>
                   </th>
 
-                  <th className="border-[1px] p-2  text-left mb-4">
+                  <th className="border-[1px] p-2 text-left mb-4">
                     {' '}
                     <div>Address</div>
                   </th>
@@ -308,16 +307,19 @@ const NFTFeaturesComp = () => {
                     {' '}
                     <div>Taxon</div>
                   </th>
-                  <th className="border-[1px] w-[30px] p-2  text-left mb-4">
+                  <th className="border-[1px] w-[30px] p-2 text-center mb-4">
                     {' '}
-                    <div></div>
+                    <div>Actions</div>
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="border-1">
                 {NftData && NftData?.data?.length > 0 ? (
                   NftData?.data?.map((ci: any, i: number) => (
-                    <tr key={i} className="text-sm p-4 font-normal">
+                    <tr
+                      key={i}
+                      className="text-sm p-4 font-normal border-b-0.5 border-[#ACB1C1] text-secondary-text"
+                    >
                       <td className="break-all p-4" style={{ textTransform: 'capitalize' }}>
                         {ci?.feature || '--'}
                       </td>
@@ -326,9 +328,19 @@ const NFTFeaturesComp = () => {
                       <td className="p-4 w-[300px] overflow-hidden">{ci?.contract_address}</td>
                       <td className="p-4 text-center">{ci?.taxon}</td>
 
-                      <td className="px-4 py-4 text-end">
-                        <div className="flex justify-end ">
-                          <Image
+                      <td className="px-4 py-4 w-[120px] text-end">
+                        <div className="flex justify-around text-[16px] ">
+                          <BsPencilFill
+                            className="text-[blue] cursor-pointer"
+                            onClick={() => {
+                              setEdit(ci)
+                            }}
+                          />
+                          <BsTrashFill
+                            className="text-[blue] cursor-pointer"
+                            style={{ color: 'Red' }}
+                          />
+                          {/* <Image
                             onClick={() => {
                               setEdit(ci)
                             }}
@@ -337,7 +349,7 @@ const NFTFeaturesComp = () => {
                             width={26}
                             src={EditIcon}
                             alt=""
-                          />
+                          /> */}
                         </div>
                       </td>
                     </tr>
@@ -345,7 +357,19 @@ const NFTFeaturesComp = () => {
                 ) : (
                   <tr className="p-4">
                     <td colSpan={7} className="w-full">
-                      <div className="text-base font-medium w-full text-center p-8">No Data</div>
+                      <div className="text-base font-medium w-full text-center p-8">
+                        {' '}
+                        {isLoading ? (
+                          <div className="inline-flex h-full">
+                            <div className="animate-spin inline-flex h-full">
+                              <AiOutlineLoading style={{ fontSize: '26px', color: '#3052FF' }} />
+                            </div>{' '}
+                            &nbsp; Fetching Data...
+                          </div>
+                        ) : (
+                          'No Data'
+                        )}
+                      </div>
                     </td>
                   </tr>
                 )}

@@ -27,7 +27,7 @@ const AdminIcon = (props: IIconProps) => {
           />
         </svg>
       )
-    case 'feature packs ':
+    case 'feature pack':
       return (
         <svg
           width="18"

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { useContext, useEffect, useState } from 'react'
+import { AiOutlineLoading } from 'react-icons/ai'
 import useWebSocket from 'react-use-websocket'
 import { useRouter } from 'next/router'
 import axios from 'axios'
@@ -99,7 +100,16 @@ const LoginLoader = (props: { setLoginData: Function }) => {
                 type="submit"
                 className="w-full bg-primary-blue text-white bg-primary-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                {loading ? 'Signing in...' : 'Sign in'}
+                {loading ? (
+                  <div className="flex  justify-center items-center">
+                    <div className="animate-spin inline-flex h-full">
+                      <AiOutlineLoading style={{ fontSize: '20px', color: 'white' }} />
+                    </div>
+                    &nbsp; Signing in...
+                  </div>
+                ) : (
+                  'Sign in'
+                )}
               </button>
             </form>
           </div>

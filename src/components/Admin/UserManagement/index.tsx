@@ -3,12 +3,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import SearchIcon from '@public/Icons/searchIcon.svg'
 import Button from '@/components/UI/Button'
 import EditIcon from '@public/Icons/editIcon.svg'
+import { AiOutlineLoading } from 'react-icons/ai'
 import useWidth from '@/hooks/useWidth'
 import { useRouter } from 'next/router'
 import { swrFetcher, trimAddress } from '@/helpers'
 import useSWR from 'swr'
 import Pagination from '@/components/common/Pagination'
-import Loader from '@/components/common/Loader'
 
 const UserManagementComp = () => {
   const [query, setQuery] = useState('')
@@ -46,7 +46,7 @@ const UserManagementComp = () => {
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>
-            <Button className="p-3" onClick={() => setSearchText(query)}>
+            <Button className="px-6" onClick={() => setSearchText(query)}>
               Search
             </Button>
           </div>
@@ -107,7 +107,12 @@ const UserManagementComp = () => {
           </div>
           {isLoading && !UserList?.data && (
             <div className="flex w-full justify-center items-center p-4 bg-white">
-              <Loader />
+              <div className="inline-flex h-full">
+                <div className="animate-spin inline-flex h-full">
+                  <AiOutlineLoading style={{ fontSize: '26px', color: '#3052FF' }} />
+                </div>{' '}
+                &nbsp; Fetching Data...
+              </div>
             </div>
           )}
           {UserList?.data && <Pagination meta={UserList?.meta} page={page} setPage={setPage} />}

@@ -11,6 +11,7 @@ interface IInputProps {
   type?: string
   name?: string
   customStyle?: {}
+  optional?: boolean
   hasFetchBtn?: boolean
   disabled?: boolean
   onFetchBtn?: () => {}
@@ -25,7 +26,11 @@ const CommonInput = (props: IInputProps) => {
         props?.message && 'mb-10'
       }`}
     >
-      <label className="pr-6 text-black capitalize">{props?.label?.replace('_', ' ')}</label>
+      <label className="pr-6 text-black capitalize">
+        {props?.label?.replace('_', ' ')} <br />{' '}
+        <span className="text-[12px]"> {props.optional && '(Optional)'} </span>{' '}
+      </label>
+
       <div className="relative w-full sm:w-auto">
         <div className="flex items-center">
           <input
@@ -40,13 +45,14 @@ const CommonInput = (props: IInputProps) => {
             } outline-none border border-primary-gray  ${
               props?.fullWidth && !props.hasFetchBtn
                 ? 'min-w-full sm:min-w-[290px] lg:min-w-[360px]'
-                : 'min-w-[260px] sm:min-w-[260px]'
+                : 'min-w-[280px] sm:min-w-[260px]'
             }`}
-          />
+          />{' '}
+          &nbsp;
           {props.hasFetchBtn && (
             <Button
               onClick={() => props.onFetchBtn && props.onFetchBtn()}
-              className="truncate px-4 mt-1 h-[42px]"
+              className="truncate px-4 mt-1 h-[40px]"
             >
               {'Fetch Data'}
             </Button>

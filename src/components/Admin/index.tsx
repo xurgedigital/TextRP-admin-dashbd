@@ -34,7 +34,7 @@ const AdminItems = [
   //   link: '/admin/nft',
   // },
   {
-    title: 'Feature Packs ',
+    title: 'Feature Pack',
     icon: Nft,
     link: '/admin/nftFeatures',
   },
