@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useContext, useEffect, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import { useRouter } from 'next/router'
@@ -5,6 +6,7 @@ import axios from 'axios'
 import { Context } from '../_app'
 import useSWR from 'swr'
 import { swrFetcher } from '@/helpers'
+import { toast } from 'react-toastify'
 
 const LoginLoader = (props: { setLoginData: Function }) => {
   const { setLoginData } = props
@@ -15,7 +17,25 @@ const LoginLoader = (props: { setLoginData: Function }) => {
   const [password, setPassword] = useState('')
   useEffect(() => {
     setLoginData(data)
-  }, [data])
+  }, [data, setLoginData])
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault()
+    setLoading(true)
+    await axios
+      .post('/api/login-user', {
+        email: email,
+        password: password,
+      })
+      .then((res) => console.log(res))
+      .catch((err) => {
+        toast.error('Failed to login, please try again', {
+          position: 'top-center',
+        })
+        console.log(err)
+        setLoading(false)
+      })
+  }
 
   return (
     <div className="bg-primary-blue h-fit">
@@ -31,18 +51,12 @@ const LoginLoader = (props: { setLoginData: Function }) => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to your account
             </h1>
+
             <form
+              role=""
               className="space-y-4 md:space-y-6"
               aria-disabled={loading}
-              onSubmit={async (e) => {
-                e.preventDefault()
-                setLoading(true)
-                await axios.post('/api/login-user', {
-                  email: email,
-                  password: password,
-                })
-                console.log('FORM', e)  
-              }}
+              onSubmit={(e) => handleLogin(e)}
             >
               <div>
                 <label

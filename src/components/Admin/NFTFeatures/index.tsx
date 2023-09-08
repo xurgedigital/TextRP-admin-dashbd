@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Img1 from '@public/Images/nft/img1.svg'
 import Image from 'next/image'
@@ -8,6 +9,7 @@ import { swrFetcher } from '@/helpers'
 import useSWR from 'swr'
 import { isValidClassicAddress } from 'ripple-address-codec'
 import EditIcon from '@public/Icons/editIcon.svg'
+import { toast } from 'react-toastify'
 
 const CreateNFTSection = ({
   setShowCreateNFT,
@@ -26,7 +28,7 @@ const CreateNFTSection = ({
   const [contract_address, setContractAddress] = useState<string>(edit?.contract_address)
   const [taxon, setTaxon] = useState<string>(edit?.taxon)
   const [features, setFeatures] = useState<string>(
-    Array.isArray(edit?.features) ? edit?.features[0] : edit?.features
+    Array.isArray(edit?.features) ? edit?.features[0] : edit?.feature
   )
   const [image_link, setImageLink] = useState<string>(edit?.image_link || '')
   const [nftLink, setNftLink] = useState('')
@@ -35,8 +37,9 @@ const CreateNFTSection = ({
   const [description_error, setDescriptionError] = useState(false)
   const [contract_address_error, setContractAddressError] = useState(false)
   const [taxon_error, setTaxonError] = useState(false)
+  const [image_error, setImageError] = useState(false)
   const [rules, setRules] = useState<string[]>(['always enabled', 'always disabled', 'NFT enabled'])
-  const [selectedRule, setSelectedRule] = useState<string>('')
+  const [selectedRule, setSelectedRule] = useState<string>(edit?.rule || '')
 
   let apiEndpoint: string
 
@@ -53,35 +56,70 @@ const CreateNFTSection = ({
       setIsSaving(false)
       return
     }
-    // if (selectedRule === rules[2]) {
-    //   if (!title || !description || !taxon) {
-    //     if (!title) setTitleError(true)
-    //     if (!description) setDescriptionError(true)
-    //     if (!taxon) setTaxonError(true)
-    //     setIsSaving(false)
-    //     return
-    //   }
-    // }
-    await axios.post(apiEndpoint, {
-      title,
-      description,
-      contract_address,
-      taxon,
-      url: nftLink,
-      feature: features,
-      rule: selectedRule,
-      image_link,
-    })
-    setShowCreateNFT(false)
-    setEdit(false)
+    if (selectedRule === rules[2]) {
+      if (!title || !description || !taxon || !contract_address || !image_link) {
+        if (!title) setTitleError(true)
+        if (!contract_address_error) setContractAddressError(true)
+        if (!description) setDescriptionError(true)
+        if (!image_link) setImageError(true)
+        if (!taxon) setTaxonError(true)
+        setIsSaving(false)
+        return
+      }
+    }
+    await axios
+      .post(apiEndpoint, {
+        title,
+        description,
+        contract_address,
+        taxon,
+        url: nftLink,
+        feature: features,
+        rule: selectedRule,
+        image_link,
+      })
+      .then((res) => {
+        toast.success(`Feature ${edit ? 'Updated' : 'Created'} Successfully`, {
+          position: 'top-center',
+        })
+        setShowCreateNFT(false)
+        setEdit(false)
+      })
+      .catch((e) => {
+        console.log(e)
+        toast.error(`Failed to ${edit ? 'edit' : 'create'} features, Please try again`, {
+          position: 'top-center',
+        })
+      })
     setIsSaving(false)
   }
-  // console.log(features, 'FFF')
+
+  const fetchDataFromURL = async () => {
+    await axios
+      .post('/api/URLtoNFTData/', {
+        url: nftLink,
+      })
+      .then((res) => {
+        console.log(res.data)
+        setTitle(res.data.title)
+        setDescription(res.data.description)
+        setContractAddress(res.data.contract_address)
+        setTaxon(res.data.taxon)
+        setImageLink(res.data.image_link)
+      })
+      .catch((e) => {
+        console.log(e)
+        toast.error('Failed to fetch data from url, Please try again', {
+          position: 'top-center',
+        })
+      })
+    setIsSaving(false)
+  }
 
   const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
 
   return (
-    <div className="w-full sm:w-auto">
+    <div className="w-[600px] sm:w-auto">
       <p className="text-2xl font-semibold"> {edit ? 'Edit Feature' : 'Create Feature'}</p>
       <div className="shadow-shadow-tertiary rounded-lg p-6 bg-white mt-3 w-full">
         <div
@@ -106,7 +144,6 @@ const CreateNFTSection = ({
             </select>
           </div>
         </div>
-
         <div
           className={`text-sm font-normal flex flex-col sm:flex-row justify-between items-start mt-3`}
         >
@@ -117,14 +154,18 @@ const CreateNFTSection = ({
               className="p-3 rounded-lg outline-none border border-primary-gray min-w-full sm:min-w-[290px] lg:min-w-[360px] overflow-y-auto"
             >
               {rules.map((rule: string, i: number) => (
-                <option key={i} value={rule} className="capitalize cursor-pointer border-b">
+                <option
+                  key={i}
+                  selected={rule === selectedRule}
+                  value={rule}
+                  className="capitalize cursor-pointer border-b"
+                >
                   {capitalizeFirstLetter(rule)}
                 </option>
               ))}
             </select>
           </div>
         </div>
-
         <CommonInput
           label="NFT URL"
           value={nftLink}
@@ -132,8 +173,10 @@ const CreateNFTSection = ({
           placeholder="Ex. "
           // disabled={selectedRule !== rules[2]}
           fullWidth
-        />
-
+          customStyle={{ width: '80px !important' }}
+          hasFetchBtn={true}
+          onFetchBtn={fetchDataFromURL}
+        />{' '}
         <CommonInput
           label="NFT Title"
           value={title}
@@ -143,7 +186,7 @@ const CreateNFTSection = ({
           fullWidth
         />
         {title_error ? (
-          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Title!</p>
+          <p className=" sm:pl-40 md:pl-38 text-xs text-red-500">Enter valid Title!</p>
         ) : null}
         <CommonInput
           label="NFT Description"
@@ -154,7 +197,7 @@ const CreateNFTSection = ({
           fullWidth
         />
         {description_error ? (
-          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Description!</p>
+          <p className=" sm:pl-20 md:pl-40 text-xs text-red-500">Enter valid Description!</p>
         ) : null}
         <CommonInput
           label="NFT Contract Address"
@@ -165,7 +208,7 @@ const CreateNFTSection = ({
           fullWidth
         />
         {contract_address_error ? (
-          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Contract Address!</p>
+          <p className=" sm:pl-20 md:pl-40 text-xs text-red-500">Enter valid Contract Address!</p>
         ) : null}
         <CommonInput
           label="NFT Taxon"
@@ -175,6 +218,9 @@ const CreateNFTSection = ({
           fullWidth
           disabled={selectedRule !== rules[2]}
         />
+        {taxon_error ? (
+          <p className=" sm:pl-20 md:pl-40 text-xs text-red-500">Enter valid Taxon!</p>
+        ) : null}
         <CommonInput
           label="NFT Image Link"
           value={image_link}
@@ -183,11 +229,9 @@ const CreateNFTSection = ({
           fullWidth
           disabled={selectedRule !== rules[2]}
         />
-
-        {taxon_error ? (
-          <p className=" sm:pl-20 md:pl-28 text-xs text-red-500">Enter valid Taxon!</p>
+        {image_error ? (
+          <p className=" sm:pl-20 md:pl-40 text-xs text-red-500">Enter Image Link!</p>
         ) : null}
-
         <div className="flex items-center gap-2 mt-4 sm:ml-24">
           <Button onClick={handleCreate} loading={isSaving} className="truncate px-4 py-2 rounded">
             {'Save'}
@@ -195,7 +239,7 @@ const CreateNFTSection = ({
           <Button
             onClick={() => {
               setEdit(undefined)
-              setShowCreateNFT((prev) => !prev)
+              setShowCreateNFT(false)
             }}
             variant="blueOutline"
             className="px-4 py-2 rounded"
@@ -274,7 +318,9 @@ const NFTFeaturesComp = () => {
                 {NftData && NftData?.data?.length > 0 ? (
                   NftData?.data?.map((ci: any, i: number) => (
                     <tr key={i} className="text-sm p-4 font-normal">
-                      <td className="break-all p-4">{ci?.feature || '--'}</td>
+                      <td className="break-all p-4" style={{ textTransform: 'capitalize' }}>
+                        {ci?.feature || '--'}
+                      </td>
                       <td className="p-4">{ci?.rule || '--'}</td>
                       <td className="p-4">{ci?.title}</td>
                       <td className="p-4 w-[300px] overflow-hidden">{ci?.contract_address}</td>
@@ -287,8 +333,8 @@ const NFTFeaturesComp = () => {
                               setEdit(ci)
                             }}
                             className="min-w-fit cursor-pointer"
-                            height={16}
-                            width={16}
+                            height={26}
+                            width={26}
                             src={EditIcon}
                             alt=""
                           />
