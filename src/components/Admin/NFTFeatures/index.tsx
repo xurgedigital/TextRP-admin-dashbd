@@ -119,8 +119,7 @@ const CreateNFTSection = ({
     setIsSaving(false)
   }
 
-  const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
-
+  const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)  
   return (
     <div className="w-[600px] sm:w-auto">
       <p className="text-2xl font-semibold"> {edit ? 'Edit Feature' : 'Create Feature'}</p>
@@ -292,12 +291,12 @@ const NFTFeaturesComp = () => {
         <div className="w-full">
           <div className="flex flex-col md:flex-row w-full gap-y-2 mb-3  md:items-center md:justify-between">
             <p className="text-xl sm:text-2xl font-semibold">Feature Packs</p>
-            <Button
+            {/* <Button
               onClick={() => setShowCreateNFT((prev) => !prev)}
               className="truncate px-4 py-2 mr-0 w-max rounded"
             >
               Create Feature Pack
-            </Button>
+            </Button> */}
           </div>
           <div className="w-full bg-white mt-8 overflow-auto rounded-md">
             <table className="table border-collapse rounded-md border-1 w-full border-spacing-4 border-[2px] ">
@@ -353,11 +352,11 @@ const NFTFeaturesComp = () => {
                               setEdit(ci)
                             }}
                           />
-                          <BsTrashFill
+                          {/* <BsTrashFill
                             onClick={() => deleteFeature(parseInt(ci.id))}
                             className="text-[blue] cursor-pointer"
                             style={{ color: 'Red' }}
-                          />
+                          /> */}
                           {/* <Image
                             onClick={() => {
                               setEdit(ci)
