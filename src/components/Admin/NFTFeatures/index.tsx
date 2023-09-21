@@ -40,9 +40,9 @@ const CreateNFTSection = ({
   const [contract_address_error, setContractAddressError] = useState(false)
   const [taxon_error, setTaxonError] = useState(false)
   const [image_error, setImageError] = useState(false)
-  const [rules, setRules] = useState<string[]>(['always enabled', 'always disabled', 'NFT enabled'])
+  const [rules, setRules] = useState<string[]>(['always_enabled', 'always disabled', 'NFT enabled'])
   const [selectedRule, setSelectedRule] = useState<string>(edit?.rule || '')
-
+  
   let apiEndpoint: string
 
   const handleCreate = async () => {
@@ -51,7 +51,7 @@ const CreateNFTSection = ({
     } else {
       apiEndpoint = `/api/admin/supported_nfts/${edit?.id}`
     }
-
+    
     setIsSaving(true)
     // if (contract_address && !isValidClassicAddress(contract_address)) {
     //   setContractAddressError(true)
@@ -69,7 +69,7 @@ const CreateNFTSection = ({
       if (title_error || contract_address_error || description_error || taxon_error) {
         return
       }
-    }
+    }    
     await axios
       .post(apiEndpoint, {
         title,
@@ -77,7 +77,7 @@ const CreateNFTSection = ({
         contract_address,
         taxon,
         url: nftLink,
-        feature: features,
+        features:[features],
         rule: selectedRule,
         image_link,
       })
@@ -119,7 +119,7 @@ const CreateNFTSection = ({
     setIsSaving(false)
   }
 
-  const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)  
+  const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
   return (
     <div className="w-[600px] sm:w-auto">
       <p className="text-2xl font-semibold"> {edit ? 'Edit Feature' : 'Create Feature'}</p>
