@@ -42,7 +42,7 @@ const CreateNFTSection = ({
   const [image_error, setImageError] = useState(false)
   const [rules, setRules] = useState<string[]>(['always_enabled', 'always disabled', 'NFT enabled'])
   const [selectedRule, setSelectedRule] = useState<string>(edit?.rule || '')
-  
+
   let apiEndpoint: string
 
   const handleCreate = async () => {
@@ -51,7 +51,7 @@ const CreateNFTSection = ({
     } else {
       apiEndpoint = `/api/admin/supported_nfts/${edit?.id}`
     }
-    
+
     setIsSaving(true)
     // if (contract_address && !isValidClassicAddress(contract_address)) {
     //   setContractAddressError(true)
@@ -69,7 +69,7 @@ const CreateNFTSection = ({
       if (title_error || contract_address_error || description_error || taxon_error) {
         return
       }
-    }    
+    }
     await axios
       .post(apiEndpoint, {
         title,
@@ -77,7 +77,7 @@ const CreateNFTSection = ({
         contract_address,
         taxon,
         url: nftLink,
-        features:[features],
+        features: [features],
         rule: selectedRule,
         image_link,
       })
@@ -118,7 +118,7 @@ const CreateNFTSection = ({
       })
     setIsSaving(false)
   }
-
+  
   const capitalizeFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1)
   return (
     <div className="w-[600px] sm:w-auto">
@@ -155,7 +155,7 @@ const CreateNFTSection = ({
           <label className="pr-6 text-black capitalize">Rule</label>
           <div className="relative w-full sm:w-auto">
             <select
-              onClick={(e) => setSelectedRule((e.target as HTMLInputElement).value)}
+              onChange={(e) => setSelectedRule((e.target as HTMLSelectElement).value)}
               className="p-3 rounded-lg outline-none border border-primary-gray min-w-full sm:min-w-[290px] lg:min-w-[360px] overflow-y-auto"
             >
               {rules.map((rule: string, i: number) => (
